@@ -216,7 +216,7 @@
   function autoGrade(q) {
     const a = answer(q.id);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? 1 : 0, pending:0, objective:true };
-    if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted || []) ? 1:0, pending:0, objective:true };
+    if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
     if (q.kind === "Fill in the blanks") return { score: (a.blank1 && accepted(a.blank1,q.accepted?.[0] || []) ? 1:0) + (a.blank2 && accepted(a.blank2,q.accepted?.[1] || []) ? 1:0), pending:0, objective:true };
     if (q.kind === "True or false") {
       if (!a.truth) return { score:0,pending:0,objective:true };
