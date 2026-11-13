@@ -25,11 +25,18 @@ For PRM, Chapter 11 and Chapter 12 each have **three playable 80-question practi
 
 **LocalStorage is device/browser-specific**. It cannot synchronize across devices and is lost when browser site data is cleared.
 
-## Notes folders
+## Notes library
 
-The `notes/` directory is **an upload-ready structure** for user-provided study notes. There are folders for ADP, ADT, ITS, and PRM chapters 09, 11, 12, 14, 15, plus PRM combined revision. The website links to those **GitHub repository folders**, not to any private Google Drive location.
+`notes/` holds the study PDFs by **module**, not by empty chapter subfolders. The current layout is:
 
-Upload the materials you choose to share into these folders. No source slide PDFs have been added by the assistant.
+- `notes/PRM/`: five chapter PDFs (9, 11, 12, 14, 15), linked directly from the PRM chapter tiles.
+- `notes/ITS/`: five chapter PDFs (8–12), listed as readable note cards.
+- `notes/ADT/`: seven software-engineering chapter PDFs (9–14 and 19), listed as readable note cards.
+- `notes/ADP/`: prepared for future uploads.
+
+The seven ADT PDFs accidentally duplicated in `notes/PRM/` were removed from that location. The correct ADT copies were preserved.
+
+The **`papers/` folder is intentionally retained**, because the interactive quizzes load their question data from there; it does not store redundant printable paper PDFs. No private Drive links are used.
 
 ## Files
 - `index.html`: static layout

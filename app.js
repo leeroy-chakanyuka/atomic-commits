@@ -19,6 +19,8 @@
     {n:14,title:"Determining Project Progress and Results"},
     {n:15,title:"Chapter 15"}
   ];
+  const NOTE_FILES={"PRM":[{"chapter":9,"title":"Chapter 09","description":"Review Chapter 9 terminology, processes and worked examples.","file":"CPM5e_PPT_Chapter09 - Tagged.pdf"},{"chapter":11,"title":"Project Uncertainty Planning","description":"Identify, analyse and respond to risks, including Agile uncertainty.","file":"CPM5e_PPT_Chapter11 - Tagged.pdf"},{"chapter":12,"title":"Project Quality Planning and Kickoff","description":"Quality assurance, control, cost of quality and project kickoff.","file":"CPM5e_PPT_Chapter12 - Tagged.pdf"},{"chapter":14,"title":"Determining Project Progress and Results","description":"Monitor progress, handle change and calculate earned value.","file":"CPM5e_PPT_Chapter14 - Tagged.pdf"},{"chapter":15,"title":"Chapter 15","description":"Review the final chapter's project-management concepts and examples.","file":"CPM5e_PPT_Chapter15 - Tagged.pdf"}],"ITS":[{"chapter":8,"title":"Information Systems · Chapter 8","description":"Review this chapter's explanations, diagrams and key terms.","file":"Chapter-8.pdf"},{"chapter":9,"title":"Information Systems · Chapter 9","description":"Read the Chapter 9 concepts and worked examples.","file":"Chapter-9.pdf"},{"chapter":10,"title":"Information Systems · Chapter 10","description":"Review the important ideas and examples in Chapter 10.","file":"Chapter-10(1).pdf"},{"chapter":11,"title":"Information Systems · Chapter 11","description":"Study the definitions and material in Chapter 11.","file":"Chapter-11(1).pdf"},{"chapter":12,"title":"Information Systems · Chapter 12","description":"Revise the concepts and worked examples in Chapter 12.","file":"Chapter-12(1).pdf"}],"ADT":[{"chapter":9,"title":"Software Evolution","description":"How software changes, is maintained and adapts over time.","file":"Ch9 Evolution - Tagged (1).pdf"},{"chapter":10,"title":"Dependable Systems","description":"Dependability, reliability, availability, safety and security.","file":"Ch10 Dependable systems - Tagged.pdf"},{"chapter":11,"title":"Reliability Engineering","description":"Engineering dependable software and understanding failures.","file":"Ch11 Reliability Engineering - Tagged.pdf"},{"chapter":12,"title":"Safety Engineering","description":"Safety requirements, hazards and risk reduction.","file":"Ch12 Safety engineering - Tagged.pdf"},{"chapter":13,"title":"Security Engineering","description":"Security threats, vulnerabilities and controls.","file":"Ch13 Security engineering - Tagged.pdf"},{"chapter":14,"title":"Resilience Engineering","description":"How systems withstand disruption and recover from failure.","file":"Ch14 Resilience engineering - Tagged.pdf"},{"chapter":19,"title":"Systems Engineering","description":"Whole-system design, integration and lifecycle concerns.","file":"Ch19 Systems engineering - Tagged.pdf"}],"ADP":[]};
+  const repoNoteUrl=(module,file)=>"https://github.com/leeroy-chakanyuka/atomic-commits/blob/main/notes/"+module+"/"+encodeURIComponent(file);
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["11-1","11-2","11-3","12-1","12-2","12-3"];
   const storageFor=key=>{const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
@@ -123,18 +125,20 @@
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
     const notesBase="https://github.com/leeroy-chakanyuka/atomic-commits/tree/main/notes/";
+    const moduleNotes=NOTE_FILES[m.id.toUpperCase()] || [];
     const tiles=CHAPTERS.map(c=>{
       const ready=Boolean(c.sessions?.length);
-      const folder=notesBase+"PRM/chapter-"+String(c.n).padStart(2,"0");
+      const note=NOTE_FILES.PRM.find(x=>x.chapter===c.n);
+      const noteLink=note?repoNoteUrl("PRM",note.file):null;
       const links=(c.sessions||[]).map(n=>{
         const key=c.n+"-"+n,prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
         return `<a class="chapter-tile-action" href="${sessionHash(key)}">Session ${String(n).padStart(2,"0")}${active?" · Resume":""}</a>`;
       }).join("");
       return `<article class="chapter-tile ${ready?"is-live":""}">
         <div class="chapter-tile-top"><span class="chapter-index">${String(c.n).padStart(2,"0")}</span><span class="chapter-badge ${ready?"is-ready":""}">${ready?c.sessions.length+" sessions":"Coming soon"}</span></div>
-        <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3><p>${ready?"80 questions each · 60 minutes":"Practice questions in preparation"}</p></div>
+        <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3><p>${note?esc(note.description):"Read the chapter notes."}</p><p class="chapter-availability">${ready?"80 questions each · 60 minutes":"Practice questions in preparation"}</p></div>
         <div class="chapter-actions">${links||'<span class="chapter-tile-action muted">Sessions coming soon</span>'}
-          <a class="chapter-notes-link" href="${folder}" target="_blank" rel="noopener noreferrer">Notes folder</a>
+          ${noteLink?`<a class="chapter-notes-link" href="${noteLink}" target="_blank" rel="noopener noreferrer">Read chapter notes</a>`:"<span class=\"chapter-notes-link muted\">Notes coming soon</span>"}
         </div>
       </article>`;
     }).join("");
@@ -161,8 +165,16 @@
           ${records?'<div class="history-list">'+records+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
           <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p>
         </section>`
-        :`<div class="module-placeholder"><span>✳</span><h2>More sessions are on the way.</h2><p>Find your study files in the module notes folder.</p>
-          <a class="chapter-tile-action" href="${notesBase+m.id.toUpperCase()}" target="_blank" rel="noopener noreferrer">Open ${m.id.toUpperCase()} notes</a></div>`}
+        :`<section class="module-notes-library">
+      <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>Your notes.</h2></div><small>${moduleNotes.length} available</small></div>
+      ${moduleNotes.length?`<div class="notes-grid">${moduleNotes.map(n=>`
+        <article class="note-card">
+          <div class="note-card-heading"><span class="note-chapter">CHAPTER ${String(n.chapter).padStart(2,"0")}</span><span class="note-filetype">PDF</span></div>
+          <h3>${esc(n.title)}</h3><p>${esc(n.description)}</p>
+          <a class="note-read-link" href="${repoNoteUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Read notes</a>
+        </article>`).join("")}</div>`:
+        `<div class="module-placeholder"><span>✳</span><h2>No notes uploaded yet.</h2><p>Study notes for this module will appear here when they're added.</p></div>`}
+      </section>`}
     `;
   }
   

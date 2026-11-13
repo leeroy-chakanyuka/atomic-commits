@@ -266,3 +266,21 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
 @media(max-height:620px){
  .exam-mode main,.exam-layout{height:calc(100dvh - 64px);max-height:calc(100dvh - 64px)}
 }
+
+/* Notes library: direct links to the PDFs that actually exist in the repo. */
+.chapter-tile .chapter-tile-body p {line-height:1.5}
+.chapter-availability{color:#718a6f!important;font-weight:650;margin-top:5px!important}
+.module-notes-library{padding:14px 0 75px}
+.notes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.note-card{display:flex;flex-direction:column;min-height:205px;padding:22px 21px;background:#fffefa;border:1px solid #dfe5d9;border-radius:15px;transition:border-color .15s,transform .15s}
+.note-card:hover{border-color:#a6bda3;transform:translateY(-2px)}
+.note-card-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}
+.note-chapter,.note-filetype{font-size:10px;color:#768b73;font-weight:750;letter-spacing:.11em}
+.note-filetype{letter-spacing:.04em;background:#edf0e6;border-radius:20px;padding:2px 9px}
+.note-card h3{font:600 19px/1.2 var(--serif);letter-spacing:-.035em;margin:0 0 9px;color:#334634}
+.note-card p{color:#829180;font-size:12px;line-height:1.65;margin:0 0 15px}
+.note-read-link{display:inline-flex;align-self:flex-start;border:1px solid #c9d8c3;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:700;color:#496346;background:#eef3e9;margin-top:auto}
+.note-read-link:hover{background:#dfebd8;border-color:#a5bda0}
+.chapter-notes-link.muted{opacity:.65;cursor:default}
+@media(max-width:1050px){.notes-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.notes-grid{grid-template-columns:1fr}.note-card{min-height:145px;padding:18px}.module-notes-library{padding-bottom:38px}}
