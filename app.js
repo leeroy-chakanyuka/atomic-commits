@@ -7,17 +7,20 @@
   }
 
   const MODULES = [
-    { id: "prm", name: "Project Risk Management", active: true },
-    { id: "adp", name: "ADP" },
-    { id: "adt", name: "ADT" },
-    { id: "its", name: "ITS" },
-    { id: "pfp", name: "PFP" },
-    { id: "prt", name: "PRT" },
-    { id: "ml", name: "Machine Learning" },
-    { id: "prp", name: "PRP" }
+    {id:"prm",name:"Project Management",active:true},
+    {id:"adp",name:"ADP",active:false},
+    {id:"adt",name:"ADT",active:false},
+    {id:"its",name:"ITS",active:false}
   ];
-
-  const STORAGE = "paperroom:prm:ch11:s1:v1";
+  const CHAPTERS = [
+    {n:9,title:"Chapter 09"},
+    {n:11,title:"Project Uncertainty Planning",ready:true},
+    {n:12,title:"Project Quality Planning & Kickoff"},
+    {n:14,title:"Determining Project Progress and Results"},
+    {n:15,title:"Chapter 15"}
+  ];
+    const STORAGE = "paperroom:prm:ch11:s1:v1";
+  const HISTORY_STORAGE = "paperroom:history:prm:ch11:s1:v1";
   const $ = (sel) => document.querySelector(sel);
   const esc = (str) => String(str == null ? "" : str).replace(/[&<>"']/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[s]);
   const canon = (str) => String(str || "").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
@@ -25,6 +28,7 @@
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
   const section = (q) => q.kind.toUpperCase();
+  let viewingHistoryId = null;
   let current = 1;
   let filter = "all";
   let attempt = readAttempt();
@@ -38,11 +42,31 @@
     } catch (_err) { /* Private or unavailable storage; session remains usable. */ }
     return null;
   }
-  function save() {
-    try { if (attempt) localStorage.setItem(STORAGE, JSON.stringify(attempt)); }
-    catch (_err) { /* Storage may be full or disabled; session continues. */ }
+  function readHistory() {
+    try {
+      const value = JSON.parse(localStorage.getItem(HISTORY_STORAGE) || "[]");
+      return Array.isArray(value) ? value.filter(a => a && a.startedAt && a.submittedAt && a.answers && a.reviews) : [];
+    } catch (_) { return []; }
   }
-  function notify(message) {
+  function archiveAttempt(item) {
+    if (!item?.submittedAt) return;
+    try {
+      const entries = readHistory();
+      const pos = entries.findIndex(x => x.startedAt === item.startedAt);
+      const copy = JSON.parse(JSON.stringify(item));
+      if (pos >= 0) entries[pos] = copy; else entries.push(copy);
+      entries.sort((a,b)=>b.startedAt - a.startedAt);
+      localStorage.setItem(HISTORY_STORAGE,JSON.stringify(entries));
+    } catch (_) { notify("Browser storage is full. Your attempt history may not be saved."); }
+  }
+  function save() {
+    if (!attempt) return;
+    try {
+      if (!viewingHistoryId) localStorage.setItem(STORAGE,JSON.stringify(attempt));
+      if (attempt.submittedAt) archiveAttempt(attempt);
+    } catch (_) { notify("Browser storage is unavailable. Changes might not be saved."); }
+  }
+    function notify(message) {
     const el = $("#toast");
     el.textContent = message;
     el.classList.add("show");
@@ -59,33 +83,44 @@
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   function renderModules() {
-    $("#modulesGrid").innerHTML = MODULES.map(m => `
-      <a href="#/module/${m.id}" class="module-card ${m.active ? "active" : ""}" aria-label="${esc(m.id.toUpperCase())} module">
-        <div class="module-card-top"><span class="module-abbr">${esc(m.id.toUpperCase())}</span><span class="module-arrow" aria-hidden="true">↗</span></div>
-        <h3>${esc(m.name)}</h3>
-        <p>${m.active ? "Chapter 11 · Project uncertainty planning" : "Questions being prepared"}</p>
-        <span class="module-status ${m.active ? "" : "soon"}"><i class="status-dot"></i>${m.active ? "1 practice session available" : "Coming soon"}</span>
-      </a>`).join("");
+    $("#modulesGrid").innerHTML = MODULES.map(m =>
+      '<a class="module-card ' + (m.active ? 'active' : '') + '" href="#/module/' + m.id + '">' +
+      '<div class="module-card-top"><span class="module-abbr">' + m.id.toUpperCase() + '</span><span class="module-card-flower">✳</span></div>' +
+      '<h3>' + esc(m.name) + '</h3><p>' + (m.active ? '5 chapters · first session ready' : 'Practice papers coming soon') + '</p>' +
+      '<span class="module-status ' + (m.active ? '' : 'soon') + '"><i class="status-dot"></i>' + (m.active ? 'Open library' : 'Coming soon') + '</span></a>'
+    ).join("");
   }
   function renderModule(id) {
-    const m = MODULES.find(x => x.id === id);
-    if (!m) { location.hash = "#/home#modules"; return; }
+    const m=MODULES.find(x=>x.id===id);
+    if(!m) {location.hash="#/home#modules";return;}
+    if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
-    $("#moduleContent").innerHTML = `
-      <div class="module-hero">
-        <div><span class="section-kicker">MODULE LIBRARY</span><h1>${esc(m.id.toUpperCase())}<span style="color:#b5bcad">.</span></h1><p>${m.active ? "Project Risk Management · Build confidence chapter by chapter, with carefully structured exam-style practice." : "The question bank for this module is not published yet. This page will list each available chapter and practice session as they're added."}</p></div>
-        <span class="module-pill">${m.active ? "1 session ready" : "Preparing questions"}</span>
-      </div>
-      <div class="module-list">
-        ${m.active ? `
-          <div class="chapter-card">
-            <div class="chapter-number">11</div>
-            <div class="chapter-content"><span class="section-kicker">CHAPTER 11 · PROJECT UNCERTAINTY PLANNING</span><h2>Practice Session 01</h2><p>80 questions · 224 marks · 60-minute countdown · Guided answer review</p><a class="button button-dark" href="#/practice/prm/ch11/s1">Open practice session <span class="button-arrow">→</span></a></div>
-          </div>` : `<div class="empty-module"><div class="empty-symbol">✳</div><h2>A little more time.</h2><p>This module has its own place in the library, but no live practice sessions yet. Chapter 11 in PRM is the first working demo.</p><p style="margin-top:20px"><a class="text-link" href="#/module/prm">Try the PRM demo →</a></p></div>`}
-      </div>`;
+    const ongoing=Boolean(attempt&&!attempt.submittedAt&&remaining()>0);
+    const chips=CHAPTERS.map(c=>
+      '<article class="chapter-tile '+(c.ready?'is-live':'')+'"><div class="chapter-tile-top"><span class="chapter-index">'+String(c.n).padStart(2,'0')+'</span>' +
+      '<span class="chapter-badge '+(c.ready?'is-ready':'')+'">'+(c.ready?'Ready to practise':'Coming soon')+'</span></div>' +
+      '<div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER '+c.n+'</span><h3>'+esc(c.title)+'</h3><p>'+(c.ready?'80 questions · 224 marks · 60 minutes':'Practice sessions in preparation')+'</p></div>' +
+      (c.ready ? '<a class="chapter-tile-action" href="#/practice/prm/ch11/s1">'+(ongoing?'Continue session':attempt?.submittedAt?'Review latest session':'Begin practice')+'</a>' :
+        '<span class="chapter-tile-action muted">Not published yet</span>') + '</article>'
+    ).join("");
+    const history=readHistory();
+    const records=history.slice(0,8).map(item=>{
+      const stats=scoreStats(item),wrong=DATA.questions.filter(q=>{const g=grade(q,item);return g.marked&&g.score<q.marks;}).length;
+      const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+      return '<a class="history-row" href="#/results/prm/ch11/s1/'+item.startedAt+'"><span class="history-icon">✓</span><span class="history-name"><strong>Chapter 11 · Session 01</strong><small>'+date+(item.timedOut?' · Timed out':' · Submitted')+'</small></span><span class="history-score"><strong>'+stats.score+'/'+DATA.totalMarks+'</strong><small>'+wrong+' to revisit'+(stats.pending?' · '+stats.pending+' marks pending':'')+'</small></span><span class="history-link">Review</span></a>';
+    }).join("");
+    $("#moduleContent").innerHTML = '<div class="module-compact-head"><div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>'+m.id.toUpperCase()+'</strong></div>' +
+      '<div class="module-title-line"><div><span class="section-kicker">EXAM PRACTICE LIBRARY</span><h1>'+esc(m.name)+'<span class="title-period">.</span></h1><p>' +
+      (m.active?'Five chapters to master, one focused hour at a time.':'This module is reserved for your upcoming practice papers.') +
+      '</p></div><div class="module-summary-chip"><strong>'+(m.active?'05':'00')+'</strong><small>'+(m.active?'chapters':'sessions')+'</small></div></div></div>' +
+      (m.active ? '<div class="library-heading"><div><span class="section-kicker">YOUR CHAPTERS</span><h2>Choose your focus.</h2></div><small>1 ready · 4 coming soon</small></div>' +
+        '<div class="chapter-tiles">'+chips+'</div><section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>' +
+        (ongoing?'<a class="resume-banner" href="#/practice/prm/ch11/s1"><strong>Continue your current session</strong><span>'+numberAnswered()+'/80 answered · '+mins(remaining())+' remaining</span></a>':'') +
+        (history.length?'<div class="history-list">'+records+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Tomorrow you can return to see every answer, mark and mistake.</p></div></div>') +
+        '<p class="storage-note">Stored in your browser, not synced between devices. Clearing site data erases local history.</p></section>' :
+        '<div class="module-placeholder"><span>✳</span><h2>More sessions are on the way.</h2><p>Your exam module has a place here. Question papers will appear once ready.</p></div>');
   }
-
-  function answer(id) { return (attempt?.answers || {})[id] || {}; }
+    function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
     if (!attempt) return false;
     const a = answer(q.id);
@@ -99,6 +134,7 @@
   function elapsed() { return attempt ? Math.min(DATA.limitSeconds, Math.ceil(((attempt.submittedAt || Date.now()) - attempt.startedAt) / 1000)) : 0; }
 
   function startSession() {
+    viewingHistoryId=null;attempt=readAttempt();
     if (attempt && !attempt.submittedAt) {
       location.hash = "#/practice/prm/ch11/s1";
       return;
@@ -172,9 +208,9 @@
     $("#flagButton").textContent = attempt.flags.includes(current) ? "⚑ Flagged for review" : "⚑ Flag for review";
     $("#previousButton").disabled = current === 1;
     $("#previousButton").style.opacity = current === 1 ? ".45" : "1";
-    $("#nextButton").innerHTML = current === 80 ? "Review progress <span class='button-arrow'>→</span>" : "Next question <span class='button-arrow'>→</span>";
+    $("#nextButton").textContent = current === 80 ? "Submit paper" : "Next question";
     renderNav();
-    if (scroll) window.scrollTo({top:0,behavior:"smooth"});
+    if (scroll) { $("#answerArea").scrollTop=0; const card=document.querySelector(".question-card"); if(card)card.scrollTop=0; }
   }
   function renderExam() {
     show("exam");
@@ -213,8 +249,8 @@
   }
   function accepted(value, options) { return options.some(o => canon(o) === canon(value)); }
 
-  function autoGrade(q) {
-    const a = answer(q.id);
+  function autoGrade(q,source=attempt) {
+    const a = answer(q.id,source);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? 1 : 0, pending:0, objective:true };
     if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
     if (q.kind === "Fill in the blanks") return { score: (a.blank1 && accepted(a.blank1,q.accepted?.[0] || []) ? 1:0) + (a.blank2 && accepted(a.blank2,q.accepted?.[1] || []) ? 1:0), pending:0, objective:true };
@@ -228,15 +264,15 @@
     if (!a.text?.trim()) return { score:0,pending:0,objective:true };
     return { score:0,pending:q.marks,objective:false };
   }
-  function grade(q) {
-    const base=autoGrade(q);
-    const assigned = attempt.reviews[q.id];
+  function grade(q,source=attempt) {
+    const base=autoGrade(q,source);
+    const assigned = source.reviews[q.id];
     const marked = base.pending === 0 || (assigned !== undefined && assigned !== null);
     const score = base.score + (marked ? Number(assigned || 0) : 0);
     return { ...base,score,marked };
   }
-  function scoreStats() {
-    const values=DATA.questions.map(grade);
+  function scoreStats(source=attempt) {
+    const values=DATA.questions.map(q=>grade(q,source));
     return {
       score:values.reduce((n,g)=>n+g.score,0),
       pending:values.reduce((n,g)=>n+(g.marked ? 0 : g.pending),0),
@@ -264,6 +300,8 @@
       (s.pending+" marks still need your review. This is not a final grade.");
     $("#reviewProgress").textContent=s.marked+" / 80";
     $("#timeUsed").textContent=mins(elapsed());
+    const wrong=DATA.questions.filter(q=>{const g=grade(q);return g.marked&&g.score<q.marks;}).length;
+    const el=$("#wrongCount");if(el)el.textContent=String(wrong);
   }
   function renderReviews() {
     const visible=DATA.questions.filter(q=>{
@@ -295,14 +333,18 @@
   function route() {
     const path=location.hash || "#/home";
     if (path.startsWith("#/results/")) {
+      const previous=path.split("/")[5];
+      if(previous){const old=readHistory().find(x=>String(x.startedAt)===previous);if(old){attempt=old;viewingHistoryId=previous;}}
+      else {viewingHistoryId=null;attempt=readAttempt();}
       if(attempt?.submittedAt){renderResults();return;}
       location.hash = "#/practice/prm/ch11/s1";return;
     }
     if(path.startsWith("#/practice/")) {
+      if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
       if(attempt && !attempt.submittedAt && remaining()<=0)completeSession(true);
       else if(attempt?.submittedAt)location.hash="#/results/prm/ch11/s1";
       else if(attempt)renderExam();
-      else {show("intro");$("#beginButton").textContent="Begin practice session →";}
+      else {show("intro");$("#beginButton").textContent="Begin practice session";}
       return;
     }
     if(path.startsWith("#/module/")) {
@@ -364,6 +406,7 @@
   window.addEventListener("hashchange",route);
   window.addEventListener("storage",(e)=>{if(e.key===STORAGE){attempt=readAttempt();route();}});
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)tick()});
+  if(attempt?.submittedAt)archiveAttempt(attempt);
   renderModules();
   route();
   timeLoop=setInterval(tick,1000);
