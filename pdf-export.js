@@ -19,7 +19,7 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
   const draw=(t,x,yy,size=10,bold=false)=>{page.push("BT /"+(bold?"F2":"F1")+" "+size+" Tf "+x+" "+yy+" Td ("+escapePDF(t)+") Tj ET");};
   const newPage=()=>{
     page=[];pages.push(page);y=781;
-    draw("PAPERROOM / PROJECT MANAGEMENT / CHAPTER "+paper.chapter,44,810,9,true);
+    draw("PAPERROOM / "+(paper.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT")+" / CHAPTER "+paper.chapter,44,810,9,true);
     page.push("0.84 0.86 0.82 RG 0.6 w 44 800 m 550 800 l S");
   };
   const need=h=>{if(y-h<64)newPage();};
@@ -74,7 +74,7 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
   out+="trailer\n<< /Size "+objs.length+" /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n";
   const url=URL.createObjectURL(new Blob([out],{type:"application/pdf"}));
   const link=document.createElement("a");
-  link.href=url;link.download="PRM_Chapter_"+paper.chapter+"_Practice_Session_"+paper.session+".pdf";
+  link.href=url;link.download=(paper.module||"PRM")+"_Chapter_"+paper.chapter+"_Practice_Session_"+paper.session+".pdf";
   document.body.appendChild(link);link.click();link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
 };

@@ -327,3 +327,12 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
  .chapter-actions{gap:9px}
  .reading-recs{grid-template-columns:1fr}
 }
+
+/* ITS Chapter 8 Advanced SQL pilot: code snippets and comfortable writing. */
+.question-snippet{display:block;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;tab-size:2;margin:19px 0 0;padding:16px 19px;border:1px solid #d9e4d3;border-radius:11px;background:#eff3eb;color:#324632;font:11.5px/1.57 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;max-width:100%;}
+.question-snippet[hidden]{display:none!important;}
+.code-answer{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;line-height:1.6;min-height:195px;font-size:13px;tab-size:2;}
+.its-one-chapter{grid-template-columns:minmax(260px,520px);}
+.its-one-chapter .chapter-tile{min-height:260px;}
+.its-one-chapter .chapter-tile-body p{max-width:43ch;}
+@media(max-width:680px){.its-one-chapter{grid-template-columns:1fr}.question-snippet{font-size:10.5px;padding:12px}.code-answer{min-height:165px;font-size:12px;}}

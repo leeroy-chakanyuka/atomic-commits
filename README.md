@@ -7,7 +7,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 | Module | Exam date | Status |
 |---|---|---|
 | ADP | 18 November 2026 | Coming soon |
-| ITS | 19 November 2026 | Coming soon |
+| ITS | 19 November 2026 | **Chapter 8 pilot live** |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
 
@@ -63,3 +63,13 @@ These are external reading recommendations, not reproductions of the textbook or
 ## Chapter 15 papers
 
 Chapter 15 focuses on *Finishing the Project and Realizing the Benefits* (formal acceptance, early termination, transition, knowledge management, closeout, staff reassignment, ongoing support, Agile validation and benefits realisation). Three new original 80-question papers, each worth **222 marks**, and a separate memorandum are available in the student's PRM Google Drive workspace. The public site contains **questions only** until submission, with immediate objective checking and guided written-answer review; it never exposes private Drive URLs.
+
+## ITS Chapter 8 pilot
+
+The ITS library includes one **80-question, 226-mark Advanced SQL** pilot covering joins, correlated and scalar subqueries, SQL functions, relational set operators, views, PL/SQL triggers, stored procedures, cursors and embedded SQL. It prioritises writing, reading and debugging queries rather than generic recall.
+
+The session has the usual 60-minute timer, optional early submission with blanks, answer review and device-local history under **ITS-specific localStorage keys**, separate from the established PRM archive. SQL examples use a code-styled context block, and written SQL is self-marked against the question-specific rubric.
+
+The original source notes remain at `notes/ITS/Chapter-8.pdf`. The student has a write-in PDF and separate memorandum in their private ITS Google Drive folder; **the website exposes no private Drive URL and does not publish the memorandum before submission**.
+
+This is deliberately one session for feedback before ITS Chapters 9-12 or more variants are created.

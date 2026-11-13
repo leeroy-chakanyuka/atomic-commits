@@ -8,7 +8,7 @@
 
   const MODULES=[
     {id:"adp",name:"ADP",date:"Wed 18 Nov",confirmed:true},
-    {id:"its",name:"ITS",date:"Thu 19 Nov",confirmed:true},
+    {id:"its",name:"ITS",date:"Thu 19 Nov",confirmed:true,pilot:true},
     {id:"prm",name:"Project Management",date:"Fri 20 Nov",active:true},
     {id:"adt",name:"ADT",date:"Tue 24 Nov"}
   ];
@@ -19,13 +19,14 @@
     {n:14,title:"Determining Project Progress and Results",sessions:[1,2,3]},
     {n:15,title:"Finishing the Project and Realizing the Benefits",sessions:[1,2,3]}
   ];
-  const NOTE_FILES={"PRM":[{"chapter":9,"title":"Resourcing and Accelerating Projects","description":"Resource planning, resource calendars, RACI, leveling, smoothing and accelerating a schedule.","file":"CPM5e_PPT_Chapter09 - Tagged.pdf"},{"chapter":11,"title":"Project Uncertainty Planning","description":"Identify, analyse and respond to risks, including Agile uncertainty.","file":"CPM5e_PPT_Chapter11 - Tagged.pdf"},{"chapter":12,"title":"Project Quality Planning and Kickoff","description":"Quality assurance, control, cost of quality and project kickoff.","file":"CPM5e_PPT_Chapter12 - Tagged.pdf"},{"chapter":14,"title":"Determining Project Progress and Results","description":"Monitor progress, handle change and calculate earned value.","file":"CPM5e_PPT_Chapter14 - Tagged.pdf"},{"chapter":15,"title":"Finishing the Project and Realizing the Benefits","description":"Scope acceptance, early termination, closeout, handover, lessons learned and benefits realisation.","file":"CPM5e_PPT_Chapter15 - Tagged.pdf"}],"ITS":[{"chapter":8,"title":"Information Systems · Chapter 8","description":"Review this chapter's explanations, diagrams and key terms.","file":"Chapter-8.pdf"},{"chapter":9,"title":"Information Systems · Chapter 9","description":"Read the Chapter 9 concepts and worked examples.","file":"Chapter-9.pdf"},{"chapter":10,"title":"Information Systems · Chapter 10","description":"Review the important ideas and examples in Chapter 10.","file":"Chapter-10(1).pdf"},{"chapter":11,"title":"Information Systems · Chapter 11","description":"Study the definitions and material in Chapter 11.","file":"Chapter-11(1).pdf"},{"chapter":12,"title":"Information Systems · Chapter 12","description":"Revise the concepts and worked examples in Chapter 12.","file":"Chapter-12(1).pdf"}],"ADT":[{"chapter":9,"title":"Software Evolution","description":"How software changes, is maintained and adapts over time.","file":"Ch9 Evolution - Tagged (1).pdf"},{"chapter":10,"title":"Dependable Systems","description":"Dependability, reliability, availability, safety and security.","file":"Ch10 Dependable systems - Tagged.pdf"},{"chapter":11,"title":"Reliability Engineering","description":"Engineering dependable software and understanding failures.","file":"Ch11 Reliability Engineering - Tagged.pdf"},{"chapter":12,"title":"Safety Engineering","description":"Safety requirements, hazards and risk reduction.","file":"Ch12 Safety engineering - Tagged.pdf"},{"chapter":13,"title":"Security Engineering","description":"Security threats, vulnerabilities and controls.","file":"Ch13 Security engineering - Tagged.pdf"},{"chapter":14,"title":"Resilience Engineering","description":"How systems withstand disruption and recover from failure.","file":"Ch14 Resilience engineering - Tagged.pdf"},{"chapter":19,"title":"Systems Engineering","description":"Whole-system design, integration and lifecycle concerns.","file":"Ch19 Systems engineering - Tagged.pdf"}],"ADP":[]};
+  const NOTE_FILES={"PRM":[{"chapter":9,"title":"Resourcing and Accelerating Projects","description":"Resource planning, resource calendars, RACI, leveling, smoothing and accelerating a schedule.","file":"CPM5e_PPT_Chapter09 - Tagged.pdf"},{"chapter":11,"title":"Project Uncertainty Planning","description":"Identify, analyse and respond to risks, including Agile uncertainty.","file":"CPM5e_PPT_Chapter11 - Tagged.pdf"},{"chapter":12,"title":"Project Quality Planning and Kickoff","description":"Quality assurance, control, cost of quality and project kickoff.","file":"CPM5e_PPT_Chapter12 - Tagged.pdf"},{"chapter":14,"title":"Determining Project Progress and Results","description":"Monitor progress, handle change and calculate earned value.","file":"CPM5e_PPT_Chapter14 - Tagged.pdf"},{"chapter":15,"title":"Finishing the Project and Realizing the Benefits","description":"Scope acceptance, early termination, closeout, handover, lessons learned and benefits realisation.","file":"CPM5e_PPT_Chapter15 - Tagged.pdf"}],"ITS":[{"chapter":8,"title":"Advanced SQL","description":"Joins, subqueries, SQL functions, set operators, views and procedural SQL.","file":"Chapter-8.pdf"},{"chapter":9,"title":"Information Systems · Chapter 9","description":"Read the Chapter 9 concepts and worked examples.","file":"Chapter-9.pdf"},{"chapter":10,"title":"Information Systems · Chapter 10","description":"Review the important ideas and examples in Chapter 10.","file":"Chapter-10(1).pdf"},{"chapter":11,"title":"Information Systems · Chapter 11","description":"Study the definitions and material in Chapter 11.","file":"Chapter-11(1).pdf"},{"chapter":12,"title":"Information Systems · Chapter 12","description":"Revise the concepts and worked examples in Chapter 12.","file":"Chapter-12(1).pdf"}],"ADT":[{"chapter":9,"title":"Software Evolution","description":"How software changes, is maintained and adapts over time.","file":"Ch9 Evolution - Tagged (1).pdf"},{"chapter":10,"title":"Dependable Systems","description":"Dependability, reliability, availability, safety and security.","file":"Ch10 Dependable systems - Tagged.pdf"},{"chapter":11,"title":"Reliability Engineering","description":"Engineering dependable software and understanding failures.","file":"Ch11 Reliability Engineering - Tagged.pdf"},{"chapter":12,"title":"Safety Engineering","description":"Safety requirements, hazards and risk reduction.","file":"Ch12 Safety engineering - Tagged.pdf"},{"chapter":13,"title":"Security Engineering","description":"Security threats, vulnerabilities and controls.","file":"Ch13 Security engineering - Tagged.pdf"},{"chapter":14,"title":"Resilience Engineering","description":"How systems withstand disruption and recover from failure.","file":"Ch14 Resilience engineering - Tagged.pdf"},{"chapter":19,"title":"Systems Engineering","description":"Whole-system design, integration and lifecycle concerns.","file":"Ch19 Systems engineering - Tagged.pdf"}],"ADP":[]};
   const repoNoteUrl=(module,file)=>"https://github.com/leeroy-chakanyuka/atomic-commits/blob/main/notes/"+module+"/"+encodeURIComponent(file);
   const repoNoteDownloadUrl=(module,file)=>"https://raw.githubusercontent.com/leeroy-chakanyuka/atomic-commits/main/notes/"+module+"/"+encodeURIComponent(file);
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
-  const storageFor=key=>{const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
-  const historyFor=key=>{const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  const ITS_PAPER_KEYS=["its-8-1"];
+  const storageFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v1`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v1`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
   let STORAGE=storageFor(paperKey);
   let HISTORY_STORAGE=historyFor(paperKey);
@@ -36,9 +37,12 @@
   const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
-  const sessionHash=(key,kind="practice")=>{const [ch,s]=key.split("-");return `#/${kind}/prm/ch${ch}/s${s}`;};
-  function selectPaper(ch,s) {
-    const key=String(ch)+"-"+String(s);
+  const sessionHash=(key,kind="practice")=>{
+    if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `#/${kind}/its/ch${ch}/s${s}`;}
+    const [ch,s]=key.split("-");return `#/${kind}/prm/ch${ch}/s${s}`;
+  };
+  function selectPaper(module,ch,s) {
+    const key=module==="its"?"its-"+String(ch)+"-"+String(s):String(ch)+"-"+String(s);
     if(!PAPERBANK[key])return false;
     if(key!==paperKey){
       paperKey=key;DATA=PAPERBANK[key];STORAGE=storageFor(key);HISTORY_STORAGE=historyFor(key);
@@ -68,7 +72,7 @@
     }catch(_e){return [];}
   }
   function readHistory(){return readHistoryFor(paperKey);}
-  function allHistory(){return PAPER_KEYS.flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
+  function allHistory(module="prm"){return (module==="its"?ITS_PAPER_KEYS:PAPER_KEYS).flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
   function readAttemptFor(key) {
     try {
       const a=JSON.parse(localStorage.getItem(storageFor(key)) || "null");
@@ -113,11 +117,11 @@
   }
   function renderModules(){
     $("#modulesGrid").innerHTML=MODULES.map(m=>`
-      <a class="module-card ${m.active?"active":""}" href="#/module/${m.id}">
+      <a class="module-card ${m.active||m.pilot?"active":""}" href="#/module/${m.id}">
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -125,14 +129,18 @@
     if(!m){location.hash="#/home#modules";return;}
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
-    const notesBase="https://github.com/leeroy-chakanyuka/atomic-commits/tree/main/notes/";
-    const moduleNotes=NOTE_FILES[m.id.toUpperCase()] || [];
-    const tiles=CHAPTERS.map(c=>{
+    const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
+    const isPractice=m.id==="prm"||m.id==="its";
+    const chapterList=m.id==="its"?[{n:8,title:"Advanced SQL",sessions:[1]}]:CHAPTERS;
+    const keys=m.id==="its"?ITS_PAPER_KEYS:PAPER_KEYS;
+    const tiles=chapterList.map(c=>{
       const ready=Boolean(c.sessions?.length);
-      const note=NOTE_FILES.PRM.find(x=>x.chapter===c.n);
-      const noteLink=note?repoNoteUrl("PRM",note.file):null;
+      const note=moduleNotes.find(x=>x.chapter===c.n);
+      const noteLink=note?repoNoteUrl(m.id.toUpperCase(),note.file):null;
       const links=(c.sessions||[]).map(n=>{
-        const key=c.n+"-"+n,prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+        const key=m.id==="its"?"its-"+c.n+"-"+n:c.n+"-"+n;
+        const prior=readAttemptFor(key);
+        const active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
         return `<div class="session-file">
           <div class="session-file-info"><span class="session-file-title">Practice session ${String(n).padStart(2,"0")}</span>
             <small>80 questions · 1 hour · ${PAPERBANK[key].totalMarks} marks</small></div>
@@ -141,58 +149,65 @@
         </div>`;
       }).join("");
       return `<article class="chapter-tile ${ready?"is-live":""}">
-        <div class="chapter-tile-top"><span class="chapter-index">${String(c.n).padStart(2,"0")}</span><span class="chapter-badge ${ready?"is-ready":""}">${ready?c.sessions.length+" sessions":"Coming soon"}</span></div>
-        <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3><p>${note?esc(note.description):"Read the chapter notes."}</p><p class="chapter-availability">${ready?"80 questions each · 60 minutes":"Practice questions in preparation"}</p></div>
+        <div class="chapter-tile-top"><span class="chapter-index">${String(c.n).padStart(2,"0")}</span><span class="chapter-badge ${ready?"is-ready":""}">${ready?c.sessions.length+(c.sessions.length===1?" session":" sessions"):"Coming soon"}</span></div>
+        <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3>
+          <p>${note?esc(note.description):"Read the chapter notes."}</p>
+          <p class="chapter-availability">${ready?"80 questions · 60 minutes":"Practice questions in preparation"}</p></div>
         <div class="chapter-actions">
-          ${c.sessions?.length?`<details class="chapter-folder"><summary><span class="chapter-folder-icon" aria-hidden="true"></span>Practice sessions <small>(${c.sessions.length})</small></summary>
-            <div class="chapter-folder-contents">${links}</div></details>`
-            :'<div class="chapter-coming-soon">Practice sessions coming soon</div>'}
+          ${ready?`<details class="chapter-folder"><summary><span class="chapter-folder-icon" aria-hidden="true"></span>Practice sessions <small>(${c.sessions.length})</small></summary>
+            <div class="chapter-folder-contents">${links}</div></details>`:
+            '<div class="chapter-coming-soon">Practice sessions coming soon</div>'}
           ${noteLink?`<div class="note-actions"><a class="chapter-notes-link" href="${noteLink}" target="_blank" rel="noopener noreferrer">Read notes</a>
-            <a class="note-download-link" href="${repoNoteDownloadUrl("PRM",note.file)}" target="_blank" rel="noopener noreferrer">Download notes</a></div>`:
-            "<span class=\"chapter-notes-link muted\">Notes coming soon</span>"}
+            <a class="note-download-link" href="${repoNoteDownloadUrl(m.id.toUpperCase(),note.file)}" target="_blank" rel="noopener noreferrer">Download notes</a></div>`:
+            '<span class="chapter-notes-link muted">Notes coming soon</span>'}
         </div>
       </article>`;
     }).join("");
-    const history=allHistory();
-    const records=history.slice(0,25).map(({key,item})=>{
-      const paper=PAPERBANK[key],stats=scoreStats(item,paper);
+    const recent=allHistory(m.id).slice(0,25).map(({key,item})=>{
+      const paper=PAPERBANK[key];const stats=scoreStats(item,paper);
       const wrong=paper.questions.filter(q=>{const g=grade(q,item);return g.marked&&g.score<q.marks}).length;
       const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
       return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
-        <span class="history-icon">✓</span><span class="history-name"><strong>Chapter ${paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
-        <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${wrong} to revisit${stats.pending?" · "+stats.pending+" marks pending":""}</small></span><span class="history-link">Review</span>
+        <span class="history-icon">✓</span>
+        <span class="history-name"><strong>Chapter ${paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+        <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${wrong} to revisit${stats.pending?" · "+stats.pending+" marks pending":""}</small></span>
+        <span class="history-link">Review</span>
       </a>`;
     }).join("");
-    const running=PAPER_KEYS.map(key=>({key,item:readAttemptFor(key)})).filter(x=>x.item&&!x.item.submittedAt&&x.item.endsAt>Date.now());
-    $("#moduleContent").innerHTML=`<div class="module-compact-head"><div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
-      <div class="module-title-line"><div><span class="section-kicker">EXAM PRACTICE LIBRARY</span><h1>${esc(m.name)}<span class="title-period">.</span></h1><p>${m.active?"Five chapters, fifteen live sessions, one focused hour each.":"Practice papers coming soon."}</p></div>
-      <div class="module-summary-chip"><strong>${m.active?"15":"00"}</strong><small>sessions</small></div></div></div>
-      ${m.active?`<div class="library-heading"><div><span class="section-kicker">YOUR CHAPTERS</span><h2>Choose your focus.</h2></div><small>15 ready · 6 combined sessions coming soon</small></div>
-        <div class="chapter-tiles">${tiles}</div>
-        <section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
-        <div class="combined-sessions">${Array.from({length:6},(_,i)=>`<span class="combined-slot">Session ${String(i+1).padStart(2,"0")} · Soon</span>`).join("")}</div></section>
-        <section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
-          ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume Chapter ${PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
-          ${records?'<div class="history-list">'+records+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
-          <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p>
-        </section>`
-        :`<section class="module-notes-library">
-      <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>Your notes.</h2></div><small>${moduleNotes.length} available</small></div>
-      ${moduleNotes.length?`<div class="notes-grid">${moduleNotes.map(n=>`
+    const running=keys.map(key=>({key,item:readAttemptFor(key)})).filter(x=>x.item&&!x.item.submittedAt&&x.item.endsAt>Date.now());
+    const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"FIRST PILOT SESSION":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Start with Advanced SQL.":"Choose your focus."}</h2></div>
+       <small>${m.id==="its"?"1 session · for your feedback":"15 ready · 6 combined sessions coming soon"}</small></div>
+       <div class="chapter-tiles ${m.id==="its"?"its-one-chapter":""}">${tiles}</div>`:"";
+    const combinedSection=m.id==="prm"?`<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
+        <div class="combined-sessions">${Array.from({length:6},(_,i)=>`<span class="combined-slot">Session ${String(i+1).padStart(2,"0")} · Soon</span>`).join("")}</div></section>`:"";
+    const sourceNotes=m.id==="its"?moduleNotes.filter(n=>n.chapter!==8):moduleNotes;
+    const notesCards=sourceNotes.length?`<div class="notes-grid">${sourceNotes.map(n=>`
         <article class="note-card">
           <div class="note-card-heading"><span class="note-chapter">CHAPTER ${String(n.chapter).padStart(2,"0")}</span><span class="note-filetype">PDF</span></div>
           <h3>${esc(n.title)}</h3><p>${esc(n.description)}</p>
           <div class="note-card-actions"><a class="note-read-link" href="${repoNoteUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Read notes</a>
           <a class="note-download-link" href="${repoNoteDownloadUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Download PDF</a></div>
         </article>`).join("")}</div>`:
-        `<div class="module-placeholder"><span>✳</span><h2>Notes aren't uploaded yet.</h2><p>Here are two Java and Spring Security resources you enjoy. They are reading recommendations, not exam notes.</p>
+       `<div class="module-placeholder"><span>✳</span><h2>Notes aren't uploaded yet.</h2><p>Here are two Java and Spring Security resources you enjoy. They are reading recommendations, not exam notes.</p>
           <div class="reading-recs"><a href="https://www.baeldung.com/security-spring" target="_blank" rel="noopener noreferrer"><strong>Baeldung · Security with Spring</strong><span>Practical guides to authentication, authorization, and OAuth.</span></a>
             <a href="https://www.manning.com/books/spring-security-in-action-second-edition" target="_blank" rel="noopener noreferrer"><strong>Spring Security in Action · 2nd edition</strong><span>Laurențiu Spilcă's book on securing Spring applications.</span></a></div>
-        </div>`}
-      </section>`}
-    `;
+        </div>`;
+    const notesSection=m.id==="its"||!isPractice?`<section class="module-notes-library">
+      <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>${m.id==="its"?"Other chapter notes.":"Your notes."}</h2></div><small>${sourceNotes.length} chapter${sourceNotes.length===1?"":"s"}</small></div>
+      ${notesCards}</section>`:"";
+    const historySection=isPractice?`<section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
+      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume Chapter ${PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+      ${recent?'<div class="history-list">'+recent+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
+      <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p></section>`:"";
+    const sessions=m.id==="prm"?15:m.id==="its"?1:0;
+    $("#moduleContent").innerHTML=`<div class="module-compact-head">
+      <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
+      <div class="module-title-line"><div><span class="section-kicker">${isPractice?"EXAM PRACTICE LIBRARY":"READING LIBRARY"}</span><h1>${esc(m.name)}<span class="title-period">.</span></h1>
+        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: practical SQL, a focused hour, and answer-by-answer review.":"Study notes and resources for this module."}</p></div>
+        <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
+      </div></div>
+      ${practiceSection}${combinedSection}${notesSection}${historySection}`;
   }
-  
   function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
     if (!attempt) return false;
@@ -270,8 +285,9 @@
     if (q.kind === "Identify the term") {
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
     }
-    return `<label class="answer-label" for="writtenAnswer">${q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
-      <textarea id="writtenAnswer" class="answer-textarea" data-field="text" placeholder="${q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
+    const codeQuestion=["SQL writing","Debugging SQL"].includes(q.kind);
+    return `<label class="answer-label" for="writtenAnswer">${codeQuestion?"Your SQL / reasoning":q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
+      <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?"Write valid SQL and explain any corrections...":q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
       <p class="answer-hint">${q.marks} mark${q.marks!==1?"s":""} available. ${q.marks > 1 ? "Include enough distinct, relevant points to earn every mark." : "Keep it concise."}</p>`;
   }
   function showQuestion(id, scroll = false) {
@@ -281,6 +297,8 @@
     $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF 80";
     $("#questionMarks").textContent = q.marks + (q.marks === 1 ? " mark" : " marks");
     $("#questionPrompt").textContent = quote(q.prompt);
+    const codeSnippet=$("#questionSnippet");
+    if(codeSnippet){codeSnippet.hidden=!q.snippet;codeSnippet.textContent=q.snippet||"";}
     $("#answerArea").innerHTML = renderInput(q);
     $("#flagButton").classList.toggle("flagged",attempt.flags.includes(current));
     $("#flagButton").textContent = attempt.flags.includes(current) ? "⚑ Flagged for review" : "⚑ Flag for review";
@@ -408,6 +426,9 @@
   }
   function renderResults() {
     show("results");
+    const mod=DATA.module.toLowerCase();
+    const back=$("#resultsScreen .back-link");if(back){back.href="#/module/"+mod;back.textContent=DATA.module+" library";}
+    const returnLink=$("#resultsScreen .results-bottom a.button");if(returnLink)returnLink.href="#/module/"+mod;
     updateResultsMeta();
     renderReviews();
   }
@@ -416,21 +437,23 @@
     $("#introKicker").textContent="CHAPTER "+DATA.chapter+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
     $("#introDescription").textContent=DATA.title+". Eighty exam-style questions, one focused hour, and room to think.";
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
-    $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.chapter===12?"Quality.":"Uncertainty.")+"</em>";
+    $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
+    const introLink=$("#introScreen .back-link");
+    if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
     $("#introSheetSession").textContent="Practice session "+String(DATA.session).padStart(2,"0");
     $("#beginButton").textContent="Begin practice session";
   }
   function route() {
     const path=location.hash || "#/home";
-    const routeMatch=path.match(/^#\/(practice|results)\/prm\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
+    const routeMatch=path.match(/^#\/(practice|results)\/(prm|its)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
     if(routeMatch) {
-      const [,kind,ch,session,savedId]=routeMatch;
-      if(!selectPaper(ch,session)){location.hash="#/module/prm";return;}
+      const [,kind,module,ch,session,savedId]=routeMatch;
+      if(!selectPaper(module,ch,session)){location.hash="#/module/"+module;return;}
       if(kind==="results"){
         if(savedId){
           const historical=readHistory().find(item=>String(item.startedAt)===savedId);
           if(historical){attempt=historical;viewingHistoryId=savedId;}
-          else{location.hash="#/module/prm";return;}
+          else{location.hash="#/module/"+module;return;}
         }else{
           viewingHistoryId=null;attempt=readAttempt();
         }
@@ -485,7 +508,7 @@
   });
   $("#examExit").addEventListener("click",()=>{
     notify("Your progress is saved. The one-hour timer keeps running.");
-    location.hash="#/module/prm";
+    location.hash="#/module/"+DATA.module.toLowerCase();
   });
   $("#restartExam").addEventListener("click",()=>{
     if(confirm("Start a new attempt? Your current answers and review marks will be replaced.")){
