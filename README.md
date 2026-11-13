@@ -62,7 +62,7 @@ These are external reading recommendations, not reproductions of the textbook or
 
 ## Chapter 15 papers
 
-Chapter 15 focuses on *Finishing the Project and Realizing the Benefits* (formal acceptance, early termination, transition, knowledge management, closeout, staff reassignment, ongoing support, Agile validation and benefits realisation). Three new original 80-question papers, each worth **222 marks**, and a separate memorandum are available in the student's PRM Google Drive workspace. The public site contains **questions only** until submission, with immediate objective checking and guided written-answer review; it never exposes private Drive URLs.
+Chapter 15 focuses on *Finishing the Project and Realizing the Benefits* (formal acceptance, early termination, transition, knowledge management, closeout, staff reassignment, ongoing support, Agile validation and benefits realisation). Three original 80-question papers, each worth **222 marks**, are playable on the website. The site contains **questions only** until submission, with immediate objective checking and guided written-answer review.
 
 ## ITS Chapter 8 pilot
 
@@ -70,6 +70,6 @@ The ITS library includes one **80-question, 226-mark Advanced SQL** pilot coveri
 
 The session has the usual 60-minute timer, optional early submission with blanks, answer review and device-local history under **ITS-specific localStorage keys**, separate from the established PRM archive. SQL examples use a code-styled context block, and written SQL is self-marked against the question-specific rubric.
 
-The original source notes remain at `notes/ITS/Chapter-8.pdf`. The student has a write-in PDF and separate memorandum in their private ITS Google Drive folder; **the website exposes no private Drive URL and does not publish the memorandum before submission**.
+The original source notes remain at `notes/ITS/Chapter-8.pdf`. A separate write-in paper and marking memorandum were prepared for individual review. The website does not publish the memorandum before submission.
 
 This is deliberately one session for feedback before ITS Chapters 9-12 or more variants are created.
