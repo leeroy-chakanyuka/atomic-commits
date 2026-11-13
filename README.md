@@ -1,21 +1,45 @@
-# paperroom.
+# Paperroom
 
-A quiet, exam-focused learning interface built on the former Atomic Commits GitHub Pages repository, redesigned at the owner's request.
+A calm exam-practice website, hosted from this repository on GitHub Pages. The former Atomic Commits landing page remains recoverable in Git history.
 
-## What is live
-- **Four module spaces:** Project Management (PRM), ADP, ADT and ITS. The three latter module pages are clearly marked as upcoming.
-- **Five PRM chapter tiles:** 9, 11, 12, 14 and 15. Only Chapter 11 / Practice Session 01 launches an interactive exam. Unreleased chapters have disabled "not published" labels, not fake question sets.
-- **Real Chapter 11 paper:** 80 imported questions, a maximum of 60 minutes and 224 marks.
-- **Compact, mostly fixed-height exam workspace:** tablet/desktop question navigation and mobile horizontal question rail, with the countdown at the top. The page itself does not scroll during an exam on supported modern browsers; long prompts and response areas scroll within their panels.
-- **Local persistence:** current attempt answers, flagged questions, start/end timestamps, awarded self-review marks, and **an archive of every completed attempt** are kept in browser localStorage. Returning tomorrow on the same browser/device allows reviewing answers, mistakes and provisional scores from previous attempts. Data does **not sync across devices** and disappears if the browser's site data is cleared. Storage quotas may limit extensive future use.
-- **Scoring:** deterministic checking for objective answers; after submission, a side-by-side model-answer review and honest learner-assigned partial credit for written explanations and calculations. "Needs work" and "Needs marking" filters show weak points. Scores remain provisional until all open answers are reviewed.
-- **Timer:** uses an absolute deadline; leaving or refreshing does not reset it; auto-submission occurs at expiry even if not all questions have been completed. Voluntary early submission requires answering all 80.
-- **History:** starting a fresh attempt does not delete older submitted papers, and reviewing an archived paper does not overwrite the latest attempt.
+## Current practice library
 
-## Running
-Static HTML/CSS/JavaScript, no build step or secrets. Serve the repository root with GitHub Pages or another static host. `exam-data.js` loads before `app.js`.
+| Module | Exam date | Status |
+|---|---|---|
+| ADP | 18 November 2026 | Coming soon |
+| ITS | 19 November 2026 | Coming soon |
+| PRM (Project Management) | 20 November 2026 | **Six sessions live** |
+| ADT | 24 November 2026 | Coming soon |
 
-## Future
-Issue [#1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1) tracks optional **server-side Gemini grading**. Do not expose an AI API key to browser JavaScript or claim the demo currently grades long written answers automatically.
+The website shows **14:00 as a provisional sitting time**. Confirm the actual times against the institution's final examination timetable.
 
-The original payment-app code remains accessible through Git history. The present version is a demonstration; do not enter sensitive personal details in answers.
+For PRM, Chapter 11 and Chapter 12 each have **three playable 80-question practice sessions**. Chapters 9, 14 and 15 are prepared as chapter tiles, and six combined revision papers have clearly labelled *coming soon* slots. No separate question-paper PDFs are published.
+
+### Exam workflow
+- Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
+- You may **submit with unanswered questions**. Unanswered items receive zero, and a confirmation explains how many are missing.
+- The answer memorandum is visible only after submission.
+- Direct objective answers are scored automatically where possible. Open-ended responses and calculations are marked against the memorandum by the learner until future server-side marking is available.
+- The exam interface uses a compact tablet/mobile layout with the timer alone in the top navigation bar.
+- Completed attempts, responses, provisional scores, missed questions, self-marking, flags and dates are kept in browser localStorage and can be revisited after later attempts.
+
+**LocalStorage is device/browser-specific**. It cannot synchronize across devices and is lost when browser site data is cleared.
+
+## Notes folders
+
+The `notes/` directory is **an upload-ready structure** for user-provided study notes. There are folders for ADP, ADT, ITS, and PRM chapters 09, 11, 12, 14, 15, plus PRM combined revision. The website links to those **GitHub repository folders**, not to any private Google Drive location.
+
+Upload the materials you choose to share into these folders. No source slide PDFs have been added by the assistant.
+
+## Files
+- `index.html`: static layout
+- `styles.css`: calm paper-and-sage responsive design
+- `app.js`: exam engine, timer, local state, marking and review
+- `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
+- `papers/prm/*.js`: additional Chapter 11/12 exam question datasets
+- `notes/`: user-uploaded study content folders
+
+This site is plain HTML/CSS/JS, deployable directly from the repo root with GitHub Pages.
+
+## Later
+Gemini-assisted rubric-driven marking of free text is tracked in [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1). Any API keys must remain on a server; do not embed them in this public website.

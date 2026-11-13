@@ -211,3 +211,58 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
  .exam-controls{margin:4px 0}
  .submit-panel{min-height:38px}
 }
+
+/* November exam library: compact chapter sessions and progress */
+.module-card .module-exam-date{font-weight:700;color:#4f654c;font-size:13px;margin:2px 0 1px}
+.module-card .module-exam-time{font-size:10px;color:#929c8e;line-height:1.4}
+.module-card .module-status{padding-top:14px}
+.chapter-tile{min-height:242px}
+.chapter-actions{margin-top:auto;display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
+.chapter-actions .chapter-tile-action{display:inline-flex;align-items:center;justify-content:center;margin:0;min-height:31px;padding:6px 10px;font-size:11px}
+.chapter-notes-link{display:inline-flex;align-items:center;justify-content:center;min-height:31px;padding:5px 9px;border:1px solid #d1dacc;background:#fafcf7;border-radius:8px;color:#6d7c69;font-size:11px;font-weight:650;text-decoration:none}
+.chapter-notes-link:hover{border-color:#a4b69f;background:#f1f5ed;color:#3c5a38}
+.combined-library{display:grid;grid-template-columns:1fr 1.35fr;gap:25px;align-items:center;margin-top:15px;background:#e7ebdf;border:1px solid #d5dece;border-radius:15px;padding:21px 24px}
+.combined-copy h2{font:600 28px/1.15 var(--serif);letter-spacing:-.045em;margin:6px 0}
+.combined-copy p{max-width:345px;color:#7b8b77;font-size:12px;line-height:1.6;margin:0}
+.combined-sessions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.combined-slot{display:grid;place-items:center;min-height:45px;padding:8px 6px;border:1px dashed #c3cfbb;border-radius:9px;background:#f6f7f0;color:#8b9b86;font-size:10px;font-weight:650;text-align:center}
+
+/* The exam navigation bar contains the timer only. Exit is in question controls. */
+.exam-bar{height:67px}
+.exam-bar-inner{height:64px;min-height:64px;justify-content:center}
+.exam-clock-wrap{gap:12px}
+.exam-clock-wrap>span{display:inline-block;font-size:11px}
+.exam-clock{font-size:31px}
+.exam-controls .exam-exit{margin:0 7px;background:#f4f5ef;border:1px solid #d5ddd1;border-radius:9px;min-height:41px;padding:8px 11px;color:#657660;font-size:12px;font-weight:700}
+.exam-controls .exam-exit:hover{background:#e7ede1;border-color:#c4d1be}
+.exam-mode{overflow:hidden}
+.exam-mode main{height:calc(100dvh - 67px);overflow:hidden}
+.exam-layout{height:calc(100dvh - 67px);min-height:0}
+@media(max-width:950px){
+ .chapter-actions .chapter-tile-action{min-height:30px;padding:5px 8px;font-size:10px}
+ .chapter-notes-link{min-height:30px;padding:5px 8px;font-size:10px}
+ .combined-library{grid-template-columns:1fr 1.4fr;gap:16px}
+}
+@media(max-width:680px){
+ .module-card .module-exam-date{font-size:12px}
+ .module-card .module-exam-time{font-size:9px}
+ .chapter-tile{min-height:0}
+ .chapter-actions{grid-column:1/-1;margin-top:9px;justify-content:flex-start}
+ .chapter-actions .chapter-tile-action{font-size:10px}
+ .combined-library{display:block;padding:18px}
+ .combined-copy h2{font-size:26px}
+ .combined-copy p{max-width:none}
+ .combined-sessions{margin-top:15px;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .exam-bar{height:64px}
+ .exam-bar-inner{height:61px;min-height:61px;justify-content:center;flex-wrap:nowrap;align-content:center}
+ .exam-clock-wrap{order:0;width:auto;justify-content:center;gap:9px}
+ .exam-clock-wrap>span{font-size:10px}
+ .exam-clock{font-size:29px}
+ .exam-mode main,.exam-layout{height:calc(100dvh - 64px);max-height:calc(100dvh - 64px)}
+ .exam-controls{gap:5px}
+ .exam-controls .exam-exit{font-size:10px;min-height:36px;padding:7px 8px;margin:0}
+ .exam-controls .button{font-size:11px;padding:7px 8px}
+}
+@media(max-height:620px){
+ .exam-mode main,.exam-layout{height:calc(100dvh - 64px);max-height:calc(100dvh - 64px)}
+}

@@ -12,6 +12,11 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="exam-data.js" defer></script>
+  <script src="papers/prm/ch11-session-2.js" defer></script>
+  <script src="papers/prm/ch11-session-3.js" defer></script>
+  <script src="papers/prm/ch12-session-1.js" defer></script>
+  <script src="papers/prm/ch12-session-2.js" defer></script>
+  <script src="papers/prm/ch12-session-3.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -114,19 +119,19 @@
 
     <div id="introScreen" class="screen" hidden>
       <section class="shell page-section intro-layout">
-        <div class="intro-left"><a href="#/module/prm" class="back-link">Back to PRM</a><span class="section-kicker">CHAPTER 11 · PRACTICE SESSION 01</span><h1>Ready when<br><em>you are.</em></h1><p>Project Uncertainty Planning. Eighty carefully prepared questions, a single focused hour, and space to think.</p>
-        <div class="intro-facts"><div><strong>80</strong><span>questions</span></div><div><strong>60</strong><span>minutes</span></div><div><strong>224</strong><span>marks</span></div></div>
-        <div class="intro-notes"><p>✳ Your timer starts only when you press <b>Begin session</b>.</p><p>✳ You'll need to answer every question before submitting early.</p><p>✳ At 00:00, your work submits automatically, even if incomplete.</p><p>✳ Answers and marking guidance unlock after submission.</p><p>✳ Progress is saved on this device, so a refresh won't restart your timer.</p></div>
+        <div class="intro-left"><a href="#/module/prm" class="back-link">Back to PRM</a><span class="section-kicker" id="introKicker">CHAPTER 11 · PRACTICE SESSION 01</span><h1>Ready when<br><em>you are.</em></h1><p id="introDescription">Project Uncertainty Planning. Eighty carefully prepared questions, a single focused hour, and space to think.</p>
+        <div class="intro-facts"><div><strong>80</strong><span>questions</span></div><div><strong>60</strong><span>minutes</span></div><div><strong id="introTotalMarks">224</strong><span>marks</span></div></div>
+        <div class="intro-notes"><p>✳ Your timer starts only when you press <b>Begin session</b>.</p><p>✳ You may submit at any point, even if some questions are unanswered.</p><p>✳ At 00:00, your work submits automatically, even if incomplete.</p><p>✳ Answers and marking guidance unlock after submission.</p><p>✳ Progress is saved on this device, so a refresh won't restart your timer.</p></div>
         <button class="button button-dark" id="beginButton" type="button">Begin practice session</button></div>
-        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label">PROJECT RISK MANAGEMENT</span><div class="sheet-line"></div><h3>Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
+        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label">PROJECT MANAGEMENT</span><div class="sheet-line"></div><h3 id="introSheetTitle">Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note" id="introSheetSession">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
       </section>
     </div>
 
     <div id="examScreen" class="screen" hidden>
-      <div class="exam-bar"><div class="shell exam-bar-inner"><div class="exam-trail"><span class="exam-dot"></span><span>PRM / Chapter 11 / Session 01</span></div><div class="exam-clock-wrap"><span>Time remaining</span><strong id="examClock" class="exam-clock" aria-live="off">60:00</strong></div><button type="button" class="exam-exit" id="examExit">Leave session</button></div><div id="timeProgress" class="time-progress"></div></div>
+      <div class="exam-bar"><div class="shell exam-bar-inner"><div class="exam-clock-wrap"><span>Time left</span><strong id="examClock" class="exam-clock" aria-live="off">60:00</strong></div></div><div id="timeProgress" class="time-progress"></div></div>
       <div class="shell exam-layout">
         <aside class="question-sidebar"><div class="sidebar-sticky"><div class="sidebar-heading"><span>YOUR PAPER</span><strong id="answeredSummary">0 / 80 answered</strong></div><div class="sidebar-track"><div id="answeredBar"></div></div><div class="navigator-explain"><span><i class="legend-dot is-answered"></i>Answered</span><span><i class="legend-dot is-flagged"></i>Flagged</span></div><div id="questionNavigator" class="question-nav" aria-label="Choose a question"></div><p class="sidebar-small">Your answers are saved automatically on this device.</p></div></aside>
-        <section class="question-workspace"><div class="question-overline"><span id="questionSection">SECTION A · DEFINITIONS</span><button type="button" id="flagButton" class="flag-button">⚑ Flag for review</button></div><div class="question-card"><div class="question-meta"><span id="questionNumber">QUESTION 01 OF 80</span><span id="questionMarks">2 marks</span></div><h2 id="questionPrompt"></h2><div id="answerArea" class="answer-area"></div></div><div class="exam-controls"><button id="previousButton" class="button button-outline" type="button">Previous</button><span class="exam-control-note">One question at a time. You're doing fine.</span><button id="nextButton" class="button button-dark" type="button">Next question</button></div><div class="submit-panel"><div><strong>Finished all 80 questions?</strong><p>Submit to unlock your memorandum and review.</p></div><button id="submitExam" class="button button-soft" type="button">Submit paper</button></div></section>
+        <section class="question-workspace"><div class="question-overline"><span id="questionSection">SECTION A · DEFINITIONS</span><button type="button" id="flagButton" class="flag-button">⚑ Flag for review</button></div><div class="question-card"><div class="question-meta"><span id="questionNumber">QUESTION 01 OF 80</span><span id="questionMarks">2 marks</span></div><h2 id="questionPrompt"></h2><div id="answerArea" class="answer-area"></div></div><div class="exam-controls"><button id="previousButton" class="button button-outline" type="button">Previous</button><button type="button" class="exam-exit" id="examExit">Leave &amp; save</button><button id="nextButton" class="button button-dark" type="button">Next question</button></div><div class="submit-panel"><div><strong>Ready to submit?</strong><p>Unanswered questions count as zero. Answers unlock after submission.</p></div><button id="submitExam" class="button button-soft" type="button">Submit paper</button></div></section>
       </div>
     </div>
 

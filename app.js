@@ -1,32 +1,48 @@
 "use strict";
 (() => {
-  const DATA = window.EXAM_DATA;
+  let DATA = window.EXAM_DATA;
   if (!DATA || !Array.isArray(DATA.questions) || DATA.questions.length !== 80) {
     document.body.innerHTML = '<main style="font:16px system-ui;padding:4rem">The practice questions could not load. Please refresh the page.</main>';
     return;
   }
 
-  const MODULES = [
-    {id:"prm",name:"Project Management",active:true},
-    {id:"adp",name:"ADP",active:false},
-    {id:"adt",name:"ADT",active:false},
-    {id:"its",name:"ITS",active:false}
+  const MODULES=[
+    {id:"adp",name:"ADP",date:"Wed 18 Nov"},
+    {id:"its",name:"ITS",date:"Thu 19 Nov"},
+    {id:"prm",name:"Project Management",date:"Fri 20 Nov",active:true},
+    {id:"adt",name:"ADT",date:"Tue 24 Nov"}
   ];
-  const CHAPTERS = [
+  const CHAPTERS=[
     {n:9,title:"Chapter 09"},
-    {n:11,title:"Project Uncertainty Planning",ready:true},
-    {n:12,title:"Project Quality Planning & Kickoff"},
+    {n:11,title:"Project Uncertainty Planning",sessions:[1,2,3]},
+    {n:12,title:"Project Quality Planning & Kickoff",sessions:[1,2,3]},
     {n:14,title:"Determining Project Progress and Results"},
     {n:15,title:"Chapter 15"}
   ];
-    const STORAGE = "paperroom:prm:ch11:s1:v1";
-  const HISTORY_STORAGE = "paperroom:history:prm:ch11:s1:v1";
+  const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
+  const PAPER_KEYS=["11-1","11-2","11-3","12-1","12-2","12-3"];
+  const storageFor=key=>{const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  let paperKey="11-1";
+  let STORAGE=storageFor(paperKey);
+  let HISTORY_STORAGE=historyFor(paperKey);
+  
   const $ = (sel) => document.querySelector(sel);
   const esc = (str) => String(str == null ? "" : str).replace(/[&<>"']/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[s]);
   const canon = (str) => String(str || "").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
   const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
+  const sessionHash=(key,kind="practice")=>{const [ch,s]=key.split("-");return `#/${kind}/prm/ch${ch}/s${s}`;};
+  function selectPaper(ch,s) {
+    const key=String(ch)+"-"+String(s);
+    if(!PAPERBANK[key])return false;
+    if(key!==paperKey){
+      paperKey=key;DATA=PAPERBANK[key];STORAGE=storageFor(key);HISTORY_STORAGE=historyFor(key);
+      viewingHistoryId=null;current=1;filter="all";attempt=readAttempt();
+    }
+    return true;
+  }
   const section = (q) => q.kind.toUpperCase();
   let viewingHistoryId = null;
   let current = 1;
@@ -42,12 +58,21 @@
     } catch (_err) { /* Private or unavailable storage; session remains usable. */ }
     return null;
   }
-  function readHistory() {
+  function readHistoryFor(key) {
     try {
-      const value = JSON.parse(localStorage.getItem(HISTORY_STORAGE) || "[]");
-      return Array.isArray(value) ? value.filter(a => a && a.startedAt && a.submittedAt && a.answers && a.reviews) : [];
-    } catch (_) { return []; }
+      const value=JSON.parse(localStorage.getItem(historyFor(key)) || "[]");
+      return Array.isArray(value)?value.filter(a=>a?.startedAt&&a?.submittedAt&&a?.answers&&a?.reviews):[];
+    }catch(_e){return [];}
   }
+  function readHistory(){return readHistoryFor(paperKey);}
+  function allHistory(){return PAPER_KEYS.flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
+  function readAttemptFor(key) {
+    try {
+      const a=JSON.parse(localStorage.getItem(storageFor(key)) || "null");
+      return a&&a.version===1&&a.startedAt&&a.endsAt&&a.answers&&a.reviews?a:null;
+    }catch(_e){return null;}
+  }
+  
   function archiveAttempt(item) {
     if (!item?.submittedAt) return;
     try {
@@ -80,52 +105,76 @@
     });
     $("#siteHeader").hidden = name === "exam";
     document.querySelector(".site-footer").hidden = name === "exam";
+    document.body.classList.toggle("exam-mode",name==="exam");
     window.scrollTo({ top: 0, behavior: "instant" });
   }
-  function renderModules() {
-    $("#modulesGrid").innerHTML = MODULES.map(m =>
-      '<a class="module-card ' + (m.active ? 'active' : '') + '" href="#/module/' + m.id + '">' +
-      '<div class="module-card-top"><span class="module-abbr">' + m.id.toUpperCase() + '</span><span class="module-card-flower">✳</span></div>' +
-      '<h3>' + esc(m.name) + '</h3><p>' + (m.active ? '5 chapters · first session ready' : 'Practice papers coming soon') + '</p>' +
-      '<span class="module-status ' + (m.active ? '' : 'soon') + '"><i class="status-dot"></i>' + (m.active ? 'Open library' : 'Coming soon') + '</span></a>'
-    ).join("");
+  function renderModules(){
+    $("#modulesGrid").innerHTML=MODULES.map(m=>`
+      <a class="module-card ${m.active?"active":""}" href="#/module/${m.id}">
+        <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
+        <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
+        <span class="module-exam-time">14:00 tentative · check your timetable</span>
+        <span class="module-status ${m.active?"":"soon"}"><i class="status-dot"></i>${m.active?"6 live practice sessions":"Sessions coming soon"}</span>
+      </a>`).join("");
   }
-  function renderModule(id) {
+  function renderModule(id){
     const m=MODULES.find(x=>x.id===id);
-    if(!m) {location.hash="#/home#modules";return;}
+    if(!m){location.hash="#/home#modules";return;}
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
-    const ongoing=Boolean(attempt&&!attempt.submittedAt&&remaining()>0);
-    const chips=CHAPTERS.map(c=>
-      '<article class="chapter-tile '+(c.ready?'is-live':'')+'"><div class="chapter-tile-top"><span class="chapter-index">'+String(c.n).padStart(2,'0')+'</span>' +
-      '<span class="chapter-badge '+(c.ready?'is-ready':'')+'">'+(c.ready?'Ready to practise':'Coming soon')+'</span></div>' +
-      '<div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER '+c.n+'</span><h3>'+esc(c.title)+'</h3><p>'+(c.ready?'80 questions · 224 marks · 60 minutes':'Practice sessions in preparation')+'</p></div>' +
-      (c.ready ? '<a class="chapter-tile-action" href="#/practice/prm/ch11/s1">'+(ongoing?'Continue session':attempt?.submittedAt?'Review latest session':'Begin practice')+'</a>' :
-        '<span class="chapter-tile-action muted">Not published yet</span>') + '</article>'
-    ).join("");
-    const history=readHistory();
-    const records=history.slice(0,8).map(item=>{
-      const stats=scoreStats(item),wrong=DATA.questions.filter(q=>{const g=grade(q,item);return g.marked&&g.score<q.marks;}).length;
-      const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
-      return '<a class="history-row" href="#/results/prm/ch11/s1/'+item.startedAt+'"><span class="history-icon">✓</span><span class="history-name"><strong>Chapter 11 · Session 01</strong><small>'+date+(item.timedOut?' · Timed out':' · Submitted')+'</small></span><span class="history-score"><strong>'+stats.score+'/'+DATA.totalMarks+'</strong><small>'+wrong+' to revisit'+(stats.pending?' · '+stats.pending+' marks pending':'')+'</small></span><span class="history-link">Review</span></a>';
+    const notesBase="https://github.com/leeroy-chakanyuka/atomic-commits/tree/main/notes/";
+    const tiles=CHAPTERS.map(c=>{
+      const ready=Boolean(c.sessions?.length);
+      const folder=notesBase+"PRM/chapter-"+String(c.n).padStart(2,"0");
+      const links=(c.sessions||[]).map(n=>{
+        const key=c.n+"-"+n,prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+        return `<a class="chapter-tile-action" href="${sessionHash(key)}">Session ${String(n).padStart(2,"0")}${active?" · Resume":""}</a>`;
+      }).join("");
+      return `<article class="chapter-tile ${ready?"is-live":""}">
+        <div class="chapter-tile-top"><span class="chapter-index">${String(c.n).padStart(2,"0")}</span><span class="chapter-badge ${ready?"is-ready":""}">${ready?c.sessions.length+" sessions":"Coming soon"}</span></div>
+        <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3><p>${ready?"80 questions each · 60 minutes":"Practice questions in preparation"}</p></div>
+        <div class="chapter-actions">${links||'<span class="chapter-tile-action muted">Sessions coming soon</span>'}
+          <a class="chapter-notes-link" href="${folder}" target="_blank" rel="noopener noreferrer">Notes folder</a>
+        </div>
+      </article>`;
     }).join("");
-    $("#moduleContent").innerHTML = '<div class="module-compact-head"><div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>'+m.id.toUpperCase()+'</strong></div>' +
-      '<div class="module-title-line"><div><span class="section-kicker">EXAM PRACTICE LIBRARY</span><h1>'+esc(m.name)+'<span class="title-period">.</span></h1><p>' +
-      (m.active?'Five chapters to master, one focused hour at a time.':'This module is reserved for your upcoming practice papers.') +
-      '</p></div><div class="module-summary-chip"><strong>'+(m.active?'05':'00')+'</strong><small>'+(m.active?'chapters':'sessions')+'</small></div></div></div>' +
-      (m.active ? '<div class="library-heading"><div><span class="section-kicker">YOUR CHAPTERS</span><h2>Choose your focus.</h2></div><small>1 ready · 4 coming soon</small></div>' +
-        '<div class="chapter-tiles">'+chips+'</div><section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>' +
-        (ongoing?'<a class="resume-banner" href="#/practice/prm/ch11/s1"><strong>Continue your current session</strong><span>'+numberAnswered()+'/80 answered · '+mins(remaining())+' remaining</span></a>':'') +
-        (history.length?'<div class="history-list">'+records+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Tomorrow you can return to see every answer, mark and mistake.</p></div></div>') +
-        '<p class="storage-note">Stored in your browser, not synced between devices. Clearing site data erases local history.</p></section>' :
-        '<div class="module-placeholder"><span>✳</span><h2>More sessions are on the way.</h2><p>Your exam module has a place here. Question papers will appear once ready.</p></div>');
+    const history=allHistory();
+    const records=history.slice(0,25).map(({key,item})=>{
+      const paper=PAPERBANK[key],stats=scoreStats(item,paper);
+      const wrong=paper.questions.filter(q=>{const g=grade(q,item);return g.marked&&g.score<q.marks}).length;
+      const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+      return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
+        <span class="history-icon">✓</span><span class="history-name"><strong>Chapter ${paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+        <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${wrong} to revisit${stats.pending?" · "+stats.pending+" marks pending":""}</small></span><span class="history-link">Review</span>
+      </a>`;
+    }).join("");
+    const running=PAPER_KEYS.map(key=>({key,item:readAttemptFor(key)})).filter(x=>x.item&&!x.item.submittedAt&&x.item.endsAt>Date.now());
+    $("#moduleContent").innerHTML=`<div class="module-compact-head"><div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
+      <div class="module-title-line"><div><span class="section-kicker">EXAM PRACTICE LIBRARY</span><h1>${esc(m.name)}<span class="title-period">.</span></h1><p>${m.active?"Five chapters, six live sessions, one focused hour each.":"Practice papers coming soon."}</p></div>
+      <div class="module-summary-chip"><strong>${m.active?"06":"00"}</strong><small>sessions</small></div></div></div>
+      ${m.active?`<div class="library-heading"><div><span class="section-kicker">YOUR CHAPTERS</span><h2>Choose your focus.</h2></div><small>6 ready · more soon</small></div>
+        <div class="chapter-tiles">${tiles}</div>
+        <section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
+        <div class="combined-sessions">${Array.from({length:6},(_,i)=>`<span class="combined-slot">Session ${String(i+1).padStart(2,"0")} · Soon</span>`).join("")}</div></section>
+        <section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
+          ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume Chapter ${PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+          ${records?'<div class="history-list">'+records+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
+          <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p>
+        </section>`
+        :`<div class="module-placeholder"><span>✳</span><h2>More sessions are on the way.</h2><p>Find your study files in the module notes folder.</p>
+          <a class="chapter-tile-action" href="${notesBase+m.id.toUpperCase()}" target="_blank" rel="noopener noreferrer">Open ${m.id.toUpperCase()} notes</a></div>`}
+    `;
   }
-    function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
+  
+  function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
     if (!attempt) return false;
     const a = answer(q.id);
     if (q.kind === "Multiple choice") return Boolean(a.choice);
-    if (q.kind === "Fill in the blanks") return Boolean(a.blank1?.trim() && a.blank2?.trim());
+    if (q.kind === "Fill in the blanks") {
+      const n=q.blanks || q.accepted?.length || 2;
+      return Array.from({length:n},(_,i)=>Boolean(a["blank"+(i+1)]?.trim())).every(Boolean);
+    }
     if (q.kind === "True or false") return Boolean(a.truth && (a.truth === "true" || a.correction?.trim()));
     return Boolean(a.text?.trim());
   }
@@ -136,12 +185,12 @@
   function startSession() {
     viewingHistoryId=null;attempt=readAttempt();
     if (attempt && !attempt.submittedAt) {
-      location.hash = "#/practice/prm/ch11/s1";
+      location.hash = sessionHash(paperKey);
       return;
     }
     attempt = { version:1, startedAt:Date.now(), endsAt:Date.now() + 3600 * 1000, submittedAt:null, timedOut:false, answers:{}, flags:[], reviews:{} };
     current = 1; filter = "all"; save();
-    location.hash = "#/practice/prm/ch11/s1";
+    location.hash = sessionHash(paperKey);
     route();
   }
   function completeSession(timedOut = false) {
@@ -149,7 +198,7 @@
     attempt.submittedAt = Date.now();
     attempt.timedOut = timedOut;
     save();
-    location.hash = "#/results/prm/ch11/s1";
+    location.hash = sessionHash(paperKey,"results");
     route();
     if (timedOut) notify("Time is up. Your saved answers have been submitted for review.");
   }
@@ -178,12 +227,14 @@
       }).join("")}</div>`;
     }
     if (q.kind === "Fill in the blanks") {
-      return `<span class="answer-label">Complete both missing terms</span><div class="blanks">
-        <div><label class="answer-label" for="blank1">Blank 1</label><input id="blank1" class="answer-input" data-field="blank1" autocomplete="off" placeholder="First missing term" value="${esc(a.blank1 || "")}"></div>
-        <div><label class="answer-label" for="blank2">Blank 2</label><input id="blank2" class="answer-input" data-field="blank2" autocomplete="off" placeholder="Second missing term" value="${esc(a.blank2 || "")}"></div>
-      </div><p class="answer-hint">Answer in the order the blanks appear.</p>`;
+      const n=q.blanks || q.accepted?.length || 2;
+      return `<span class="answer-label">Complete ${n===1?"the missing term":"the missing terms"}</span>
+        <div class="blanks">${Array.from({length:n},(_,i)=>`<div><label class="answer-label" for="blank${i+1}">Blank ${i+1}</label>
+          <input id="blank${i+1}" class="answer-input" data-field="blank${i+1}" autocomplete="off" placeholder="Missing term" value="${esc(a["blank"+(i+1)] || "")}"></div>`).join("")}
+        </div><p class="answer-hint">Answer in the order the blanks appear.</p>`;
     }
-    if (q.kind === "True or false") {
+    
+  if (q.kind === "True or false") {
       return `<span class="answer-label">Choose an answer</span><div class="choice-list">
       <label class="choice-item"><input type="radio" name="truth" data-field="truth" value="true" ${a.truth==="true"?"checked":""}><span>True</span></label>
       <label class="choice-item"><input type="radio" name="truth" data-field="truth" value="false" ${a.truth==="false"?"checked":""}><span>False</span></label>
@@ -239,13 +290,11 @@
   }
   function submitAttempt() {
     if (!attempt || attempt.submittedAt) return;
-    const remainingQuestions = DATA.questions.filter(q => !isAnswered(q));
-    if (remainingQuestions.length) {
-      notify("Answer all questions first. " + remainingQuestions.length + " still need an answer.");
-      showQuestion(remainingQuestions[0].id, true);
-      return;
-    }
-    if (confirm("Submit all 80 questions now? You won't be able to change your answers after submission.")) completeSession(false);
+    const incomplete=DATA.questions.filter(q=>!isAnswered(q)).length;
+    const message=incomplete
+      ? `Submit with ${incomplete} unanswered or incomplete question(s)? Unanswered parts receive zero, and you cannot change answers after submitting.`
+      : "Submit this paper now? You cannot change answers after submitting.";
+    if(confirm(message))completeSession(false);
   }
   function accepted(value, options) { return options.some(o => canon(o) === canon(value)); }
 
@@ -253,7 +302,12 @@
     const a = answer(q.id,source);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? 1 : 0, pending:0, objective:true };
     if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
-    if (q.kind === "Fill in the blanks") return { score: (a.blank1 && accepted(a.blank1,q.accepted?.[0] || []) ? 1:0) + (a.blank2 && accepted(a.blank2,q.accepted?.[1] || []) ? 1:0), pending:0, objective:true };
+    if (q.kind === "Fill in the blanks") {
+      const n=q.blanks || q.accepted?.length || 2;
+      const correct=Array.from({length:n},(_,i)=>accepted(a["blank"+(i+1)] || "",q.accepted?.[i] || [])?1:0)
+        .reduce((x,y)=>x+y,0);
+      return {score:Math.min(q.marks,correct * q.marks/n),pending:0,objective:true};
+    }
     if (q.kind === "True or false") {
       if (!a.truth) return { score:0,pending:0,objective:true };
       if (a.truth !== q.correct) return { score:0,pending:0,objective:true };
@@ -271,8 +325,8 @@
     const score = base.score + (marked ? Number(assigned || 0) : 0);
     return { ...base,score,marked };
   }
-  function scoreStats(source=attempt) {
-    const values=DATA.questions.map(q=>grade(q,source));
+  function scoreStats(source=attempt,paper=DATA) {
+    const values=paper.questions.map(q=>grade(q,source));
     return {
       score:values.reduce((n,g)=>n+g.score,0),
       pending:values.reduce((n,g)=>n+(g.marked ? 0 : g.pending),0),
@@ -282,7 +336,7 @@
   function displayAnswer(q) {
     const a=answer(q.id);
     if (q.kind==="Multiple choice") return a.choice ? a.choice + ". " + q.options["ABCD".indexOf(a.choice)] : "No answer";
-    if (q.kind==="Fill in the blanks") return "1. " + (a.blank1||"—") + "\n2. " + (a.blank2||"—");
+    if (q.kind==="Fill in the blanks") return Array.from({length:q.blanks || q.accepted?.length || 2},(_,i)=>(i+1)+". "+(a["blank"+(i+1)]||"—")).join("\n");
     if (q.kind==="True or false") return (a.truth||"Not answered").toUpperCase() + (a.correction?.trim() ? "\n\n" + a.correction : "");
     return a.text || "No answer submitted";
   }
@@ -330,32 +384,48 @@
     updateResultsMeta();
     renderReviews();
   }
+  function renderIntro() {
+    show("intro");
+    $("#introKicker").textContent="CHAPTER "+DATA.chapter+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
+    $("#introDescription").textContent=DATA.title+". Eighty exam-style questions, one focused hour, and room to think.";
+    $("#introTotalMarks").textContent=String(DATA.totalMarks);
+    $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.chapter===12?"Quality.":"Uncertainty.")+"</em>";
+    $("#introSheetSession").textContent="Practice session "+String(DATA.session).padStart(2,"0");
+    $("#beginButton").textContent="Begin practice session";
+  }
   function route() {
     const path=location.hash || "#/home";
-    if (path.startsWith("#/results/")) {
-      const previous=path.split("/")[5];
-      if(previous){const old=readHistory().find(x=>String(x.startedAt)===previous);if(old){attempt=old;viewingHistoryId=previous;}}
-      else {viewingHistoryId=null;attempt=readAttempt();}
-      if(attempt?.submittedAt){renderResults();return;}
-      location.hash = "#/practice/prm/ch11/s1";return;
+    const routeMatch=path.match(/^#\/(practice|results)\/prm\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
+    if(routeMatch) {
+      const [,kind,ch,session,savedId]=routeMatch;
+      if(!selectPaper(ch,session)){location.hash="#/module/prm";return;}
+      if(kind==="results"){
+        if(savedId){
+          const historical=readHistory().find(item=>String(item.startedAt)===savedId);
+          if(historical){attempt=historical;viewingHistoryId=savedId;}
+          else{location.hash="#/module/prm";return;}
+        }else{
+          viewingHistoryId=null;attempt=readAttempt();
+        }
+        if(attempt?.submittedAt){renderResults();return;}
+        location.hash=sessionHash(paperKey);return;
+      }
+      if(viewingHistoryId){viewingHistoryId=null;attempt=readAttempt();}
+      if(attempt && !attempt.submittedAt && remaining()<=0){completeSession(true);return;}
+      if(attempt && !attempt.submittedAt){renderExam();return;}
+      renderIntro();return;
     }
-    if(path.startsWith("#/practice/")) {
-      if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
-      if(attempt && !attempt.submittedAt && remaining()<=0)completeSession(true);
-      else if(attempt?.submittedAt)location.hash="#/results/prm/ch11/s1";
-      else if(attempt)renderExam();
-      else {show("intro");$("#beginButton").textContent="Begin practice session";}
-      return;
-    }
-    if(path.startsWith("#/module/")) {
-      const id=path.split("/")[2] || "prm";renderModule(id);return;
+    if(path.startsWith("#/module/")){
+      const id=path.split("/")[2] || "prm";
+      if(viewingHistoryId){viewingHistoryId=null;attempt=readAttempt();}
+      renderModule(id);return;
     }
     show("home");
     if(path.includes("#modules"))requestAnimationFrame(()=>$("#modules").scrollIntoView({behavior:"smooth",block:"start"}));
     if(path.includes("#how-it-works"))requestAnimationFrame(()=>$("#how-it-works").scrollIntoView({behavior:"smooth",block:"start"}));
   }
 
-  // Events
+    // Events
   $("#beginButton").addEventListener("click",startSession);
   $("#previousButton").addEventListener("click",()=>showQuestion(current-1,true));
   $("#nextButton").addEventListener("click",()=> {
@@ -383,7 +453,7 @@
   $("#restartExam").addEventListener("click",()=>{
     if(confirm("Start a new attempt? Your current answers and review marks will be replaced.")){
       attempt=null;try{localStorage.removeItem(STORAGE)}catch(_err){}
-      location.hash="#/practice/prm/ch11/s1";
+      location.hash=sessionHash(paperKey);
       route();
     }
   });
@@ -404,7 +474,7 @@
     if(filter!=="all")renderReviews();
   });
   window.addEventListener("hashchange",route);
-  window.addEventListener("storage",(e)=>{if(e.key===STORAGE){attempt=readAttempt();route();}});
+  window.addEventListener("storage",(e)=>{if(e.key===STORAGE || e.key===HISTORY_STORAGE){attempt=readAttempt();route();}});
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)tick()});
   if(attempt?.submittedAt)archiveAttempt(attempt);
   renderModules();
