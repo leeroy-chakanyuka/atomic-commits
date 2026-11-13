@@ -8,12 +8,12 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 |---|---|---|
 | ADP | 18 November 2026 | Coming soon |
 | ITS | 19 November 2026 | Coming soon |
-| PRM (Project Management) | 20 November 2026 | **Six sessions live** |
+| PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
 
-The website shows **14:00 as a provisional sitting time**. Confirm the actual times against the institution's final examination timetable.
+ADP and ITS exams are **confirmed by the student at 14:00**. PRM and ADT show 14:00 as provisional pending confirmation on the final institutional timetable.
 
-For PRM, Chapter 11 and Chapter 12 each have **three playable 80-question practice sessions**, now presented as expandable chapter folders with **downloadable question-only PDF versions**. Chapters 9, 14 and 15 are prepared as chapter tiles, and six combined revision papers have clearly labelled *coming soon* slots. No separate question-paper PDFs are published.
+For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-question practice sessions** (15 total). Each chapter has its own expandable session folder with downloadable question-only PDF versions, a 60-minute limit, mark allocations, self-marking for written answers, and a local attempt archive. Six combined revision papers remain labelled *coming soon*. No separate question-paper PDFs are published.
 
 ### Exam workflow
 - Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
@@ -43,7 +43,7 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `styles.css`: calm paper-and-sage responsive design
 - `app.js`: exam engine, timer, local state, marking and review
 - `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
-- `papers/prm/*.js`: additional Chapter 11/12 exam question datasets
+- `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
 - `notes/`: user-uploaded study content folders
 
 This site is plain HTML/CSS/JS, deployable directly from the repo root with GitHub Pages.
@@ -59,3 +59,7 @@ Until ADP notes are supplied, its module page links to the user's preferred Java
 - [Spring Security in Action, Second Edition](https://www.manning.com/books/spring-security-in-action-second-edition) by Laurențiu Spilcă
 
 These are external reading recommendations, not reproductions of the textbook or substitute lecturer notes. ADP and ITS exam start times (14:00) are confirmed by the user; other modules' times remain provisional.
+
+## Chapter 15 papers
+
+Chapter 15 focuses on *Finishing the Project and Realizing the Benefits* (formal acceptance, early termination, transition, knowledge management, closeout, staff reassignment, ongoing support, Agile validation and benefits realisation). Three new original 80-question papers, each worth **222 marks**, and a separate memorandum are available in the student's PRM Google Drive workspace. The public site contains **questions only** until submission, with immediate objective checking and guided written-answer review; it never exposes private Drive URLs.
