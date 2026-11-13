@@ -7,8 +7,8 @@
   }
 
   const MODULES=[
-    {id:"adp",name:"ADP",date:"Wed 18 Nov"},
-    {id:"its",name:"ITS",date:"Thu 19 Nov"},
+    {id:"adp",name:"ADP",date:"Wed 18 Nov",confirmed:true},
+    {id:"its",name:"ITS",date:"Thu 19 Nov",confirmed:true},
     {id:"prm",name:"Project Management",date:"Fri 20 Nov",active:true},
     {id:"adt",name:"ADT",date:"Tue 24 Nov"}
   ];
@@ -21,6 +21,7 @@
   ];
   const NOTE_FILES={"PRM":[{"chapter":9,"title":"Chapter 09","description":"Review Chapter 9 terminology, processes and worked examples.","file":"CPM5e_PPT_Chapter09 - Tagged.pdf"},{"chapter":11,"title":"Project Uncertainty Planning","description":"Identify, analyse and respond to risks, including Agile uncertainty.","file":"CPM5e_PPT_Chapter11 - Tagged.pdf"},{"chapter":12,"title":"Project Quality Planning and Kickoff","description":"Quality assurance, control, cost of quality and project kickoff.","file":"CPM5e_PPT_Chapter12 - Tagged.pdf"},{"chapter":14,"title":"Determining Project Progress and Results","description":"Monitor progress, handle change and calculate earned value.","file":"CPM5e_PPT_Chapter14 - Tagged.pdf"},{"chapter":15,"title":"Chapter 15","description":"Review the final chapter's project-management concepts and examples.","file":"CPM5e_PPT_Chapter15 - Tagged.pdf"}],"ITS":[{"chapter":8,"title":"Information Systems · Chapter 8","description":"Review this chapter's explanations, diagrams and key terms.","file":"Chapter-8.pdf"},{"chapter":9,"title":"Information Systems · Chapter 9","description":"Read the Chapter 9 concepts and worked examples.","file":"Chapter-9.pdf"},{"chapter":10,"title":"Information Systems · Chapter 10","description":"Review the important ideas and examples in Chapter 10.","file":"Chapter-10(1).pdf"},{"chapter":11,"title":"Information Systems · Chapter 11","description":"Study the definitions and material in Chapter 11.","file":"Chapter-11(1).pdf"},{"chapter":12,"title":"Information Systems · Chapter 12","description":"Revise the concepts and worked examples in Chapter 12.","file":"Chapter-12(1).pdf"}],"ADT":[{"chapter":9,"title":"Software Evolution","description":"How software changes, is maintained and adapts over time.","file":"Ch9 Evolution - Tagged (1).pdf"},{"chapter":10,"title":"Dependable Systems","description":"Dependability, reliability, availability, safety and security.","file":"Ch10 Dependable systems - Tagged.pdf"},{"chapter":11,"title":"Reliability Engineering","description":"Engineering dependable software and understanding failures.","file":"Ch11 Reliability Engineering - Tagged.pdf"},{"chapter":12,"title":"Safety Engineering","description":"Safety requirements, hazards and risk reduction.","file":"Ch12 Safety engineering - Tagged.pdf"},{"chapter":13,"title":"Security Engineering","description":"Security threats, vulnerabilities and controls.","file":"Ch13 Security engineering - Tagged.pdf"},{"chapter":14,"title":"Resilience Engineering","description":"How systems withstand disruption and recover from failure.","file":"Ch14 Resilience engineering - Tagged.pdf"},{"chapter":19,"title":"Systems Engineering","description":"Whole-system design, integration and lifecycle concerns.","file":"Ch19 Systems engineering - Tagged.pdf"}],"ADP":[]};
   const repoNoteUrl=(module,file)=>"https://github.com/leeroy-chakanyuka/atomic-commits/blob/main/notes/"+module+"/"+encodeURIComponent(file);
+  const repoNoteDownloadUrl=(module,file)=>"https://raw.githubusercontent.com/leeroy-chakanyuka/atomic-commits/main/notes/"+module+"/"+encodeURIComponent(file);
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["11-1","11-2","11-3","12-1","12-2","12-3"];
   const storageFor=key=>{const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
@@ -115,7 +116,7 @@
       <a class="module-card ${m.active?"active":""}" href="#/module/${m.id}">
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
-        <span class="module-exam-time">14:00 tentative · check your timetable</span>
+        <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
         <span class="module-status ${m.active?"":"soon"}"><i class="status-dot"></i>${m.active?"6 live practice sessions":"Sessions coming soon"}</span>
       </a>`).join("");
   }
@@ -132,13 +133,23 @@
       const noteLink=note?repoNoteUrl("PRM",note.file):null;
       const links=(c.sessions||[]).map(n=>{
         const key=c.n+"-"+n,prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
-        return `<a class="chapter-tile-action" href="${sessionHash(key)}">Session ${String(n).padStart(2,"0")}${active?" · Resume":""}</a>`;
+        return `<div class="session-file">
+          <div class="session-file-info"><span class="session-file-title">Practice session ${String(n).padStart(2,"0")}</span>
+            <small>80 questions · 1 hour · ${PAPERBANK[key].totalMarks} marks</small></div>
+          <div class="session-file-actions"><a class="session-start-link" href="${sessionHash(key)}">${active?"Resume":"Start"}</a>
+            <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download Chapter ${c.n} session ${n} as PDF">PDF</button></div>
+        </div>`;
       }).join("");
       return `<article class="chapter-tile ${ready?"is-live":""}">
         <div class="chapter-tile-top"><span class="chapter-index">${String(c.n).padStart(2,"0")}</span><span class="chapter-badge ${ready?"is-ready":""}">${ready?c.sessions.length+" sessions":"Coming soon"}</span></div>
         <div class="chapter-tile-body"><span class="tile-eyebrow">CHAPTER ${c.n}</span><h3>${esc(c.title)}</h3><p>${note?esc(note.description):"Read the chapter notes."}</p><p class="chapter-availability">${ready?"80 questions each · 60 minutes":"Practice questions in preparation"}</p></div>
-        <div class="chapter-actions">${links||'<span class="chapter-tile-action muted">Sessions coming soon</span>'}
-          ${noteLink?`<a class="chapter-notes-link" href="${noteLink}" target="_blank" rel="noopener noreferrer">Read chapter notes</a>`:"<span class=\"chapter-notes-link muted\">Notes coming soon</span>"}
+        <div class="chapter-actions">
+          ${c.sessions?.length?`<details class="chapter-folder"><summary><span class="chapter-folder-icon" aria-hidden="true"></span>Practice sessions <small>(${c.sessions.length})</small></summary>
+            <div class="chapter-folder-contents">${links}</div></details>`
+            :'<div class="chapter-coming-soon">Practice sessions coming soon</div>'}
+          ${noteLink?`<div class="note-actions"><a class="chapter-notes-link" href="${noteLink}" target="_blank" rel="noopener noreferrer">Read notes</a>
+            <a class="note-download-link" href="${repoNoteDownloadUrl("PRM",note.file)}" target="_blank" rel="noopener noreferrer">Download notes</a></div>`:
+            "<span class=\"chapter-notes-link muted\">Notes coming soon</span>"}
         </div>
       </article>`;
     }).join("");
@@ -171,9 +182,13 @@
         <article class="note-card">
           <div class="note-card-heading"><span class="note-chapter">CHAPTER ${String(n.chapter).padStart(2,"0")}</span><span class="note-filetype">PDF</span></div>
           <h3>${esc(n.title)}</h3><p>${esc(n.description)}</p>
-          <a class="note-read-link" href="${repoNoteUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Read notes</a>
+          <div class="note-card-actions"><a class="note-read-link" href="${repoNoteUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Read notes</a>
+          <a class="note-download-link" href="${repoNoteDownloadUrl(m.id.toUpperCase(),n.file)}" target="_blank" rel="noopener noreferrer">Download PDF</a></div>
         </article>`).join("")}</div>`:
-        `<div class="module-placeholder"><span>✳</span><h2>No notes uploaded yet.</h2><p>Study notes for this module will appear here when they're added.</p></div>`}
+        `<div class="module-placeholder"><span>✳</span><h2>Notes aren't uploaded yet.</h2><p>Here are two Java and Spring Security resources you enjoy. They are reading recommendations, not exam notes.</p>
+          <div class="reading-recs"><a href="https://www.baeldung.com/security-spring" target="_blank" rel="noopener noreferrer"><strong>Baeldung · Security with Spring</strong><span>Practical guides to authentication, authorization, and OAuth.</span></a>
+            <a href="https://www.manning.com/books/spring-security-in-action-second-edition" target="_blank" rel="noopener noreferrer"><strong>Spring Security in Action · 2nd edition</strong><span>Laurențiu Spilcă's book on securing Spring applications.</span></a></div>
+        </div>`}
       </section>`}
     `;
   }
@@ -437,7 +452,17 @@
     if(path.includes("#how-it-works"))requestAnimationFrame(()=>$("#how-it-works").scrollIntoView({behavior:"smooth",block:"start"}));
   }
 
-    // Events
+    // Download blank PDF copies without exposing answer keys or private Drive files.
+  $("#moduleContent").addEventListener("click",event=>{
+    const button=event.target.closest("button[data-download-paper]");
+    if(!button)return;
+    const key=button.dataset.downloadPaper;
+    if(typeof window.PAPERROOM_DOWNLOAD_PDF==="function" && PAPERBANK[key])
+      window.PAPERROOM_DOWNLOAD_PDF(PAPERBANK[key]);
+    else notify("This paper cannot be downloaded right now.");
+  });
+
+  // Events
   $("#beginButton").addEventListener("click",startSession);
   $("#previousButton").addEventListener("click",()=>showQuestion(current-1,true));
   $("#nextButton").addEventListener("click",()=> {

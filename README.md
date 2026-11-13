@@ -13,7 +13,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 The website shows **14:00 as a provisional sitting time**. Confirm the actual times against the institution's final examination timetable.
 
-For PRM, Chapter 11 and Chapter 12 each have **three playable 80-question practice sessions**. Chapters 9, 14 and 15 are prepared as chapter tiles, and six combined revision papers have clearly labelled *coming soon* slots. No separate question-paper PDFs are published.
+For PRM, Chapter 11 and Chapter 12 each have **three playable 80-question practice sessions**, now presented as expandable chapter folders with **downloadable question-only PDF versions**. Chapters 9, 14 and 15 are prepared as chapter tiles, and six combined revision papers have clearly labelled *coming soon* slots. No separate question-paper PDFs are published.
 
 ### Exam workflow
 - Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
@@ -50,3 +50,12 @@ This site is plain HTML/CSS/JS, deployable directly from the repo root with GitH
 
 ## Later
 Gemini-assisted rubric-driven marking of free text is tracked in [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1). Any API keys must remain on a server; do not embed them in this public website.
+
+## Reading resources for ADP
+
+Until ADP notes are supplied, its module page links to the user's preferred Java/Spring resources:
+
+- [Baeldung · Security with Spring](https://www.baeldung.com/security-spring)
+- [Spring Security in Action, Second Edition](https://www.manning.com/books/spring-security-in-action-second-edition) by Laurențiu Spilcă
+
+These are external reading recommendations, not reproductions of the textbook or substitute lecturer notes. ADP and ITS exam start times (14:00) are confirmed by the user; other modules' times remain provisional.

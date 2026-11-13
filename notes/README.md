@@ -10,3 +10,7 @@ The study files are arranged by module, with individual PDFs linked directly fro
 These are **study notes**, not question papers. The working online PRM quizzes load their question datasets from `papers/prm/` and `exam-data.js`.
 
 If you rename a PDF, update the `NOTE_FILES` entries in `app.js` so the website's **Read notes** link stays valid.
+
+## ADP reading preferences
+
+For the eventual ADP module, prefer practical Java and Spring material from Baeldung, especially its Spring Security guides, and refer readers to the official listing of *Spring Security in Action* (Second Edition). This is a **link-only** reading recommendation; do not copy the book into the repository. The ADP notes folder is currently empty.
