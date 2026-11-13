@@ -336,3 +336,13 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
 .its-one-chapter .chapter-tile{min-height:260px;}
 .its-one-chapter .chapter-tile-body p{max-width:43ch;}
 @media(max-width:680px){.its-one-chapter{grid-template-columns:1fr}.question-snippet{font-size:10.5px;padding:12px}.code-answer{min-height:165px;font-size:12px;}}
+/* ITS practical assessment: tappable, accessible SQL matching controls. */
+.match-grid{display:grid;gap:12px}
+.match-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,44%);align-items:center;gap:18px;padding:13px 15px;background:#f5f8f1;border:1px solid #dce5d8;border-radius:11px;font-size:13px;line-height:1.5}
+.match-row b{color:#5e775a;margin-right:5px}
+.match-row select{appearance:auto;min-height:43px;width:100%;padding:9px 10px;border:1px solid #bfcfbb;border-radius:8px;background:#fffefa;color:#31462f;font:12px var(--sans)}
+.match-row select:focus{outline:2px solid #9cb596;outline-offset:2px}
+@media(max-width:680px){
+  .match-row{grid-template-columns:1fr;gap:7px;padding:10px 11px}
+  .match-row select{min-height:38px}
+}

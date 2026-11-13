@@ -25,8 +25,8 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=["its-8-1"];
-  const storageFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v1`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
-  const historyFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v1`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  const storageFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
   let STORAGE=storageFor(paperKey);
   let HISTORY_STORAGE=historyFor(paperKey);
@@ -203,7 +203,7 @@
     $("#moduleContent").innerHTML=`<div class="module-compact-head">
       <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
       <div class="module-title-line"><div><span class="section-kicker">${isPractice?"EXAM PRACTICE LIBRARY":"READING LIBRARY"}</span><h1>${esc(m.name)}<span class="title-period">.</span></h1>
-        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: practical SQL, a focused hour, and answer-by-answer review.":"Study notes and resources for this module."}</p></div>
+        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
       ${practiceSection}${combinedSection}${notesSection}${historySection}`;
@@ -213,9 +213,12 @@
     if (!attempt) return false;
     const a = answer(q.id);
     if (q.kind === "Multiple choice") return Boolean(a.choice);
-    if (q.kind === "Fill in the blanks") {
+    if (q.kind === "Fill in the blanks" || q.kind === "SQL completion") {
       const n=q.blanks || q.accepted?.length || 2;
       return Array.from({length:n},(_,i)=>Boolean(a["blank"+(i+1)]?.trim())).every(Boolean);
+    }
+    if (q.kind === "Matching") {
+      return (q.matchItems || []).every((_,i)=>Boolean(a["match"+(i+1)]));
     }
     if (q.kind === "True or false") return Boolean(a.truth && (a.truth === "true" || a.correction?.trim()));
     return Boolean(a.text?.trim());
@@ -268,9 +271,18 @@
         return `<label class="choice-item"><input type="radio" name="answer-choice" data-field="choice" value="${ch}" ${a.choice===ch ? "checked" : ""}><b>${ch}.</b><span>${esc(opt)}</span></label>`;
       }).join("")}</div>`;
     }
-    if (q.kind === "Fill in the blanks") {
+    if (q.kind === "Matching") {
+      return `<span class="answer-label">Match each item to the correct SQL expression or meaning</span>
+        <div class="match-grid">${q.matchItems.map((item,i)=>`
+          <label class="match-row"><span><b>${i+1}.</b> ${esc(item.text)}</span>
+            <select data-field="match${i+1}" aria-label="Match item ${i+1}">
+              <option value="">Choose an answer</option>
+              ${q.matchOptions.map(choice=>`<option value="${esc(choice.letter)}" ${a["match"+(i+1)]===choice.letter?"selected":""}>${esc(choice.letter)} · ${esc(choice.text)}</option>`).join("")}
+            </select></label>`).join("")}</div><p class="answer-hint">One mark for each correctly matched item.</p>`;
+    }
+    if (q.kind === "Fill in the blanks" || q.kind === "SQL completion") {
       const n=q.blanks || q.accepted?.length || 2;
-      return `<span class="answer-label">Complete ${n===1?"the missing term":"the missing terms"}</span>
+      return `<span class="answer-label">Complete ${n===1?"the missing SQL token or term":"the missing SQL tokens or terms"}</span>
         <div class="blanks">${Array.from({length:n},(_,i)=>`<div><label class="answer-label" for="blank${i+1}">Blank ${i+1}</label>
           <input id="blank${i+1}" class="answer-input" data-field="blank${i+1}" autocomplete="off" placeholder="Missing term" value="${esc(a["blank"+(i+1)] || "")}"></div>`).join("")}
         </div><p class="answer-hint">Answer in the order the blanks appear.</p>`;
@@ -285,7 +297,7 @@
     if (q.kind === "Identify the term") {
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
     }
-    const codeQuestion=["SQL writing","Debugging SQL"].includes(q.kind);
+    const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation"].includes(q.kind);
     return `<label class="answer-label" for="writtenAnswer">${codeQuestion?"Your SQL / reasoning":q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
       <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?"Write valid SQL and explain any corrections...":q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
       <p class="answer-hint">${q.marks} mark${q.marks!==1?"s":""} available. ${q.marks > 1 ? "Include enough distinct, relevant points to earn every mark." : "Keep it concise."}</p>`;
@@ -347,7 +359,12 @@
     const a = answer(q.id,source);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? 1 : 0, pending:0, objective:true };
     if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
-    if (q.kind === "Fill in the blanks") {
+    if (q.kind === "Matching") {
+      const pairs=q.matchItems||[];
+      const awarded=pairs.filter((item,i)=>a["match"+(i+1)]===item.correct).length;
+      return {score:awarded,pending:0,objective:true};
+    }
+    if (q.kind === "Fill in the blanks" || q.kind === "SQL completion") {
       const n=q.blanks || q.accepted?.length || 2;
       const correct=Array.from({length:n},(_,i)=>accepted(a["blank"+(i+1)] || "",q.accepted?.[i] || [])?1:0)
         .reduce((x,y)=>x+y,0);
@@ -381,7 +398,12 @@
   function displayAnswer(q) {
     const a=answer(q.id);
     if (q.kind==="Multiple choice") return a.choice ? a.choice + ". " + q.options["ABCD".indexOf(a.choice)] : "No answer";
-    if (q.kind==="Fill in the blanks") return Array.from({length:q.blanks || q.accepted?.length || 2},(_,i)=>(i+1)+". "+(a["blank"+(i+1)]||"—")).join("\n");
+    if (q.kind==="Fill in the blanks" || q.kind==="SQL completion") return Array.from({length:q.blanks || q.accepted?.length || 2},(_,i)=>(i+1)+". "+(a["blank"+(i+1)]||"—")).join("\n");
+    if(q.kind==="Matching") return (q.matchItems||[]).map((item,i)=>{
+      const letter=a["match"+(i+1)]||"—";
+      const option=(q.matchOptions||[]).find(o=>o.letter===letter);
+      return (i+1)+". "+letter+(option?" — "+option.text:"");
+    }).join("\n");
     if (q.kind==="True or false") return (a.truth||"Not answered").toUpperCase() + (a.correction?.trim() ? "\n\n" + a.correction : "");
     return a.text || "No answer submitted";
   }
@@ -435,7 +457,7 @@
   function renderIntro() {
     show("intro");
     $("#introKicker").textContent="CHAPTER "+DATA.chapter+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
-    $("#introDescription").textContent=DATA.title+". Eighty exam-style questions, one focused hour, and room to think.";
+    $("#introDescription").textContent=DATA.intro || (DATA.title+". Eighty exam-style questions, one focused hour, and room to think.");
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
     $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");

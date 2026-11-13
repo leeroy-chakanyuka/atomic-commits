@@ -40,7 +40,21 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
     need(Math.min(estimated,175));
     if(kind!==prev){y-=7;need(24);draw(kind,47,y,10,true);y-=21;prev=kind;}
     write(q.id+".  "+q.prompt+"  ["+q.marks+" marks]",10,true,92,14);
-    if(Array.isArray(q.options)) {
+    if(q.snippet){
+      y-=6;
+      for(const codeLine of String(q.snippet).split(/\r?\n/)){
+        need(17);
+        write("    "+(codeLine||" "),8,false,103,11);
+      }
+      y-=6;
+    }
+    if(q.kind==="Matching"){
+      for(let i=0;i<(q.matchItems||[]).length;i++)
+        write("  "+(i+1)+". "+q.matchItems[i].text+"  [___]",9,false,93,13);
+      for(const opt of q.matchOptions||[])
+        write("  "+opt.letter+". "+opt.text,9,false,93,13);
+      need(25);y-=8;draw("Your matches: 1.___   2.___   3.___",57,y,9);y-=22;
+    }else if(Array.isArray(q.options)) {
       for(let i=0;i<q.options.length;i++)write("   "+"ABCD"[i]+". "+q.options[i],9,false,91,12);
       need(22);draw("Answer: ______",57,y,9);y-=23;
     }else if(q.kind==="True or false") {

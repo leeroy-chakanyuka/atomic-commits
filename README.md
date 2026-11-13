@@ -64,12 +64,25 @@ These are external reading recommendations, not reproductions of the textbook or
 
 Chapter 15 focuses on *Finishing the Project and Realizing the Benefits* (formal acceptance, early termination, transition, knowledge management, closeout, staff reassignment, ongoing support, Agile validation and benefits realisation). Three original 80-question papers, each worth **222 marks**, are playable on the website. The site contains **questions only** until submission, with immediate objective checking and guided written-answer review.
 
-## ITS Chapter 8 pilot
+## ITS Chapter 8 — Practical SQL pilot (revised)
 
-The ITS library includes one **80-question, 226-mark Advanced SQL** pilot covering joins, correlated and scalar subqueries, SQL functions, relational set operators, views, PL/SQL triggers, stored procedures, cursors and embedded SQL. It prioritises writing, reading and debugging queries rather than generic recall.
+The 80-question ITS Chapter 8 pilot was rebuilt after feedback to emphasize **practical SQL rather than definitions**. Current distribution:
 
-The session has the usual 60-minute timer, optional early submission with blanks, answer review and device-local history under **ITS-specific localStorage keys**, separate from the established PRM archive. SQL examples use a code-styled context block, and written SQL is self-marked against the question-specific rubric.
+| Task | Questions |
+| --- | ---: |
+| Contextual SQL terminology (small vocabulary component) | 8 |
+| Matching expressions, clauses and outcomes | 10 |
+| Complete missing SQL tokens / clauses | 14 |
+| Repair broken SQL | 12 |
+| Write SQL queries / PL/SQL | 16 |
+| Predict query results | 10 |
+| Larger applied SQL case studies | 10 |
+| **Total** | **80** |
 
-The original source notes remain at `notes/ITS/Chapter-8.pdf`. A separate write-in paper and marking memorandum were prepared for individual review. The website does not publish the memorandum before submission.
+The revised paper totals **256 marks**. The 60-minute timer is intentionally a speed challenge, not a claim every student should finish all written tasks. Oracle SQL and PL/SQL are used for Chapter 8 (including MINUS, TO_DATE, triggers, stored procedures and cursors).
 
-This is deliberately one session for feedback before ITS Chapters 9-12 or more variants are created.
+Matching questions use three drop-down answers, awarded one mark per correct pairing. Token-completion questions are marked per answer. Written SQL, debugging, query interpretation and case studies have detailed model answers for self-review; no fake automatic code grading.
+
+Attempts and history use new **v2 ITS browser-local storage keys** because the old pilot questions and answer keys no longer correspond. The older v1 storage is not erased, but old results are intentionally not scored against the revised paper. PRM storage and all 15 PRM sessions are unaffected.
+
+The source reading remains `notes/ITS/Chapter-8.pdf`. The page offers a question-only printable PDF; there is no link to private Google Drive content.
