@@ -106,7 +106,7 @@ window.PAPERROOM_LIBRARY["adp-1-1"]={
           "next"
         ]
       ],
-      "snippet": "Chain of Responsibility is a __1__ pattern. A handler may keep a reference to its __2__."
+      "contextMd": "Chain of Responsibility is a __1__ pattern. A handler may keep a reference to its __2__."
     },
     {
       "id": 10,
@@ -218,7 +218,7 @@ window.PAPERROOM_LIBRARY["adp-1-1"]={
       "marks": 5,
       "memo": "Client invokes H1; H1 delegates to H2; H2 delegates to H3; H3 handles (3). Client depends on the handler contract / first entry point, not H3 (2).",
       "diagram": "flowchart LR\n  Client[Client] --> H1[H1: low severity]\n  H1 --> H2[H2: medium severity]\n  H2 --> H3[H3: high severity]\n  H3 --> Result[Handled]",
-      "snippet": "Each handler tests whether it accepts the request; only H3 accepts HIGH."
+      "contextMd": "Each handler tests whether it accepts the request; only H3 accepts HIGH."
     },
     {
       "id": 18,
