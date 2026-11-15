@@ -28,5 +28,18 @@
       nodes.forEach(node=>{if(!node.querySelector("svg")){node.classList.add("mermaid-fallback");node.removeAttribute("data-processed");}});
     });
   };
-  window.PAPERROOM_RICH={render,renderDiagrams,escapeHtml};
+  const highlightCode = root => {
+    if (!window.hljs) return;
+    const scope=root || document;
+    const blocks=Array.from(scope.querySelectorAll("pre code:not([data-highlighted])"));
+    blocks.forEach(code => {
+      try {
+        if (code.classList.contains("language-plaintext") || code.classList.contains("language-text")) return;
+        window.hljs.highlightElement(code);
+      } catch (error) {
+        console.warn("Code syntax highlighting unavailable; preserving the example text.",error);
+      }
+    });
+  };
+  window.PAPERROOM_RICH={render,renderDiagrams,highlightCode,escapeHtml};
 })();
