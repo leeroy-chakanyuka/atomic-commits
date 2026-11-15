@@ -109,7 +109,7 @@ window.PAPERROOM_LIBRARY["adp-2-1"]={
           "target"
         ]
       ],
-      "snippet": "interface __1__ {\\n  String read();\\n}\\nclass RealSubject implements Subject {\\n  public String read() { return \"content\"; }\\n}\\nclass DocumentProxy implements Subject {\\n  private final __2__ target;\\n  DocumentProxy(RealSubject target) { this.target = target; }\\n  public String read() { return target.read(); }\\n}"
+      "snippet": "interface __1__ {\n  String read();\n}\nclass RealSubject implements Subject {\n  public String read() { return \"content\"; }\n}\nclass DocumentProxy implements Subject {\n  private final __2__ target;\n  DocumentProxy(RealSubject target) { this.target = target; }\n  public String read() { return target.read(); }\n}"
     },
     {
       "id": 10,
