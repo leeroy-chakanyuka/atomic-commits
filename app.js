@@ -264,7 +264,28 @@
         <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
-      ${practiceSection}${m.id==="its"?`<section class="its-database-access"><div><span class="section-kicker">WORK WITH ACTUAL DATA</span><h2>Chapter 8 practice database.</h2><p>Schema, sample rows and question-specific data tables. For trace questions, use the values shown with that question.</p></div><div class="its-database-links"><a href="notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">View reference tables</a><a href="notes/ITS/ch08-practice-database.sql" download>Download Oracle SQL setup</a></div></section>`:""}${combinedSection}${notesSection}${historySection}`;
+      ${practiceSection}${m.id==="its"?`<section class="its-database-access"><div><span class="section-kicker">WORK WITH ACTUAL DATA</span><h2>Chapter 8 practice database.</h2><p>Schema, sample rows and question-specific data tables. For trace questions, use the values shown with that question.</p></div><div class="its-database-links"><a href="notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Read Markdown reference</a><a href="notes/ITS/ch08-practice-database.sql" download>Download Oracle SQL setup</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>Preview the schema and sample tables here</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Open the reference to load sample tables.</p></div></details>`:""}${combinedSection}${notesSection}${historySection}`;
+    if(m.id==="its"){
+      const dbDetails=$("#itsDbDetails"),holder=$("#itsDatabaseMarkdown");
+      if(dbDetails&&holder)dbDetails.addEventListener("toggle",async()=>{
+        if(!dbDetails.open||dbDetails.dataset.loaded)return;
+        dbDetails.dataset.loaded="loading";
+        try{
+          const response=await fetch("notes/ITS/ch08-practice-database.md");
+          if(!response.ok)throw new Error("HTTP "+response.status);
+          holder.innerHTML=rich(await response.text());
+          holder.querySelectorAll("pre > code.language-mermaid").forEach(code=>{
+            const d=document.createElement("div");d.className="mermaid";d.textContent=code.textContent;
+            code.parentElement.replaceWith(d);
+          });
+          drawDiagrams(holder);
+          dbDetails.dataset.loaded="true";
+        }catch(err){
+          holder.textContent="The inline preview is unavailable. Open the Markdown reference or download the SQL setup instead.";
+          delete dbDetails.dataset.loaded;
+        }
+      });
+    }
   }
   function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
@@ -479,6 +500,7 @@
     const s=scoreStats();
     $("#resultScore").textContent=s.score+" / "+DATA.totalMarks;
     $("#scoreLabel").textContent=s.pending===0 ? "TOTAL SCORE" : "SCORE SO FAR";
+    $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
     $("#scoreContext").textContent=s.pending===0 ?
       (Math.round(s.score/DATA.totalMarks*100)+"% · Fully reviewed") :
       (s.pending+" marks still need your review. This is not a final grade.");
