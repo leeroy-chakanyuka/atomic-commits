@@ -25,8 +25,9 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=["its-8-1"];
-  const storageFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
-  const historyFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  const ADP_PAPER_KEYS=["adp-1-1","adp-2-1","adp-3-1"];
+  const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
   let STORAGE=storageFor(paperKey);
   let HISTORY_STORAGE=historyFor(paperKey);
@@ -37,12 +38,15 @@
   const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
+  const rich = text => window.PAPERROOM_RICH?.render(text) || `<p>${esc(text)}</p>`;
+  const drawDiagrams = root => window.PAPERROOM_RICH?.renderDiagrams(root || document);
   const sessionHash=(key,kind="practice")=>{
+    if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `#/${kind}/adp/ch${ch}/s${s}`;}
     if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `#/${kind}/its/ch${ch}/s${s}`;}
     const [ch,s]=key.split("-");return `#/${kind}/prm/ch${ch}/s${s}`;
   };
   function selectPaper(module,ch,s) {
-    const key=module==="its"?"its-"+String(ch)+"-"+String(s):String(ch)+"-"+String(s);
+    const key=module==="its"||module==="adp"?module+"-"+String(ch)+"-"+String(s):String(ch)+"-"+String(s);
     if(!PAPERBANK[key])return false;
     if(key!==paperKey){
       paperKey=key;DATA=PAPERBANK[key];STORAGE=storageFor(key);HISTORY_STORAGE=historyFor(key);
@@ -72,7 +76,7 @@
     }catch(_e){return [];}
   }
   function readHistory(){return readHistoryFor(paperKey);}
-  function allHistory(module="prm"){return (module==="its"?ITS_PAPER_KEYS:PAPER_KEYS).flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
+  function allHistory(module="prm"){return (module==="its"?ITS_PAPER_KEYS:module==="adp"?ADP_PAPER_KEYS:PAPER_KEYS).flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
   function readAttemptFor(key) {
     try {
       const a=JSON.parse(localStorage.getItem(storageFor(key)) || "null");
@@ -121,7 +125,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"4 study topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"3 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -260,7 +264,7 @@
       location.hash = sessionHash(paperKey);
       return;
     }
-    attempt = { version:1, startedAt:Date.now(), endsAt:Date.now() + 3600 * 1000, submittedAt:null, timedOut:false, answers:{}, flags:[], reviews:{} };
+    attempt = { version:1, startedAt:Date.now(), endsAt:Date.now() + DATA.limitSeconds * 1000, submittedAt:null, timedOut:false, answers:{}, flags:[], reviews:{} };
     current = 1; filter = "all"; save();
     location.hash = sessionHash(paperKey);
     route();
@@ -285,8 +289,8 @@
   }
   function renderNav() {
     const count = numberAnswered();
-    $("#answeredSummary").textContent = count + " / 80 answered";
-    $("#answeredBar").style.width = (count / 80 * 100) + "%";
+    $("#answeredSummary").textContent = count + " / " + DATA.questions.length + " answered";
+    $("#answeredBar").style.width = (count / DATA.questions.length * 100) + "%";
     $("#questionNavigator").innerHTML = DATA.questions.map(q => `
       <button type="button" data-navigate="${q.id}" class="${isAnswered(q) ? "answered" : ""} ${q.id === current ? "current" : ""} ${attempt.flags.includes(q.id) ? "flagged" : ""}" aria-label="Question ${q.id}${isAnswered(q) ? ", answered" : ""}${attempt.flags.includes(q.id) ? ", flagged" : ""}" ${current === q.id ? 'aria-current="step"' : ""}>${q.id}</button>`).join("");
   }
@@ -299,7 +303,7 @@
       }).join("")}</div>`;
     }
     if (q.kind === "Matching") {
-      return `<span class="answer-label">Match each item to the correct SQL expression or meaning</span>
+      return `<span class="answer-label">Match each item to its correct description</span>
         <div class="match-grid">${q.matchItems.map((item,i)=>`
           <label class="match-row"><span><b>${i+1}.</b> ${esc(item.text)}</span>
             <select data-field="match${i+1}" aria-label="Match item ${i+1}">
@@ -324,26 +328,31 @@
     if (q.kind === "Identify the term") {
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
     }
-    const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation"].includes(q.kind);
+    const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation","Java implementation","Java debugging","Code review","Code tracing","Integrated design","Integrated review","Error identification","Testing"].includes(q.kind);
     return `<label class="answer-label" for="writtenAnswer">${codeQuestion?"Your SQL / reasoning":q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
       <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?"Write valid SQL and explain any corrections...":q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
       <p class="answer-hint">${q.marks} mark${q.marks!==1?"s":""} available. ${q.marks > 1 ? "Include enough distinct, relevant points to earn every mark." : "Keep it concise."}</p>`;
   }
   function showQuestion(id, scroll = false) {
-    current = Math.max(1, Math.min(80, id));
+    current = Math.max(1, Math.min(DATA.questions.length, id));
     const q = qOf(current);
     $("#questionSection").textContent = q.kind.toUpperCase();
-    $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF 80";
+    $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF " + DATA.questions.length;
     $("#questionMarks").textContent = q.marks + (q.marks === 1 ? " mark" : " marks");
-    $("#questionPrompt").textContent = quote(q.prompt);
+    $("#questionPrompt").innerHTML = rich(q.prompt);
     const codeSnippet=$("#questionSnippet");
     if(codeSnippet){codeSnippet.hidden=!q.snippet;codeSnippet.textContent=q.snippet||"";}
+    const context=$("#questionContext");
+    if(context){context.hidden=!q.contextMd&&!q.referenceNote;context.innerHTML=(q.contextMd?rich(q.contextMd):"")+(q.referenceNote?`<p class="reference-note">${esc(q.referenceNote)}</p>`:"");}
+    const diagram=$("#questionDiagram");
+    if(diagram){diagram.hidden=!q.diagram;diagram.innerHTML=q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:"";}
     $("#answerArea").innerHTML = renderInput(q);
+    drawDiagrams(diagram);
     $("#flagButton").classList.toggle("flagged",attempt.flags.includes(current));
     $("#flagButton").textContent = attempt.flags.includes(current) ? "⚑ Flagged for review" : "⚑ Flag for review";
     $("#previousButton").disabled = current === 1;
     $("#previousButton").style.opacity = current === 1 ? ".45" : "1";
-    $("#nextButton").textContent = current === 80 ? "Submit paper" : "Next question";
+    $("#nextButton").textContent = current === DATA.questions.length ? "Submit paper" : "Next question";
     renderNav();
     if (scroll) { $("#answerArea").scrollTop=0; const card=document.querySelector(".question-card"); if(card)card.scrollTop=0; }
   }
@@ -446,7 +455,7 @@
     $("#scoreContext").textContent=s.pending===0 ?
       (Math.round(s.score/DATA.totalMarks*100)+"% · Fully reviewed") :
       (s.pending+" marks still need your review. This is not a final grade.");
-    $("#reviewProgress").textContent=s.marked+" / 80";
+    $("#reviewProgress").textContent=s.marked+" / "+DATA.questions.length;
     $("#timeUsed").textContent=mins(elapsed());
     const wrong=DATA.questions.filter(q=>{const g=grade(q);return g.marked&&g.score<q.marks;}).length;
     const el=$("#wrongCount");if(el)el.textContent=String(wrong);
@@ -463,8 +472,9 @@
       return `<details class="review-item" data-review-question="${q.id}">
         <summary><span class="review-index">${String(q.id).padStart(2,"0")}</span><span class="review-title">${esc(quote(q.prompt))}</span><span class="review-status ${state.className}">${state.label}</span><span class="review-chevron">⌄</span></summary>
         <div class="review-body">
+          ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet">${esc(q.snippet)}</pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
-          <div class="review-answer right"><h4>Model answer / marking guidance</h4><p>${esc(q.memo)}</p></div>
+          <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div></div>
           <div class="review-mark">
             <div><strong>${q.marks} marks available</strong><br><small>${g.pending ? "Compare your answer to the memorandum and award only earned marks." : "Checked automatically or no answer provided."}</small></div>
             ${g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
@@ -480,13 +490,16 @@
     const returnLink=$("#resultsScreen .results-bottom a.button");if(returnLink)returnLink.href="#/module/"+mod;
     updateResultsMeta();
     renderReviews();
+    drawDiagrams($("#reviewList"));
   }
   function renderIntro() {
     show("intro");
-    $("#introKicker").textContent="CHAPTER "+DATA.chapter+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
-    $("#introDescription").textContent=DATA.intro || (DATA.title+". Eighty exam-style questions, one focused hour, and room to think.");
+    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
+    $("#introDescription").textContent=DATA.intro || (DATA.title+". "+DATA.questions.length+" exam-style questions and room to think.");
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
-    $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
+    $("#introQuestionCount").textContent=String(DATA.questions.length);
+    $("#introDuration").textContent=String(Math.round(DATA.limitSeconds/60));
+    $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":"Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");
     if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
     $("#introSheetSession").textContent="Practice session "+String(DATA.session).padStart(2,"0");
@@ -494,7 +507,7 @@
   }
   function route() {
     const path=location.hash || "#/home";
-    const routeMatch=path.match(/^#\/(practice|results)\/(prm|its)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
+    const routeMatch=path.match(/^#\/(practice|results)\/(prm|its|adp)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
     if(routeMatch) {
       const [,kind,module,ch,session,savedId]=routeMatch;
       if(!selectPaper(module,ch,session)){location.hash="#/module/"+module;return;}
@@ -538,7 +551,7 @@
   $("#beginButton").addEventListener("click",startSession);
   $("#previousButton").addEventListener("click",()=>showQuestion(current-1,true));
   $("#nextButton").addEventListener("click",()=> {
-    if(current>=80){submitAttempt();return;}
+    if(current>=DATA.questions.length){submitAttempt();return;}
     showQuestion(current+1,true);
   });
   $("#flagButton").addEventListener("click",flagQuestion);
