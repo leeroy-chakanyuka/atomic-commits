@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | Coming soon |
+| ADP | 18 November 2026 | Four topic tiles: Design Patterns, Spring Security, Spring Data JPA, TBD (papers pending) |
 | ITS | 19 November 2026 | **Chapter 8 pilot live** |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -24,6 +24,10 @@ For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-que
 - Completed attempts, responses, provisional scores, missed questions, self-marking, flags and dates are kept in browser localStorage and can be revisited after later attempts.
 
 **LocalStorage is device/browser-specific**. It cannot synchronize across devices and is lost when browser site data is cleared.
+
+## ADP topic tiles
+
+The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA**, and **TBD**. The first three expand into distinct content areas; the fourth deliberately remains unnamed until the student specifies it. All four are organisation placeholders, not falsely advertised playable sessions. The Design Patterns tile lists the eight unhighlighted GOF patterns chosen for revision. Practice papers and marking memorandums are not yet published in these tiles.
 
 ## Notes library
 
