@@ -93,7 +93,7 @@ window.PAPERROOM_LIBRARY["adp-2-1"]={
     {
       "id": 9,
       "kind": "Fill in the blanks",
-      "prompt": "Complete the shared-interface terminology.",
+      "prompt": "Complete the two missing Java type names to preserve the Proxy pattern's shared interface and delegation.",
       "marks": 2,
       "memo": "Subject; RealSubject.",
       "blanks": 2,
@@ -109,7 +109,7 @@ window.PAPERROOM_LIBRARY["adp-2-1"]={
           "target"
         ]
       ],
-      "snippet": "Client --> __1__ contract <-- Proxy\nProxy delegates to __2__ when allowed."
+      "snippet": "interface __1__ {\\n  String read();\\n}\\nclass RealSubject implements Subject {\\n  public String read() { return \"content\"; }\\n}\\nclass DocumentProxy implements Subject {\\n  private final __2__ target;\\n  DocumentProxy(RealSubject target) { this.target = target; }\\n  public String read() { return target.read(); }\\n}"
     },
     {
       "id": 10,
