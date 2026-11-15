@@ -438,3 +438,13 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
 
 /* Preserve readable diagram source if an external renderer is offline. */
 .mermaid:not(:has(svg)){white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,Consolas,monospace}
+
+/* ADP Java snippets and ITS SQL samples: highlighted, line-preserving code. */
+.question-snippet{overflow-x:auto;overflow-y:hidden;white-space:pre;overflow-wrap:normal;word-break:normal;tab-size:2;max-width:100%;background:#f7f9f4}
+.question-snippet code.hljs{display:block;overflow:visible;white-space:pre;padding:0;background:transparent;color:#293d31;font-size:12px;line-height:1.65;tab-size:2}
+.review-material .question-snippet code.hljs{font-size:11.5px}
+.md-body pre code.hljs{display:block;overflow-x:auto;white-space:pre;padding:0;background:transparent;line-height:1.65}
+.question-snippet code:not(.hljs){display:block;white-space:pre;line-height:1.65}
+@media(max-width:680px){
+  .question-snippet code.hljs,.review-material .question-snippet code.hljs{font-size:11px}
+}
