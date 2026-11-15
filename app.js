@@ -40,6 +40,8 @@
   const qOf = (id) => DATA.questions[id - 1];
   const rich = text => window.PAPERROOM_RICH?.render(text) || `<p>${esc(text)}</p>`;
   const drawDiagrams = root => window.PAPERROOM_RICH?.renderDiagrams(root || document);
+  const highlightCode = root => window.PAPERROOM_RICH?.highlightCode(root || document);
+  const snippetLanguage = q => q.snippetLanguage || (DATA.module==="ITS"?"sql":DATA.module==="ADP"?"java":"plaintext");
   const sessionHash=(key,kind="practice")=>{
     if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `#/${kind}/adp/ch${ch}/s${s}`;}
     if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `#/${kind}/its/ch${ch}/s${s}`;}
@@ -279,6 +281,7 @@
             code.parentElement.replaceWith(d);
           });
           drawDiagrams(holder);
+          highlightCode(holder);
           dbDetails.dataset.loaded="true";
         }catch(err){
           holder.textContent="The inline preview is unavailable. Open the Markdown reference or download the SQL setup instead.";
@@ -361,7 +364,8 @@
     }
     if (q.kind === "Fill in the blanks" || q.kind === "SQL completion") {
       const n=q.blanks || q.accepted?.length || 2;
-      return `<span class="answer-label">Complete ${n===1?"the missing SQL token or term":"the missing SQL tokens or terms"}</span>
+      const blankLabel=DATA.module==="ITS" ? (n===1?"the missing SQL token or term":"the missing SQL tokens or terms") : (n===1?"the missing Java keyword or term":"the missing Java keywords or terms");
+      return `<span class="answer-label">Complete ${blankLabel}</span>
         <div class="blanks">${Array.from({length:n},(_,i)=>`<div><label class="answer-label" for="blank${i+1}">Blank ${i+1}</label>
           <input id="blank${i+1}" class="answer-input" data-field="blank${i+1}" autocomplete="off" placeholder="Missing term" value="${esc(a["blank"+(i+1)] || "")}"></div>`).join("")}
         </div><p class="answer-hint">Answer in the order the blanks appear.</p>`;
@@ -377,8 +381,10 @@
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
     }
     const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation","Java implementation","Java debugging","Code review","Code tracing","Integrated design","Integrated review","Error identification","Testing"].includes(q.kind);
-    return `<label class="answer-label" for="writtenAnswer">${codeQuestion?"Your SQL / reasoning":q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
-      <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?"Write valid SQL and explain any corrections...":q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
+    const codeLabel=DATA.module==="ITS"?"Your SQL / reasoning":DATA.module==="ADP"?"Your Java code / reasoning":"Your code / reasoning";
+    const codePlaceholder=DATA.module==="ITS"?"Write valid SQL and explain any corrections...":DATA.module==="ADP"?"Write Java code or explain your reasoning...":"Write your code or reasoning...";
+    return `<label class="answer-label" for="writtenAnswer">${codeQuestion?codeLabel:q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
+      <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?codePlaceholder:q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
       <p class="answer-hint">${q.marks} mark${q.marks!==1?"s":""} available. ${q.marks > 1 ? "Include enough distinct, relevant points to earn every mark." : "Keep it concise."}</p>`;
   }
   function showQuestion(id, scroll = false) {
@@ -389,7 +395,17 @@
     $("#questionMarks").textContent = q.marks + (q.marks === 1 ? " mark" : " marks");
     $("#questionPrompt").innerHTML = rich(q.prompt);
     const codeSnippet=$("#questionSnippet");
-    if(codeSnippet){codeSnippet.hidden=!q.snippet;codeSnippet.textContent=q.snippet||"";}
+    if(codeSnippet){
+      codeSnippet.hidden=!q.snippet;
+      codeSnippet.replaceChildren();
+      if(q.snippet){
+        const code=document.createElement("code");
+        code.className="language-"+snippetLanguage(q);
+        code.textContent=q.snippet;
+        codeSnippet.appendChild(code);
+        highlightCode(codeSnippet);
+      }
+    }
     const context=$("#questionContext");
     if(context){context.hidden=!q.contextMd&&!q.referenceNote;context.innerHTML=(q.contextMd?rich(q.contextMd):"")+(q.referenceNote?`<p class="reference-note">${esc(q.referenceNote)}</p>`:"");}
     const diagram=$("#questionDiagram");
@@ -521,7 +537,7 @@
       return `<details class="review-item" data-review-question="${q.id}">
         <summary><span class="review-index">${String(q.id).padStart(2,"0")}</span><span class="review-title">${esc(quote(q.prompt))}</span><span class="review-status ${state.className}">${state.label}</span><span class="review-chevron">⌄</span></summary>
         <div class="review-body">
-          ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet">${esc(q.snippet)}</pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
+          ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet"><code class="language-${esc(snippetLanguage(q))}">${esc(q.snippet)}</code></pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
           <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div></div>
           <div class="review-mark">
@@ -532,6 +548,7 @@
     }).join("") : '<div class="review-empty">Nothing in this filter. Keep going ✳</div>';
     document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
     drawDiagrams($("#reviewList"));
+    highlightCode($("#reviewList"));
   }
   function renderResults() {
     show("results");
