@@ -448,3 +448,206 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
 @media(max-width:680px){
   .question-snippet code.hljs,.review-material .question-snippet code.hljs{font-size:11px}
 }
+
+/*
+ * Long-form exam layout (ITS and ADP first, safe for PRM too).
+ * Let the document scroll. Never trap tables, code and answers inside fixed-height panes.
+ */
+body.exam-mode,
+body:has(#examScreen:not([hidden])) {
+  height:auto;
+  min-height:100dvh;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+body.exam-mode main,
+body:has(#examScreen:not([hidden])) main,
+.exam-mode #examScreen {
+  height:auto;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+}
+.exam-mode .exam-bar {
+  position:sticky;
+  top:0;
+  z-index:30;
+  height:67px;
+}
+.exam-mode .exam-bar-inner {height:64px;min-height:64px}
+.exam-layout.shell {
+  width:100%;
+  max-width:1540px;
+  height:auto;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+  display:grid;
+  grid-template-columns:202px minmax(0,1fr);
+  grid-template-rows:auto;
+  align-items:start;
+  gap:clamp(16px,2.4vw,38px);
+  padding:22px clamp(18px,3vw,46px) 90px;
+}
+.exam-layout .question-sidebar {
+  min-height:0;
+  height:auto;
+  overflow:visible;
+  padding-right:15px;
+}
+.exam-layout .sidebar-sticky {
+  height:auto;
+  max-height:calc(100dvh - 93px);
+  position:sticky;
+  top:81px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.exam-layout .question-nav {
+  flex:0 1 auto;
+  min-height:0;
+  max-height:none;
+  overflow-y:visible;
+  align-content:start;
+}
+.exam-layout .question-workspace {
+  width:100%;
+  max-width:none;
+  display:flex;
+  flex-direction:column;
+  height:auto;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+}
+.exam-layout .question-card {
+  width:100%;
+  display:block;
+  flex:none;
+  height:auto;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+  padding:clamp(20px,2.4vw,36px);
+}
+.exam-layout .question-card h2 {
+  display:block;
+  max-height:none;
+  height:auto;
+  min-height:0;
+  overflow:visible;
+  margin-bottom:8px;
+  padding:0;
+  line-height:1.42;
+}
+.exam-layout .answer-area {
+  display:block;
+  flex:none;
+  height:auto;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+  overscroll-behavior:auto;
+  padding:20px 0 0;
+}
+.exam-layout .answer-textarea {
+  width:100%;
+  min-height:220px;
+  max-height:none;
+  resize:vertical;
+}
+.exam-layout .question-context,
+.exam-layout .question-diagram {
+  max-width:100%;
+  max-height:none;
+  overflow-x:auto;
+  overflow-y:visible;
+}
+.exam-layout .question-snippet {
+  max-height:none;
+  overflow-x:auto;
+  overflow-y:visible;
+}
+.exam-layout .exam-controls {
+  margin:16px 0 11px;
+}
+.exam-layout .submit-panel {
+  margin:0;
+}
+@media(max-width:900px) {
+  .exam-layout.shell {
+    grid-template-columns:148px minmax(0,1fr);
+    gap:14px;
+    padding:15px 17px 70px;
+  }
+  .exam-layout .question-sidebar {padding-right:10px}
+}
+@media(max-width:680px) {
+  .exam-mode .exam-bar {height:64px}
+  .exam-mode .exam-bar-inner {height:61px;min-height:61px}
+  .exam-layout.shell {
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:11px;
+    width:100%;
+    height:auto;
+    max-height:none;
+    min-height:0;
+    padding:12px 12px 76px;
+  }
+  .exam-layout .question-sidebar {
+    position:relative;
+    width:100%;
+    border:0;
+    padding:0;
+    height:auto;
+  }
+  .exam-layout .sidebar-sticky {
+    position:static;
+    height:auto;
+    max-height:none;
+    overflow:visible;
+  }
+  .exam-layout .question-nav {
+    display:flex;
+    flex-wrap:nowrap;
+    width:100%;
+    max-width:100%;
+    height:39px;
+    max-height:none;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:5px 0 0;
+  }
+  .exam-layout .question-workspace {
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    max-height:none;
+    overflow:visible;
+    min-height:0;
+  }
+  .exam-layout .question-card {
+    display:block;
+    height:auto;
+    max-height:none;
+    overflow:visible;
+    padding:19px 17px;
+  }
+  .exam-layout .question-card h2 {
+    font-size:clamp(18px,4.5vw,23px);
+    max-height:none;
+    overflow:visible;
+  }
+  .exam-layout .answer-area {
+    overflow:visible;
+    padding:17px 0 0;
+  }
+  .exam-layout .answer-textarea {
+    min-height:230px;
+    max-height:none;
+  }
+  .exam-layout .question-context {padding:12px}
+  .exam-layout .question-diagram {padding:12px}
+}
