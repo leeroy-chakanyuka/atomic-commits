@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | Four topic tiles: Design Patterns, Spring Security, Spring Data JPA, TBD (papers pending) |
+| ADP | 18 November 2026 | **3 pilot papers live on review branch**: two design patterns + one intermediate Spring Security |
 | ITS | 19 November 2026 | **Chapter 8 pilot live** |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -25,9 +25,19 @@ For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-que
 
 **LocalStorage is device/browser-specific**. It cannot synchronize across devices and is lost when browser site data is cleared.
 
-## ADP topic tiles
+## ADP topic tiles and exam pilots
 
-The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA**, and **TBD**. The first three expand into distinct content areas; the fourth deliberately remains unnamed until the student specifies it. All four are organisation placeholders, not falsely advertised playable sessions. The Design Patterns tile lists the eight unhighlighted GOF patterns chosen for revision. Practice papers and marking memorandums are not yet published in these tiles.
+The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA**, and **TBD**. The fourth tile remains unnamed as requested. Under Design Patterns, there are **two independently playable 30-question papers**: Chain of Responsibility (138 marks) and Proxy (146 marks). Under Spring Security, there is **one 30-question intermediate paper** (150 marks). Each paper has a **90-minute timer** and its own detailed marking memorandum, revealed only on the results/review screen. Other design patterns and JPA are not represented as playable papers yet.
+
+Examples include Java classes, Spring Security configuration, code tracing, debugging, test design and Mermaid diagrams. A staged curriculum for later Spring Security content is documented in `papers/adp/SECURITY-LAYERS.md`; **OAuth is intentionally outside the pilot**.
+
+## Rich questions and ITS sample database
+
+Questions, optional context blocks and memorandums can contain **GitHub-flavored Markdown**. The browser uses Marked plus DOMPurify for sanitized rendering and Mermaid for diagrams. External CDN dependencies are pinned in `index.html`. The app falls back to readable plaintext if a dependency is unavailable. **Student answers are never rendered as HTML or executable Markdown.**
+
+ITS Chapter 8 retains its original **80 questions / 256 marks and existing v2 local storage keys**. Its result-tracing/case-study questions now display Markdown sample tables where useful. The module offers an expandable reference database with table inventory, sample rows, schema relationship diagram and a runnable Oracle SQL setup (`notes/ITS/ch08-practice-database.sql`). **When a question defines its own rows, those rows override the shared sample dataset**. Existing SQL answer memorandums and marking weights were preserved.
+
+The original PRM papers, question counts, marks, memorandums and local histories remain unchanged.
 
 ## Notes library
 
@@ -48,6 +58,9 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `app.js`: exam engine, timer, local state, marking and review
 - `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
+- `papers/adp/*.js`: two design patterns papers and one Spring Security pilot
+- `rich-content.js`: sanitized Markdown and diagrams
+- `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference
 - `notes/`: user-uploaded study content folders
 
 This site is plain HTML/CSS/JS, deployable directly from the repo root with GitHub Pages.
