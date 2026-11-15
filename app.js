@@ -117,11 +117,11 @@
   }
   function renderModules(){
     $("#modulesGrid").innerHTML=MODULES.map(m=>`
-      <a class="module-card ${m.active||m.pilot?"active":""}" href="#/module/${m.id}">
+      <a class="module-card ${m.active||m.pilot||m.id==="adp"?"active":""}" href="#/module/${m.id}">
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"4 study topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -129,6 +129,33 @@
     if(!m){location.hash="#/home#modules";return;}
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
+    if(m.id==="adp"){
+      const topics=[
+        {number:"01",slug:"design-patterns",title:"Design Patterns",description:"Eight unhighlighted Gang of Four patterns, with diagrams, Java examples and exam-style practice.",details:"Prototype · Façade · Proxy · Mediator · State · Memento · Chain of Responsibility · Template Method",note:"Practice papers and marking memorandums will be added here."},
+        {number:"02",slug:"spring-security",title:"Spring Security",description:"A dedicated section for Spring Security notes and practice.",details:"Spring Security",note:"Notes, practice papers and marking memorandums will be added here."},
+        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",description:"A dedicated section for Spring Data JPA notes and practice.",details:"Spring Data JPA",note:"Notes, practice papers and marking memorandums will be added here."}
+      ];
+      $("#moduleContent").innerHTML=`<div class="module-compact-head">
+        <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
+        <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
+        <p>Four study areas, organised separately so each can have its own notes, questions and marking memorandums.</p></div>
+        <div class="module-summary-chip"><strong>04</strong><small>topics</small></div></div></div>
+        <section class="adp-topics" aria-label="ADP study topics">
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>3 named · 1 reserved</small></div>
+          <div class="adp-topic-grid">
+            ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
+              <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">Topic reserved</span></span>
+                <span class="adp-topic-title">${esc(t.title)}</span><span class="adp-topic-description">${esc(t.description)}</span>
+                <span class="adp-topic-action">View topic <span aria-hidden="true">+</span></span></summary>
+              <div class="adp-topic-detail"><p>${esc(t.details)}</p><p class="adp-topic-note">${esc(t.note)}</p></div>
+            </details>`).join("")}
+            <article class="adp-topic-tile adp-topic-tbd"><div class="adp-topic-top"><span class="adp-topic-number">04</span><span class="adp-topic-status">Unassigned</span></div>
+              <h3 class="adp-topic-title">TBD</h3><p class="adp-topic-description">The fourth topic will be named when you decide what belongs here.</p>
+              <div class="adp-topic-action">Awaiting topic</div></article>
+          </div>
+        </section>`;
+      return;
+    }
     const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
     const isPractice=m.id==="prm"||m.id==="its";
     const chapterList=m.id==="its"?[{n:8,title:"Advanced SQL",sessions:[1]}]:CHAPTERS;
