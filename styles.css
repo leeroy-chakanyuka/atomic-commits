@@ -435,3 +435,6 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
 .its-database-reference .md-body table{margin:11px 0 20px}
 .its-database-reference .mermaid{overflow-x:auto;max-width:100%;padding:12px}
 @media(max-width:680px){.its-database-reference .md-body{padding:12px}.its-database-reference summary{padding:12px}}
+
+/* Preserve readable diagram source if an external renderer is offline. */
+.mermaid:not(:has(svg)){white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,Consolas,monospace}
