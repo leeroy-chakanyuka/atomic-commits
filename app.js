@@ -312,7 +312,7 @@
     const clock = $("#examClock");
     clock.textContent = mins(time);
     clock.classList.toggle("warning", time <= 300);
-    $("#timeProgress").style.width = (time / 3600 * 100) + "%";
+    $("#timeProgress").style.width = (time / DATA.limitSeconds * 100) + "%";
   }
   function renderNav() {
     const count = numberAnswered();
@@ -397,8 +397,8 @@
     save();
     // Update progress without replacing focused input controls.
     const count = numberAnswered();
-    $("#answeredSummary").textContent = count + " / 80 answered";
-    $("#answeredBar").style.width = (count / 80 * 100) + "%";
+    $("#answeredSummary").textContent = count + " / " + DATA.questions.length + " answered";
+    $("#answeredBar").style.width = (count / DATA.questions.length * 100) + "%";
     const dot = $("#questionNavigator button.current");
     if (dot) dot.classList.toggle("answered", isAnswered(qOf(current)));
   }
@@ -509,6 +509,7 @@
         </div></details>`;
     }).join("") : '<div class="review-empty">Nothing in this filter. Keep going ✳</div>';
     document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
+    drawDiagrams($("#reviewList"));
   }
   function renderResults() {
     show("results");
@@ -517,7 +518,6 @@
     const returnLink=$("#resultsScreen .results-bottom a.button");if(returnLink)returnLink.href="#/module/"+mod;
     updateResultsMeta();
     renderReviews();
-    drawDiagrams($("#reviewList"));
   }
   function renderIntro() {
     show("intro");
@@ -526,6 +526,8 @@
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
     $("#introQuestionCount").textContent=String(DATA.questions.length);
     $("#introDuration").textContent=String(Math.round(DATA.limitSeconds/60));
+    $("#introSheetModule").textContent=DATA.module==="ADP"?"APPLICATION DEVELOPMENT":DATA.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT";
+    $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
     $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":"Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");
     if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
