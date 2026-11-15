@@ -346,3 +346,28 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
   .match-row{grid-template-columns:1fr;gap:7px;padding:10px 11px}
   .match-row select{min-height:38px}
 }
+
+/* ADP: topic-first study library. Topic cards are separate from PRM/ITS chapters. */
+.adp-topics{padding:18px 0 74px}
+.adp-topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.adp-topic-tile{min-width:0;overflow:hidden;border:1px solid #dbe3d4;border-radius:18px;background:#fffefa;transition:border-color .2s,box-shadow .2s;box-shadow:0 6px 18px rgba(46,64,42,.025)}
+.adp-topic-tile:hover,.adp-topic-tile[open]{border-color:#b4c5ad;box-shadow:0 10px 24px rgba(46,64,42,.055)}
+.adp-topic-tile summary{list-style:none;cursor:pointer;min-height:227px;padding:26px 28px 22px;display:flex;flex-direction:column;align-items:stretch}
+.adp-topic-tile summary::-webkit-details-marker{display:none}
+.adp-topic-tile summary:focus-visible{outline:3px solid #b3a277;outline-offset:-4px}
+.adp-topic-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:27px}
+.adp-topic-number{font:600 13px/1 var(--sans);color:#849780;letter-spacing:.075em}
+.adp-topic-status{font:700 10px/1.3 var(--sans);color:#71866d;background:#edf2e8;border-radius:30px;padding:6px 11px}
+.adp-topic-title{display:block;font:600 clamp(23px,2.2vw,30px)/1.18 var(--serif);letter-spacing:-.045em;color:#354a35;margin:0 0 12px}
+.adp-topic-description{display:block;font-size:13px;line-height:1.7;color:#748173;max-width:44ch;min-height:44px;margin:0}
+.adp-topic-action{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #e7ebe1;margin-top:auto;padding-top:17px;font-size:12px;font-weight:700;color:#52704f}
+.adp-topic-action span{font-size:20px;font-weight:400;line-height:1}
+.adp-topic-tile[open] .adp-topic-action span{transform:rotate(45deg)}
+.adp-topic-detail{border-top:1px solid #e7ebe1;margin:0 28px;padding:19px 0 24px}
+.adp-topic-detail p{font-size:13px;color:#455b44;line-height:1.75;margin:0 0 7px}
+.adp-topic-detail .adp-topic-note{font-size:12px;color:#81907e;margin:0}
+.adp-topic-tbd{padding:26px 28px 22px;display:flex;flex-direction:column;background:#f4f5ef;border-style:dashed}
+.adp-topic-tbd .adp-topic-status{background:#e9ebe4;color:#8a9487}
+.adp-topic-tbd .adp-topic-title{color:#879385}
+.adp-topic-tbd .adp-topic-action{color:#909d8e}
+@media(max-width:720px){.adp-topic-grid{grid-template-columns:1fr;gap:12px}.adp-topic-tile summary{min-height:197px;padding:21px}.adp-topic-tbd{min-height:197px;padding:21px}.adp-topic-detail{margin:0 21px}.adp-topic-top{margin-bottom:21px}.adp-topics{padding-bottom:45px}}
