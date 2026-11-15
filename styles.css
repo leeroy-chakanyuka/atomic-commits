@@ -421,3 +421,17 @@ body:has(#examScreen:not([hidden])) main{height:100dvh;overflow:hidden}
   .question-diagram{padding:10px}
   .adp-subsection{padding:15px 0}
 }
+
+/* Expandable inline ITS reference database preview. */
+.its-database-reference{margin:-11px 0 27px;background:#fffefa;border:1px solid #dae4d4;border-radius:14px;overflow:hidden}
+.its-database-reference summary{cursor:pointer;list-style:none;padding:14px 20px;font-size:12px;font-weight:750;color:#536e50;display:flex;justify-content:space-between;align-items:center}
+.its-database-reference summary:after{content:"+";font-size:20px;font-weight:400}
+.its-database-reference[open] summary:after{content:"−"}
+.its-database-reference summary::-webkit-details-marker{display:none}
+.its-database-reference summary:focus-visible{outline:3px solid #b3a277;outline-offset:-3px}
+.its-database-reference .md-body{padding:18px 22px 26px;border-top:1px solid #e1e8dd;overflow-x:auto}
+.its-database-reference .md-body h1{font:600 27px var(--serif)}
+.its-database-reference .md-body h2{font:600 20px var(--serif);margin:28px 0 12px}
+.its-database-reference .md-body table{margin:11px 0 20px}
+.its-database-reference .mermaid{overflow-x:auto;max-width:100%;padding:12px}
+@media(max-width:680px){.its-database-reference .md-body{padding:12px}.its-database-reference summary{padding:12px}}
