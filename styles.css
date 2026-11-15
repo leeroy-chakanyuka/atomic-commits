@@ -651,3 +651,32 @@ body:has(#examScreen:not([hidden])) main,
   .exam-layout .question-context {padding:12px}
   .exam-layout .question-diagram {padding:12px}
 }
+
+/* ITS reference links stay visible before starting and during a question. */
+.its-database-access{margin-top:22px;margin-bottom:16px}
+.its-database-access h2{max-width:38ch}
+.its-database-access .its-db-examples{margin-top:9px;color:#566e52;font-weight:600;font-size:11px}
+.its-database-links a:first-child{background:#496b48;color:#fff;border-color:#496b48}
+.its-database-links a:first-child:hover{background:#315334;color:#fff}
+.its-database-quick-link{
+  margin-left:auto;
+  margin-right:10px;
+  display:inline-flex;
+  gap:5px;
+  align-items:center;
+  padding:7px 11px;
+  border:1px solid #b6cdae;
+  border-radius:8px;
+  background:#edf5e9;
+  color:#355c35;
+  font-size:11px;
+  font-weight:750;
+  white-space:nowrap;
+}
+.its-database-quick-link:hover{background:#dfeedd;border-color:#9bb994}
+.its-database-quick-link[hidden]{display:none!important}
+@media(max-width:680px){
+  .its-database-access{margin-top:16px}
+  .exam-layout .question-overline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .exam-layout .its-database-quick-link{margin-left:auto;margin-right:0;font-size:10px;padding:6px 8px}
+}
