@@ -60,7 +60,7 @@
         <div class="hero-copy">
           <div class="eyebrow"><span class="eyebrow-line"></span> YOUR EXAM PREP, REIMAGINED</div>
           <h1>Know it well.<br><em>Know it fast.</em></h1>
-          <p class="hero-description">A quieter place to put your knowledge to the test. Proper practice papers, thoughtful review, and sixty minutes to show yourself what you know.</p>
+          <p class="hero-description">A quieter place to put your knowledge to the test. Proper practice papers, thoughtful review, and time to show yourself what you know.</p>
           <div class="hero-actions">
             <a href="#/module/prm" class="button button-dark">Explore practice papers</a>
             <a href="#/practice/prm/ch11/s1" class="text-link">Try Chapter 11</a>
@@ -103,7 +103,7 @@
       </section>
 
       <section class="principles shell" aria-label="Practice principles">
-        <div><span class="principle-icon">↗</span><strong>One focused hour</strong><span>Every paper ends after 60 minutes.</span></div>
+        <div><span class="principle-icon">↗</span><strong>Focused practice</strong><span>Timed sessions help you practise with focus.</span></div>
         <div><span class="principle-icon">✳</span><strong>Real exam-style questions</strong><span>Definitions, application, numbers and more.</span></div>
         <div><span class="principle-icon">◎</span><strong>Review with clarity</strong><span>See the answer and understand the gaps.</span></div>
       </section>
@@ -142,7 +142,7 @@
         <div class="intro-facts"><div><strong id="introQuestionCount">80</strong><span>questions</span></div><div><strong id="introDuration">60</strong><span>minutes</span></div><div><strong id="introTotalMarks">224</strong><span>marks</span></div></div>
         <div class="intro-notes"><p>✳ Your timer starts only when you press <b>Begin session</b>.</p><p>✳ You may submit at any point, even if some questions are unanswered.</p><p>✳ At 00:00, your work submits automatically, even if incomplete.</p><p>✳ Answers and marking guidance unlock after submission.</p><p>✳ Progress is saved on this device, so a refresh won't restart your timer.</p></div>
         <button class="button button-dark" id="beginButton" type="button">Begin practice session</button></div>
-        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label">PROJECT MANAGEMENT</span><div class="sheet-line"></div><h3 id="introSheetTitle">Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note" id="introSheetSession">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
+        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label" id="introSheetModule">PROJECT MANAGEMENT</span><div class="sheet-line"></div><h3 id="introSheetTitle">Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note" id="introSheetSession">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
       </section>
     </div>
 
@@ -156,7 +156,7 @@
 
     <div id="resultsScreen" class="screen" hidden>
       <section class="shell results-shell"><div class="results-top"><a href="#/module/prm" class="back-link">PRM library</a><span class="section-kicker">SESSION COMPLETE</span><h1>Every answer tells<br><em>you something.</em></h1><p>Review each response alongside the memorandum. Your marks, mistakes and completed attempts are saved in this browser for tomorrow's revision.</p></div>
-      <div class="results-cards"><div class="results-card highlight"><span id="scoreLabel">PROVISIONAL SCORE</span><strong id="resultScore">0 / 224</strong><small id="scoreContext">Review your written answers to complete your mark.</small></div><div class="results-card"><span>TIME USED</span><strong id="timeUsed">—</strong><small>of 60 minutes allowed</small></div><div class="results-card"><span>REVIEW STATUS</span><strong id="reviewProgress">0 / 80</strong><small>questions completely marked</small></div><div class="results-card"><span>NEEDS WORK</span><strong id="wrongCount">0</strong><small>questions to revisit later</small></div></div>
+      <div class="results-cards"><div class="results-card highlight"><span id="scoreLabel">PROVISIONAL SCORE</span><strong id="resultScore">0 / 224</strong><small id="scoreContext">Review your written answers to complete your mark.</small></div><div class="results-card"><span>TIME USED</span><strong id="timeUsed">—</strong><small id="resultsTimeAllowed">of 60 minutes allowed</small></div><div class="results-card"><span>REVIEW STATUS</span><strong id="reviewProgress">0 / 80</strong><small>questions completely marked</small></div><div class="results-card"><span>NEEDS WORK</span><strong id="wrongCount">0</strong><small>questions to revisit later</small></div></div>
       <div class="review-heading"><div><span class="section-kicker">YOUR REVIEW</span><h2>Learn from <em>every question.</em></h2></div><div class="review-filters"><button type="button" data-filter="all" class="filter active">All questions</button><button type="button" data-filter="wrong" class="filter">Needs work</button><button type="button" data-filter="pending" class="filter">Needs marking</button></div></div><div id="reviewList" class="review-list"></div><div class="results-bottom"><button id="restartExam" type="button" class="button button-outline">Start a fresh attempt</button><a href="#/module/prm" class="button button-dark">Back to module</a></div></section>
     </div>
   </main>
