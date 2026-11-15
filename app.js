@@ -266,7 +266,7 @@
         <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
-      ${practiceSection}${m.id==="its"?`<section class="its-database-access"><div><span class="section-kicker">WORK WITH ACTUAL DATA</span><h2>Chapter 8 practice database.</h2><p>Schema, sample rows and question-specific data tables. For trace questions, use the values shown with that question.</p></div><div class="its-database-links"><a href="notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Read Markdown reference</a><a href="notes/ITS/ch08-practice-database.sql" download>Download Oracle SQL setup</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>Preview the schema and sample tables here</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Open the reference to load sample tables.</p></div></details>`:""}${combinedSection}${notesSection}${historySection}`;
+      ${m.id==="its"?`<section class="its-database-access" id="its-shared-db"><div><span class="section-kicker">REFERENCE DATA FOR SQL QUESTIONS</span><h2>Shared ITS database: Chapter 8</h2><p>Use this data dictionary for table names, columns, sample rows and the relationship diagram. Individual questions may give different data: when they do, use the data in the question.</p><p class="its-db-examples">Includes CUSTOMERS, ORDERS, PRODUCTS, EMPLOYEES, DEPARTMENTS, PAYMENTS and related tables.</p></div><div class="its-database-links"><a href="https://github.com/leeroy-chakanyuka/atomic-commits/blob/preview-pr-2/notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Open shared database tables ↗</a><a href="notes/ITS/ch08-practice-database.sql" download>Download sample Oracle database (.sql)</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>See sample tables and ER diagram in Paperroom</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Expand this section to display the shared database, table relationships and example queries.</p></div></details>`:""}${practiceSection}${combinedSection}${notesSection}${historySection}`;
     if(m.id==="its"){
       const dbDetails=$("#itsDbDetails"),holder=$("#itsDatabaseMarkdown");
       if(dbDetails&&holder)dbDetails.addEventListener("toggle",async()=>{
@@ -411,6 +411,7 @@
     const diagram=$("#questionDiagram");
     if(diagram){diagram.hidden=!q.diagram;diagram.innerHTML=q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:"";}
     $("#answerArea").innerHTML = renderInput(q);
+    $("#itsDatabaseQuickLink").hidden=DATA.module!=="ITS";
     drawDiagrams(diagram);
     $("#flagButton").classList.toggle("flagged",attempt.flags.includes(current));
     $("#flagButton").textContent = attempt.flags.includes(current) ? "⚑ Flagged for review" : "⚑ Flag for review";
@@ -418,7 +419,7 @@
     $("#previousButton").style.opacity = current === 1 ? ".45" : "1";
     $("#nextButton").textContent = current === DATA.questions.length ? "Submit paper" : "Next question";
     renderNav();
-    if (scroll) { $("#answerArea").scrollTop=0; const card=document.querySelector(".question-card"); if(card)card.scrollTop=0; }
+    if (scroll) window.scrollTo({top:0,behavior:"instant"});
   }
   function renderExam() {
     show("exam");
