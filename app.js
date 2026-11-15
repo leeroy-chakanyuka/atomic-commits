@@ -134,30 +134,57 @@
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
     if(m.id==="adp"){
+      const adpPaper=(key,title)=>{
+        const paper=PAPERBANK[key],prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+        if(!paper)return "";
+        return `<div class="session-file adp-session-file">
+          <div class="session-file-info"><span class="session-file-title">${esc(title)}</span>
+            <small>${paper.questions.length} questions · ${Math.round(paper.limitSeconds/60)} minutes · ${paper.totalMarks} marks · memo after submission</small></div>
+          <div class="session-file-actions"><a class="session-start-link" href="${sessionHash(key)}">${active?"Resume":"Start"}</a>
+            <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download ${esc(title)} questions as PDF">PDF</button></div></div>`;
+      };
       const topics=[
-        {number:"01",slug:"design-patterns",title:"Design Patterns",description:"Eight unhighlighted Gang of Four patterns, with diagrams, Java examples and exam-style practice.",details:"Prototype · Façade · Proxy · Mediator · State · Memento · Chain of Responsibility · Template Method",note:"Practice papers and marking memorandums will be added here."},
-        {number:"02",slug:"spring-security",title:"Spring Security",description:"A dedicated section for Spring Security notes and practice.",details:"Spring Security",note:"Notes, practice papers and marking memorandums will be added here."},
-        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",description:"A dedicated section for Spring Data JPA notes and practice.",details:"Spring Data JPA",note:"Notes, practice papers and marking memorandums will be added here."}
+        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"2 papers ready",
+          description:"Two Java-focused pattern papers. Six other unhighlighted patterns remain on the revision checklist.",
+          detail:`<p class="adp-topic-guidance">Study scope: Prototype, Façade, Proxy, Mediator, State, Memento, Chain of Responsibility, Template Method.</p>
+          <div class="adp-subsection"><strong>Chain of Responsibility</strong><p>Routing, handler ordering, delegation, failure paths and Java debugging.</p>${adpPaper("adp-1-1","Practice Paper 01")}</div>
+          <div class="adp-subsection"><strong>Proxy</strong><p>Protection, virtual and remote proxies, delegation, caching, security and code reviews.</p>${adpPaper("adp-2-1","Practice Paper 02")}</div>`},
+        {number:"02",slug:"spring-security",title:"Spring Security",status:"1 paper ready",
+          description:"Intermediate request rules, authentication, roles, password encoding, method security, sessions and CSRF.",
+          detail:`<p class="adp-topic-guidance">No OAuth deep dive. Java SecurityFilterChain configuration, access decisions and troubleshooting.</p>
+            ${adpPaper("adp-3-1","Intermediate Security · Paper 01")}
+            <div class="adp-resource-links"><a href="https://docs.spring.io/spring-security/reference/servlet/configuration/java.html" target="_blank" rel="noopener noreferrer">Java configuration</a><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noopener noreferrer">Filter chain architecture</a></div>`},
+        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"Papers pending",
+          description:"Reserved for JPA entities, repositories, relationships and persistence practice.",
+          detail:`<p class="adp-topic-guidance">No JPA questions have been published yet.</p>`}
       ];
+      const history=allHistory("adp").slice(0,20).map(({key,item})=>{
+        const paper=PAPERBANK[key],stats=scoreStats(item,paper);
+        return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
+          <span class="history-icon">✓</span><span class="history-name"><strong>${esc(paper.title)}</strong><small>${new Date(item.startedAt).toLocaleDateString()} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+          <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${stats.pending?"Review written answers":"Marked"}</small></span><span class="history-link">Review</span></a>`;
+      }).join("");
       $("#moduleContent").innerHTML=`<div class="module-compact-head">
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
-        <p>Four study areas, organised separately so each can have its own notes, questions and marking memorandums.</p></div>
-        <div class="module-summary-chip"><strong>04</strong><small>topics</small></div></div></div>
+        <p>Design Patterns, Spring Security and Spring Data JPA, with a fourth topic kept unassigned.</p></div>
+        <div class="module-summary-chip"><strong>03</strong><small>papers</small></div></div></div>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>3 named · 1 reserved</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>3 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
-              <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">Topic reserved</span></span>
+              <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
                 <span class="adp-topic-title">${esc(t.title)}</span><span class="adp-topic-description">${esc(t.description)}</span>
                 <span class="adp-topic-action">View topic <span aria-hidden="true">+</span></span></summary>
-              <div class="adp-topic-detail"><p>${esc(t.details)}</p><p class="adp-topic-note">${esc(t.note)}</p></div>
-            </details>`).join("")}
+              <div class="adp-topic-detail">${t.detail}</div></details>`).join("")}
             <article class="adp-topic-tile adp-topic-tbd"><div class="adp-topic-top"><span class="adp-topic-number">04</span><span class="adp-topic-status">Unassigned</span></div>
-              <h3 class="adp-topic-title">TBD</h3><p class="adp-topic-description">The fourth topic will be named when you decide what belongs here.</p>
+              <h3 class="adp-topic-title">TBD</h3><p class="adp-topic-description">Your fourth topic remains unnamed until you choose it.</p>
               <div class="adp-topic-action">Awaiting topic</div></article>
           </div>
-        </section>`;
+        </section>
+        <section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>ADP attempts.</h2></div><small>Saved on this device</small></div>
+          ${history?'<div class="history-list">'+history+'</div>':'<div class="history-empty"><span>✳</span><div><strong>No ADP attempts yet.</strong><p>Choose a practice paper to begin.</p></div></div>'}
+          <p class="storage-note">Saved in this browser, not synced across devices.</p></section>`;
       return;
     }
     const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
@@ -237,7 +264,7 @@
         <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
-      ${practiceSection}${combinedSection}${notesSection}${historySection}`;
+      ${practiceSection}${m.id==="its"?`<section class="its-database-access"><div><span class="section-kicker">WORK WITH ACTUAL DATA</span><h2>Chapter 8 practice database.</h2><p>Schema, sample rows and question-specific data tables. For trace questions, use the values shown with that question.</p></div><div class="its-database-links"><a href="notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">View reference tables</a><a href="notes/ITS/ch08-practice-database.sql" download>Download Oracle SQL setup</a></div></section>`:""}${combinedSection}${notesSection}${historySection}`;
   }
   function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
