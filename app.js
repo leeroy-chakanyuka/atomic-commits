@@ -112,13 +112,14 @@
     toastTimer = setTimeout(() => el.classList.remove("show"), 3800);
   }
   function show(name) {
-    ["home","module","intro","exam","results"].forEach(s => {
+    ["home","module","intro","exam","results","study"].forEach(s => {
       const el = $("#" + s + "Screen");
       el.hidden = s !== name;
     });
-    $("#siteHeader").hidden = name === "exam";
-    document.querySelector(".site-footer").hidden = name === "exam";
+    $("#siteHeader").hidden = name === "exam" || name === "study";
+    document.querySelector(".site-footer").hidden = name === "exam" || name === "study";
     document.body.classList.toggle("exam-mode",name==="exam");
+    document.body.classList.toggle("study-mode",name==="study");
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   function renderModules(){
@@ -578,6 +579,12 @@
   }
   function route() {
     const path=location.hash || "#/home";
+    const studyMatch=path.match(/^#\/study\/its\/ch(8|9)\/([a-z0-9-]+)$/);
+    if(studyMatch){
+      show("study");
+      window.PAPERROOM_CONCEPT_MAP?.renderStudy(studyMatch[1],studyMatch[2]);
+      return;
+    }
     const routeMatch=path.match(/^#\/(practice|results)\/(prm|its|adp)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
     if(routeMatch) {
       const [,kind,module,ch,session,savedId]=routeMatch;
