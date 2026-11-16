@@ -262,6 +262,12 @@
     if(!panel.dataset.atlasBound){
       panel.addEventListener("click",onDrawerClick);
       panel.addEventListener("submit",onDrawerSubmit);
+      panel.addEventListener("keydown",event=>{
+        if(event.target?.id==="atlasMessage"&&event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
+          event.preventDefault();
+          event.target.form?.requestSubmit();
+        }
+      });
       panel.dataset.atlasBound="yes";
     }
     state.drawer=panel;
@@ -291,7 +297,6 @@
     const n=byId[id];if(!n)return;
     state.active=id;if(!ensureDrawer())return;
     const chapter=n.chapter||8;
-    state.drawer.querySelector("#conceptDrawerChapter").textContent="ITS · CHAPTER "+String(chapter).padStart(2,"0");
     const firstTime=!state.key&&!state.asked&&!state.offline;
     const hasHistory=!!state.messages.get(id)?.length;
     state.drawer.querySelector("#conceptDrawerContent").innerHTML=`
