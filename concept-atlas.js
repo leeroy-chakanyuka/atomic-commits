@@ -284,7 +284,7 @@
       if(n.qs?.length)references.push(n.qs.length+" related questions");
     }
     parts.push("**Study materials:** "+references.join(" · "));
-    parts.push("Ask me for an explanation, an example, or a practice question.");
+    parts.push(state.key?"Ask me for an explanation, an example, or a practice question.":"You can explore these connections and source notes without AI. Connect Gemini when you want to ask a question.");
     return parts.join("\n\n");
   }
   function open(id){
@@ -366,6 +366,10 @@
         // Shared renderer parses GFM and sanitizes HTML before insertion.
         if(window.PAPERROOM_RICH?.render)body.innerHTML=window.PAPERROOM_RICH.render(m.text);
         else body.textContent=m.text;
+        body.querySelectorAll?.('a[href^="https://"],a[href^="http://"]').forEach(a=>{
+          a.target="_blank";
+          a.rel="noopener noreferrer";
+        });
         box.appendChild(body);
       }else box.textContent=m.text;
       row.appendChild(box);list.appendChild(row);
