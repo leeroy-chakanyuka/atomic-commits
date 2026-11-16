@@ -128,3 +128,276 @@
   .study-return{font-size:11px}
   .study-map-pane .atlas-toolbar{flex-wrap:wrap}
 }
+
+/* Chat-first study sidebar: minimal chrome, one scrollable transcript, fixed composer. */
+.study-chat-panel .concept-drawer-content{
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+  padding:0;
+  width:100%;
+}
+.atlas-conversation{
+  height:100%;
+  min-height:0;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  background:#fffefa;
+}
+.atlas-conversation-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex:none;
+  padding:18px 22px 15px;
+  border-bottom:1px solid #e8ede5;
+  background:#fffefa;
+}
+.atlas-conversation-topic{min-width:0}
+.atlas-conversation-topic>span{font-size:10px;font-weight:700;color:#8ca187;letter-spacing:.11em}
+.atlas-conversation-topic h2{
+  font:600 26px/1.12 var(--serif,Georgia,serif);
+  letter-spacing:-.04em;
+  color:#35563b;
+  margin:5px 0 0;
+  overflow-wrap:anywhere;
+}
+.atlas-conversation-settings{
+  flex:none;
+  cursor:pointer;
+  border:1px solid #e1e8dc;
+  border-radius:9px;
+  padding:9px 12px;
+  background:#f8faf5;
+  color:#587a55;
+  font-size:11px;
+  font-weight:700;
+}
+.atlas-conversation-settings:hover{background:#eef4e9}
+.atlas-conversation-log{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:20px 20px 26px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:19px;
+  background:#fbfcf9;
+}
+.atlas-msg{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  min-width:0;
+  max-width:100%;
+  font-size:13px;
+  line-height:1.68;
+}
+.atlas-msg-role{
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  font-size:9px;
+  font-weight:800;
+  color:#879985;
+  margin-left:2px;
+}
+.atlas-msg-body{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.atlas-msg-assistant>.atlas-msg-body{
+  padding:0 2px;
+  color:#435c45;
+  width:100%;
+}
+.atlas-msg-intro{border-bottom:1px solid #e8ede5;padding-bottom:17px}
+.atlas-msg-related{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-top:2px}
+.atlas-msg-related>span{font-size:10px;color:#8b9b87;margin-right:3px}
+.atlas-msg-related button{
+  color:#4f6d4b;
+  background:#eef4ea;
+  border:1px solid #dae6d3;
+  border-radius:99px;
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:10px;
+  font-weight:700;
+}
+.atlas-msg-related button:hover{background:#dfeada}
+.atlas-msg-resources{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:5px}
+.atlas-msg-resources a{color:#688363;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.atlas-msg-user{align-self:flex-end;max-width:90%;align-items:flex-end}
+.atlas-msg-user .atlas-msg-body{
+  background:#e6efe1;
+  color:#36523b;
+  padding:10px 14px;
+  border-radius:15px 15px 4px 15px;
+}
+.atlas-msg-error .atlas-msg-body{
+  background:#f8efe9;
+  border:1px solid #ead5c9;
+  color:#8b594b;
+  border-radius:11px;
+  padding:10px 13px;
+}
+.atlas-msg-pending{color:#718a70;font-style:italic;font-size:11px}
+.atlas-msg-connect{
+  background:#f2f6ee;
+  border:1px solid #e0e9d9;
+  border-radius:13px;
+  padding:16px;
+}
+.atlas-msg-connect>strong{font:600 18px/1.3 var(--serif,Georgia,serif);color:#3c5b3c}
+.atlas-msg-connect>p{font-size:11px;color:#7c907a;margin:0;line-height:1.6}
+.atlas-key-form-inline{width:100%;margin-top:7px}
+.atlas-key-form-inline input{
+  width:100%;
+  min-width:0;
+  border:1px solid #d2decf;
+  background:#fffefa;
+  color:#3a563c;
+  padding:11px 12px;
+  font-size:12px;
+  border-radius:9px;
+}
+.atlas-key-form-inline .atlas-inline-actions{margin-top:9px}
+.atlas-key-form-inline .atlas-inline-actions button{padding:8px 12px}
+.atlas-conversation-composer{
+  flex:none;
+  border-top:1px solid #e5ece1;
+  padding:12px 17px 16px;
+  background:#fffefa;
+}
+.atlas-conversation-composer .atlas-quick-prompts{margin:0 0 9px}
+.atlas-conversation-composer .atlas-quick-prompts button{
+  padding:6px 11px;
+  background:#f5f8f1;
+}
+.atlas-conversation-composer .atlas-chat-form textarea{
+  min-height:58px;
+  max-height:170px;
+  padding:11px 12px;
+  border:1px solid #d5dfcf;
+  border-radius:11px;
+  font-size:13px;
+  background:#fff;
+  line-height:1.5;
+}
+.atlas-conversation-composer .atlas-chat-form textarea:focus{
+  border-color:#82a480;
+  outline:2px solid #bbd7b040;
+  outline-offset:1px;
+}
+.atlas-conversation-composer .atlas-sendbar{margin-top:7px}
+.atlas-conversation-composer .atlas-sendbar span{font-size:10px;color:#90a08a}
+.atlas-conversation-composer .atlas-sendbar button{min-width:67px}
+.atlas-conversation-noai{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.atlas-conversation-noai>span{font-size:11px;color:#899c84}
+.atlas-conversation-noai button{
+  border:1px solid #ceddc9;
+  color:#4d6e4a;
+  background:#eaf2e5;
+  border-radius:8px;
+  padding:9px 11px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+}
+.atlas-conversation-settings-panel{
+  position:absolute;
+  top:73px;
+  right:15px;
+  z-index:20;
+  width:min(360px,calc(100% - 30px));
+  max-height:calc(100% - 85px);
+  overflow:auto;
+  background:#fffefa;
+  box-shadow:0 14px 36px #315a3d24;
+}
+.atlas-markdown{white-space:normal;min-width:0;width:100%;overflow-wrap:anywhere}
+.atlas-markdown>*:first-child{margin-top:0}
+.atlas-markdown>*:last-child{margin-bottom:0}
+.atlas-markdown p{margin:0 0 11px;line-height:1.7}
+.atlas-markdown h1,.atlas-markdown h2,.atlas-markdown h3,.atlas-markdown h4{
+  font-family:var(--serif,Georgia,serif);
+  font-weight:600;
+  color:#365339;
+  line-height:1.3;
+  margin:17px 0 7px;
+  letter-spacing:-.018em;
+}
+.atlas-markdown h1{font-size:21px}
+.atlas-markdown h2{font-size:19px}
+.atlas-markdown h3{font-size:17px}
+.atlas-markdown h4{font-size:15px}
+.atlas-markdown ul,.atlas-markdown ol{margin:5px 0 13px;padding-left:22px}
+.atlas-markdown li{margin:4px 0}
+.atlas-markdown li>p{margin-bottom:5px}
+.atlas-markdown blockquote{margin:11px 0;padding:9px 14px;border-left:3px solid #abc9a6;background:#f3f7ef;color:#60775e}
+.atlas-markdown a{color:#466b47;text-decoration:underline;text-underline-offset:3px}
+.atlas-markdown :not(pre)>code{
+  display:inline;
+  padding:2px 5px;
+  font:11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;
+  background:#edf2ea;
+  color:#335c42;
+  border:1px solid #dde8d7;
+  border-radius:5px;
+  overflow-wrap:anywhere;
+}
+.atlas-markdown pre{
+  display:block;
+  max-width:100%;
+  overflow-x:auto;
+  padding:14px;
+  margin:12px 0;
+  background:#f0f3ed;
+  border:1px solid #dde5d8;
+  border-radius:10px;
+  tab-size:2;
+}
+.atlas-markdown pre code,.atlas-markdown pre code.hljs{
+  display:block;
+  width:max-content;
+  min-width:100%;
+  padding:0;
+  white-space:pre;
+  background:transparent;
+  font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.atlas-markdown table{
+  width:100%;
+  max-width:100%;
+  display:block;
+  overflow-x:auto;
+  border-collapse:collapse;
+  margin:12px 0;
+  font-size:11px;
+  white-space:nowrap;
+}
+.atlas-markdown th,.atlas-markdown td{border:1px solid #dce6d7;padding:7px 10px;text-align:left}
+.atlas-markdown th{background:#edf3e9;font-weight:700}
+.atlas-markdown hr{border:0;border-top:1px solid #dce6d7;margin:14px 0}
+@media(max-width:900px){
+  .study-chat-panel{height:min(83dvh,800px);min-height:530px;overflow:hidden}
+  .study-chat-panel .concept-drawer-content{min-height:0;overflow:hidden;padding:0}
+  .atlas-conversation{min-height:0}
+  .atlas-conversation-log{padding:18px 16px 23px}
+  .atlas-conversation-header{padding:14px 17px}
+  .atlas-conversation-topic h2{font-size:24px}
+}
+@media(max-width:480px){
+  .atlas-conversation-log{padding:16px 13px 20px;gap:15px}
+  .atlas-conversation-composer{padding:10px 12px 14px}
+  .atlas-msg{font-size:12px}
+  .atlas-conversation-header{padding:13px}
+}
