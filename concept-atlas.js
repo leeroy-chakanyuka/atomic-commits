@@ -257,7 +257,8 @@
     vp.addEventListener("pointerdown",down);vp.addEventListener("pointermove",move);vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
     vp.addEventListener("wheel",wheel,{passive:false});vp.addEventListener("keydown",key);
     resize?.observe(vp);
-    state.cleanup=()=>{resize?.disconnect();vp.removeEventListener("pointerdown",down);vp.removeEventListener("pointermove",move);vp.removeEventListener("pointerup",up);vp.removeEventListener("pointercancel",up);vp.removeEventListener("wheel",wheel);vp.removeEventListener("keydown",key);root.removeEventListener("click",onClick);root.removeEventListener("pointerover",onHover);root.removeEventListener("pointerout",onUnhover)};
+    const mountedRoot=root;
+    state.cleanup=()=>{resize?.disconnect();vp.removeEventListener("pointerdown",down);vp.removeEventListener("pointermove",move);vp.removeEventListener("pointerup",up);vp.removeEventListener("pointercancel",up);vp.removeEventListener("wheel",wheel);vp.removeEventListener("keydown",key);mountedRoot.removeEventListener("click",onClick);mountedRoot.removeEventListener("pointerover",onHover);mountedRoot.removeEventListener("pointerout",onUnhover)};
     state.viewSize={fit,zoom};fit();
     if(state.view==="8")updateSignals();
     focusConnections(state.workspace?state.active:null);
