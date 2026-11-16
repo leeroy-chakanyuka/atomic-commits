@@ -52,7 +52,7 @@
     ["plsql","triggers"],["plsql","cursors"],["plsql","procedures"],["plsql","dynamic"],["dml","sequences"]
   ];
   const paper=window.PAPERROOM_LIBRARY?.["its-8-1"];
-  const state={active:"joins",view:"master",key:"",model:"gemini-3.5-flash",busy:false,messages:new Map(),drawer:null,offline:false,asked:false,viewSize:null,scale:1,x:0,y:0,cleanup:null,chapterText:new Map()};
+  const state={active:"joins",view:"master",workspace:false,mountedView:null,mountedRoot:null,key:"",model:"gemini-3.5-flash",busy:false,messages:new Map(),drawer:null,offline:false,asked:false,viewSize:null,scale:1,x:0,y:0,cleanup:null,chapterText:new Map()};
   const escape=s=>String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]));
   const canon=s=>String(s||"").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
   const accepted=(v,options)=>options.some(o=>canon(v)===canon(o));
@@ -141,7 +141,7 @@
         <span class="atlas-small-note">Study maps fit your screen by default. Zoom or drag to explore.</span></div>
         <div class="atlas-toolbar">
           <div class="atlas-views" role="group" aria-label="Choose graph">
-            ${modes.map(m=>`<button type="button" data-view="${m.id}" class="${state.view===m.id?"active":""}" aria-pressed="${state.view===m.id}">${m.label}</button>`).join("")}
+            ${modes.filter(m=>!state.workspace||m.id!=="master").map(m=>`<button type="button" data-view="${m.id}" class="${state.view===m.id?"active":""}" aria-pressed="${state.view===m.id}">${m.label}</button>`).join("")}
           </div>
           <div class="atlas-zoom" role="group" aria-label="Map zoom">
             <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
@@ -154,7 +154,7 @@
             <svg class="atlas-lines" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true">
               ${view.links.map(([a,b])=>`<path d="${coordsLink(lookup[a],lookup[b])}"/>`).join("")}
             </svg>
-            ${view.nodes.map(n=>`<button type="button" class="atlas-node atlas-node-${n.group} ${n.id==="master-its"?"atlas-central":""} ${(n.chapter||8)===8&&state.view==="8"&&status(n,scores)==="needs-work"?"atlas-weak":""}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px" aria-label="${escape(n.title)}"><strong>${escape(n.title)}</strong><small>${escape(n.sub)}</small></button>`).join("")}
+            ${view.nodes.map(n=>`<button type="button" class="atlas-node atlas-node-${n.group} ${n.id==="master-its"?"atlas-central":""} ${state.workspace&&n.id===state.active?"is-selected":""} ${(n.chapter||8)===8&&state.view==="8"&&status(n,scores)==="needs-work"?"atlas-weak":""}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px" aria-label="${escape(n.title)}"><strong>${escape(n.title)}</strong><small>${escape(n.sub)}</small></button>`).join("")}
           </div>
           <div class="atlas-help">Drag to pan · Use + / − to zoom · Fit to reset</div>
         </div>
@@ -166,6 +166,8 @@
       </section>`;
     root.innerHTML=html;
     root.addEventListener("click",onClick);
+    state.mountedView=state.view;
+    state.mountedRoot=root;
 
     const vp=root.querySelector("#atlasViewport"),stage=root.querySelector("#atlasStage");
     const apply=()=>stage.style.transform=`translate(${state.x}px,${state.y}px) scale(${state.scale})`;
@@ -201,7 +203,6 @@
     state.cleanup=()=>{resize?.disconnect();vp.removeEventListener("pointerdown",down);vp.removeEventListener("pointermove",move);vp.removeEventListener("pointerup",up);vp.removeEventListener("pointercancel",up);vp.removeEventListener("wheel",wheel);vp.removeEventListener("keydown",key);root.removeEventListener("click",onClick)};
     state.viewSize={fit,zoom};fit();
     if(state.view==="8")updateSignals();
-    ensureDrawer();
   }
   function updateSignals(){
     const p=root?.querySelector("#atlasProgressSummary");if(!p)return;
@@ -223,34 +224,52 @@
     if(!["master","8","9"].includes(id))return;
     state.view=id;close();mount();
   }
+
   function onClick(e){
-    const view=e.target.closest("[data-view]");if(view){switchView(view.dataset.view);return;}
-    const zoom=e.target.closest("[data-zoom]");if(zoom){if(zoom.dataset.zoom==="fit")state.viewSize?.fit();else state.viewSize?.zoom(zoom.dataset.zoom==="in"?1.3:1/1.3);return;}
-    const node=e.target.closest("[data-node]");if(node){
-      if(node.dataset.node==="master-8")switchView("8");
-      else if(node.dataset.node==="master-9")switchView("9");
-      else if(node.dataset.node==="master-its")switchView("8");
-      else open(node.dataset.node);
+    const view=e.target.closest("[data-view]");
+    if(view){
+      const id=view.dataset.view;
+      if(state.workspace){
+        if(id==="master"){location.hash="#/module/its";return;}
+        location.hash="#/study/its/ch"+id+"/"+(id==="9"?"design":"advanced");
+      }else switchView(id);
+      return;
+    }
+    const zoom=e.target.closest("[data-zoom]");
+    if(zoom){
+      if(zoom.dataset.zoom==="fit")state.viewSize?.fit();
+      else state.viewSize?.zoom(zoom.dataset.zoom==="in"?1.3:1/1.3);
+      return;
+    }
+    const node=e.target.closest("[data-node]");
+    if(node){
+      const id=node.dataset.node;
+      if(id==="master-8"){switchView("8");return;}
+      if(id==="master-9"){switchView("9");return;}
+      if(id==="master-its"){switchView("8");return;}
+      const concept=byId[id];
+      if(concept)location.hash="#/study/its/ch"+(concept.chapter||8)+"/"+encodeURIComponent(id);
       return;
     }
     if(e.target.closest("[data-progress]"))root.querySelector("#atlasProgress")?.setAttribute("open","");
     if(e.target.closest("#atlasDownloadWeak"))makePaper();
   }
+
+  // The discussion is part of the dedicated page, not a modal overlay.
   function ensureDrawer(){
-    let d=document.getElementById("conceptDrawer");
-    if(!d){
-      d=document.createElement("div");d.id="conceptDrawer";d.className="concept-drawer-wrap";d.hidden=true;
-      d.innerHTML='<div class="concept-drawer-backdrop" data-close="true"></div><aside class="concept-drawer" role="dialog" aria-modal="true" aria-labelledby="conceptDrawerTitle"><div class="concept-drawer-top"><span class="section-kicker" id="conceptDrawerChapter">ITS · CHAPTER</span><button type="button" class="concept-close" data-close="true" aria-label="Close discussion">×</button></div><div class="concept-drawer-content" id="conceptDrawerContent"></div></aside>';
-      document.body.appendChild(d);
-      d.addEventListener("click",onDrawerClick);d.addEventListener("submit",onDrawerSubmit);
-      window.addEventListener("keydown",e=>{if(e.key==="Escape"&&!d.hidden)close()});
-      window.addEventListener("hashchange",close);
+    const panel=document.getElementById("conceptStudySidebar");
+    if(!panel)return false;
+    if(!panel.dataset.atlasBound){
+      panel.addEventListener("click",onDrawerClick);
+      panel.addEventListener("submit",onDrawerSubmit);
+      panel.dataset.atlasBound="yes";
     }
-    state.drawer=d;
+    state.drawer=panel;
+    return true;
   }
   function open(id){
     const n=byId[id];if(!n)return;
-    state.active=id;ensureDrawer();
+    state.active=id;if(!ensureDrawer())return;
     const chapter=n.chapter||8;
     state.drawer.querySelector("#conceptDrawerChapter").textContent="ITS · CHAPTER "+String(chapter).padStart(2,"0");
     const count=n.qs?.length||0,links=(n.links||[]).filter(k=>byId[k]);
@@ -268,12 +287,15 @@
       <details class="atlas-extra"><summary>Notes, questions and study details</summary><div><a href="${paths[chapter]}" target="_blank" rel="noopener noreferrer">Chapter ${chapter} PDF</a>${chapter===8?`<a href="#/practice/its/ch8/s1">Chapter 8 practice paper</a><p>${count} question-bank questions linked to this concept. This mapping supports local progress, not automatic AI grading.</p>${count?`<p>Question IDs: ${n.qs.join(", ")}</p>`:""}`:"<p>Chapter 9 practice paper is not available yet.</p>"}</div></details>
       <div id="atlasSettings" class="atlas-settings" hidden><label for="atlasModel">Gemini model</label><select id="atlasModel"><option value="gemini-3.5-flash" ${state.model==="gemini-3.5-flash"?"selected":""}>Gemini 3.5 Flash (default)</option><option value="gemini-3.5-flash-lite" ${state.model==="gemini-3.5-flash-lite"?"selected":""}>Gemini 3.5 Flash-Lite</option><option value="gemini-3.8-flash" ${state.model==="gemini-3.8-flash"?"selected":""}>Gemini 3.8 Flash</option></select><label for="atlasChangeKey">Change API key (optional)</label><input type="password" id="atlasChangeKey" placeholder="Paste new key"><div class="atlas-inline-actions"><button type="button" data-replace-key="true">Save settings</button><button type="button" data-clear-key="true">Disconnect</button></div><p>API key and chat history are stored in this tab's memory only. Prompts and chapter text are sent directly to Google when you use AI. Calls time out after 25 seconds.</p></div>`;
     state.drawer.hidden=false;
-    document.body.classList.add("concept-drawer-open");
-    state.drawer.querySelector(".concept-close")?.focus();
+    root?.querySelectorAll(".atlas-node[data-node]").forEach(button=>{
+      const chosen=button.dataset.node===id;
+      button.classList.toggle("is-selected",chosen);
+      button.setAttribute("aria-pressed",String(chosen));
+    });
     if(firstTime)state.drawer.querySelector("#atlasKey")?.focus();
     renderMessages();
   }
-  function close(){if(state.drawer&&!state.drawer.hidden){state.drawer.hidden=true;document.body.classList.remove("concept-drawer-open");}}
+  function close(){ /* The study sidebar stays visible for the lifetime of the study page. */ }
   function renderMessages(){
     const list=state.drawer?.querySelector("#atlasChatMessages");
     if(!list)return;
@@ -285,7 +307,7 @@
   }
   function onDrawerClick(e){
     if(e.target.closest("[data-close]")){close();return;}
-    const rel=e.target.closest("[data-related]");if(rel){open(rel.dataset.related);return;}
+    const rel=e.target.closest("[data-related]");if(rel){const n=byId[rel.dataset.related];if(n)location.hash="#/study/its/ch"+(n.chapter||8)+"/"+n.id;return;}
     if(e.target.closest("[data-offline]")){state.asked=true;state.offline=true;open(state.active);return;}
     if(e.target.closest("[data-settings]")){if(!state.key){state.asked=false;state.offline=false;open(state.active);}else{const box=state.drawer.querySelector("#atlasSettings");box.hidden=!box.hidden;}return;}
     if(e.target.closest("[data-clear-key]")){state.key="";state.offline=true;open(state.active);return;}
@@ -360,7 +382,30 @@
       const statusEl=state.drawer?.querySelector("#atlasChatStatus");if(statusEl)statusEl.textContent="Chapter "+chapter+" source · "+state.model;
     }
   }
-  window.PAPERROOM_CONCEPT_MAP={mount:()=>{root=document.getElementById("itsConceptMap");if(root)mount();},refresh:()=>{if(root&&state.view==="8")updateSignals();},open,switchView};
+
+  function renderStudy(chapter,id){
+    const host=document.getElementById("itsStudyMap");
+    const panel=document.getElementById("conceptStudySidebar");
+    if(!host||!panel)return;
+    const chapterId=String(chapter)==="9"?"9":"8";
+    const graph=chapterId==="9"?N9:T;
+    const valid=graph.some(node=>node.id===id)?id:chapterId==="9"?"design":"advanced";
+    const needsMount=state.mountedRoot!==host||state.mountedView!==chapterId||!host.querySelector("#atlasViewport");
+    state.workspace=true;
+    state.view=chapterId;
+    root=host;
+    if(needsMount)mount();
+    open(valid);
+  }
+  window.PAPERROOM_CONCEPT_MAP={
+    mount:()=>{
+      state.workspace=false;
+      root=document.getElementById("itsConceptMap");
+      if(root)mount();
+    },
+    refresh:()=>{if(root?.isConnected&&state.view==="8")updateSignals();},
+    open,switchView,renderStudy
+  };
   if(root)mount();
 
 })();
