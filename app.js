@@ -25,8 +25,9 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=["its-8-1"];
-  const storageFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
-  const historyFor=key=>{if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  const ADP_PAPER_KEYS=["adp-1-1","adp-2-1","adp-3-1"];
+  const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
   let STORAGE=storageFor(paperKey);
   let HISTORY_STORAGE=historyFor(paperKey);
@@ -37,12 +38,17 @@
   const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
+  const rich = text => window.PAPERROOM_RICH?.render(text) || `<p>${esc(text)}</p>`;
+  const drawDiagrams = root => window.PAPERROOM_RICH?.renderDiagrams(root || document);
+  const highlightCode = root => window.PAPERROOM_RICH?.highlightCode(root || document);
+  const snippetLanguage = q => q.snippetLanguage || (DATA.module==="ITS"?"sql":DATA.module==="ADP"?"java":"plaintext");
   const sessionHash=(key,kind="practice")=>{
+    if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `#/${kind}/adp/ch${ch}/s${s}`;}
     if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `#/${kind}/its/ch${ch}/s${s}`;}
     const [ch,s]=key.split("-");return `#/${kind}/prm/ch${ch}/s${s}`;
   };
   function selectPaper(module,ch,s) {
-    const key=module==="its"?"its-"+String(ch)+"-"+String(s):String(ch)+"-"+String(s);
+    const key=module==="its"||module==="adp"?module+"-"+String(ch)+"-"+String(s):String(ch)+"-"+String(s);
     if(!PAPERBANK[key])return false;
     if(key!==paperKey){
       paperKey=key;DATA=PAPERBANK[key];STORAGE=storageFor(key);HISTORY_STORAGE=historyFor(key);
@@ -72,7 +78,7 @@
     }catch(_e){return [];}
   }
   function readHistory(){return readHistoryFor(paperKey);}
-  function allHistory(module="prm"){return (module==="its"?ITS_PAPER_KEYS:PAPER_KEYS).flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
+  function allHistory(module="prm"){return (module==="its"?ITS_PAPER_KEYS:module==="adp"?ADP_PAPER_KEYS:PAPER_KEYS).flatMap(key=>readHistoryFor(key).map(item=>({key,item}))).sort((a,b)=>b.item.startedAt-a.item.startedAt);}
   function readAttemptFor(key) {
     try {
       const a=JSON.parse(localStorage.getItem(storageFor(key)) || "null");
@@ -121,7 +127,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"4 study topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"3 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -130,30 +136,57 @@
     if(viewingHistoryId){attempt=readAttempt();viewingHistoryId=null;}
     show("module");
     if(m.id==="adp"){
+      const adpPaper=(key,title)=>{
+        const paper=PAPERBANK[key],prior=readAttemptFor(key),active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+        if(!paper)return "";
+        return `<div class="session-file adp-session-file">
+          <div class="session-file-info"><span class="session-file-title">${esc(title)}</span>
+            <small>${paper.questions.length} questions · ${Math.round(paper.limitSeconds/60)} minutes · ${paper.totalMarks} marks · memo after submission</small></div>
+          <div class="session-file-actions"><a class="session-start-link" href="${sessionHash(key)}">${active?"Resume":"Start"}</a>
+            <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download ${esc(title)} questions as PDF">PDF</button></div></div>`;
+      };
       const topics=[
-        {number:"01",slug:"design-patterns",title:"Design Patterns",description:"Eight unhighlighted Gang of Four patterns, with diagrams, Java examples and exam-style practice.",details:"Prototype · Façade · Proxy · Mediator · State · Memento · Chain of Responsibility · Template Method",note:"Practice papers and marking memorandums will be added here."},
-        {number:"02",slug:"spring-security",title:"Spring Security",description:"A dedicated section for Spring Security notes and practice.",details:"Spring Security",note:"Notes, practice papers and marking memorandums will be added here."},
-        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",description:"A dedicated section for Spring Data JPA notes and practice.",details:"Spring Data JPA",note:"Notes, practice papers and marking memorandums will be added here."}
+        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"2 papers ready",
+          description:"Two Java-focused pattern papers. Six other unhighlighted patterns remain on the revision checklist.",
+          detail:`<p class="adp-topic-guidance">Study scope: Prototype, Façade, Proxy, Mediator, State, Memento, Chain of Responsibility, Template Method.</p>
+          <div class="adp-subsection"><strong>Chain of Responsibility</strong><p>Routing, handler ordering, delegation, failure paths and Java debugging.</p>${adpPaper("adp-1-1","Practice Paper 01")}</div>
+          <div class="adp-subsection"><strong>Proxy</strong><p>Protection, virtual and remote proxies, delegation, caching, security and code reviews.</p>${adpPaper("adp-2-1","Practice Paper 02")}</div>`},
+        {number:"02",slug:"spring-security",title:"Spring Security",status:"1 paper ready",
+          description:"Intermediate request rules, authentication, roles, password encoding, method security, sessions and CSRF.",
+          detail:`<p class="adp-topic-guidance">No OAuth deep dive. Java SecurityFilterChain configuration, access decisions and troubleshooting.</p>
+            ${adpPaper("adp-3-1","Intermediate Security · Paper 01")}
+            <div class="adp-resource-links"><a href="https://docs.spring.io/spring-security/reference/servlet/configuration/java.html" target="_blank" rel="noopener noreferrer">Java configuration</a><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noopener noreferrer">Filter chain architecture</a></div>`},
+        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"Papers pending",
+          description:"Reserved for JPA entities, repositories, relationships and persistence practice.",
+          detail:`<p class="adp-topic-guidance">No JPA questions have been published yet.</p>`}
       ];
+      const history=allHistory("adp").slice(0,20).map(({key,item})=>{
+        const paper=PAPERBANK[key],stats=scoreStats(item,paper);
+        return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
+          <span class="history-icon">✓</span><span class="history-name"><strong>${esc(paper.title)}</strong><small>${new Date(item.startedAt).toLocaleDateString()} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+          <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${stats.pending?"Review written answers":"Marked"}</small></span><span class="history-link">Review</span></a>`;
+      }).join("");
       $("#moduleContent").innerHTML=`<div class="module-compact-head">
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
-        <p>Four study areas, organised separately so each can have its own notes, questions and marking memorandums.</p></div>
-        <div class="module-summary-chip"><strong>04</strong><small>topics</small></div></div></div>
+        <p>Design Patterns, Spring Security and Spring Data JPA, with a fourth topic kept unassigned.</p></div>
+        <div class="module-summary-chip"><strong>03</strong><small>papers</small></div></div></div>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>3 named · 1 reserved</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>3 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
-              <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">Topic reserved</span></span>
+              <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
                 <span class="adp-topic-title">${esc(t.title)}</span><span class="adp-topic-description">${esc(t.description)}</span>
                 <span class="adp-topic-action">View topic <span aria-hidden="true">+</span></span></summary>
-              <div class="adp-topic-detail"><p>${esc(t.details)}</p><p class="adp-topic-note">${esc(t.note)}</p></div>
-            </details>`).join("")}
+              <div class="adp-topic-detail">${t.detail}</div></details>`).join("")}
             <article class="adp-topic-tile adp-topic-tbd"><div class="adp-topic-top"><span class="adp-topic-number">04</span><span class="adp-topic-status">Unassigned</span></div>
-              <h3 class="adp-topic-title">TBD</h3><p class="adp-topic-description">The fourth topic will be named when you decide what belongs here.</p>
+              <h3 class="adp-topic-title">TBD</h3><p class="adp-topic-description">Your fourth topic remains unnamed until you choose it.</p>
               <div class="adp-topic-action">Awaiting topic</div></article>
           </div>
-        </section>`;
+        </section>
+        <section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>ADP attempts.</h2></div><small>Saved on this device</small></div>
+          ${history?'<div class="history-list">'+history+'</div>':'<div class="history-empty"><span>✳</span><div><strong>No ADP attempts yet.</strong><p>Choose a practice paper to begin.</p></div></div>'}
+          <p class="storage-note">Saved in this browser, not synced across devices.</p></section>`;
       return;
     }
     const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
@@ -233,7 +266,29 @@
         <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
-      ${practiceSection}${combinedSection}${notesSection}${historySection}`;
+      ${m.id==="its"?`<section class="its-database-access" id="its-shared-db"><div><span class="section-kicker">REFERENCE DATA FOR SQL QUESTIONS</span><h2>Shared ITS database: Chapter 8</h2><p>Use this data dictionary for table names, columns, sample rows and the relationship diagram. Individual questions may give different data: when they do, use the data in the question.</p><p class="its-db-examples">Includes CUSTOMERS, ORDERS, PRODUCTS, EMPLOYEES, DEPARTMENTS, PAYMENTS and related tables.</p></div><div class="its-database-links"><a href="https://github.com/leeroy-chakanyuka/atomic-commits/blob/preview-pr-2/notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Open shared database tables ↗</a><a href="notes/ITS/ch08-practice-database.sql" download>Download sample Oracle database (.sql)</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>See sample tables and ER diagram in Paperroom</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Expand this section to display the shared database, table relationships and example queries.</p></div></details>`:""}${practiceSection}${combinedSection}${notesSection}${historySection}`;
+    if(m.id==="its"){
+      const dbDetails=$("#itsDbDetails"),holder=$("#itsDatabaseMarkdown");
+      if(dbDetails&&holder)dbDetails.addEventListener("toggle",async()=>{
+        if(!dbDetails.open||dbDetails.dataset.loaded)return;
+        dbDetails.dataset.loaded="loading";
+        try{
+          const response=await fetch("notes/ITS/ch08-practice-database.md");
+          if(!response.ok)throw new Error("HTTP "+response.status);
+          holder.innerHTML=rich(await response.text());
+          holder.querySelectorAll("pre > code.language-mermaid").forEach(code=>{
+            const d=document.createElement("div");d.className="mermaid";d.textContent=code.textContent;
+            code.parentElement.replaceWith(d);
+          });
+          drawDiagrams(holder);
+          highlightCode(holder);
+          dbDetails.dataset.loaded="true";
+        }catch(err){
+          holder.textContent="The inline preview is unavailable. Open the Markdown reference or download the SQL setup instead.";
+          delete dbDetails.dataset.loaded;
+        }
+      });
+    }
   }
   function answer(id,source=attempt) { return (source?.answers || {})[id] || {}; }
   function isAnswered(q) {
@@ -260,7 +315,7 @@
       location.hash = sessionHash(paperKey);
       return;
     }
-    attempt = { version:1, startedAt:Date.now(), endsAt:Date.now() + 3600 * 1000, submittedAt:null, timedOut:false, answers:{}, flags:[], reviews:{} };
+    attempt = { version:1, startedAt:Date.now(), endsAt:Date.now() + DATA.limitSeconds * 1000, submittedAt:null, timedOut:false, answers:{}, flags:[], reviews:{} };
     current = 1; filter = "all"; save();
     location.hash = sessionHash(paperKey);
     route();
@@ -281,12 +336,12 @@
     const clock = $("#examClock");
     clock.textContent = mins(time);
     clock.classList.toggle("warning", time <= 300);
-    $("#timeProgress").style.width = (time / 3600 * 100) + "%";
+    $("#timeProgress").style.width = (time / DATA.limitSeconds * 100) + "%";
   }
   function renderNav() {
     const count = numberAnswered();
-    $("#answeredSummary").textContent = count + " / 80 answered";
-    $("#answeredBar").style.width = (count / 80 * 100) + "%";
+    $("#answeredSummary").textContent = count + " / " + DATA.questions.length + " answered";
+    $("#answeredBar").style.width = (count / DATA.questions.length * 100) + "%";
     $("#questionNavigator").innerHTML = DATA.questions.map(q => `
       <button type="button" data-navigate="${q.id}" class="${isAnswered(q) ? "answered" : ""} ${q.id === current ? "current" : ""} ${attempt.flags.includes(q.id) ? "flagged" : ""}" aria-label="Question ${q.id}${isAnswered(q) ? ", answered" : ""}${attempt.flags.includes(q.id) ? ", flagged" : ""}" ${current === q.id ? 'aria-current="step"' : ""}>${q.id}</button>`).join("");
   }
@@ -299,7 +354,7 @@
       }).join("")}</div>`;
     }
     if (q.kind === "Matching") {
-      return `<span class="answer-label">Match each item to the correct SQL expression or meaning</span>
+      return `<span class="answer-label">Match each item to its correct description</span>
         <div class="match-grid">${q.matchItems.map((item,i)=>`
           <label class="match-row"><span><b>${i+1}.</b> ${esc(item.text)}</span>
             <select data-field="match${i+1}" aria-label="Match item ${i+1}">
@@ -309,7 +364,8 @@
     }
     if (q.kind === "Fill in the blanks" || q.kind === "SQL completion") {
       const n=q.blanks || q.accepted?.length || 2;
-      return `<span class="answer-label">Complete ${n===1?"the missing SQL token or term":"the missing SQL tokens or terms"}</span>
+      const blankLabel=DATA.module==="ITS" ? (n===1?"the missing SQL token or term":"the missing SQL tokens or terms") : (n===1?"the missing Java keyword or term":"the missing Java keywords or terms");
+      return `<span class="answer-label">Complete ${blankLabel}</span>
         <div class="blanks">${Array.from({length:n},(_,i)=>`<div><label class="answer-label" for="blank${i+1}">Blank ${i+1}</label>
           <input id="blank${i+1}" class="answer-input" data-field="blank${i+1}" autocomplete="off" placeholder="Missing term" value="${esc(a["blank"+(i+1)] || "")}"></div>`).join("")}
         </div><p class="answer-hint">Answer in the order the blanks appear.</p>`;
@@ -324,28 +380,46 @@
     if (q.kind === "Identify the term") {
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
     }
-    const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation"].includes(q.kind);
-    return `<label class="answer-label" for="writtenAnswer">${codeQuestion?"Your SQL / reasoning":q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
-      <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?"Write valid SQL and explain any corrections...":q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
+    const codeQuestion=["SQL writing","Debugging SQL","SQL case study","Query interpretation","Java implementation","Java debugging","Code review","Code tracing","Integrated design","Integrated review","Error identification","Testing"].includes(q.kind);
+    const codeLabel=DATA.module==="ITS"?"Your SQL / reasoning":DATA.module==="ADP"?"Your Java code / reasoning":"Your code / reasoning";
+    const codePlaceholder=DATA.module==="ITS"?"Write valid SQL and explain any corrections...":DATA.module==="ADP"?"Write Java code or explain your reasoning...":"Write your code or reasoning...";
+    return `<label class="answer-label" for="writtenAnswer">${codeQuestion?codeLabel:q.kind === "Numerical reasoning" ? "Show your formula, working and final answer" : "Your written answer"}</label>
+      <textarea id="writtenAnswer" class="answer-textarea ${codeQuestion?"code-answer":""}" data-field="text" placeholder="${codeQuestion?codePlaceholder:q.kind==="Numerical reasoning" ? "Formula → substitution → working → final answer..." : "Write your response here..."}">${esc(a.text || "")}</textarea>
       <p class="answer-hint">${q.marks} mark${q.marks!==1?"s":""} available. ${q.marks > 1 ? "Include enough distinct, relevant points to earn every mark." : "Keep it concise."}</p>`;
   }
   function showQuestion(id, scroll = false) {
-    current = Math.max(1, Math.min(80, id));
+    current = Math.max(1, Math.min(DATA.questions.length, id));
     const q = qOf(current);
     $("#questionSection").textContent = q.kind.toUpperCase();
-    $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF 80";
+    $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF " + DATA.questions.length;
     $("#questionMarks").textContent = q.marks + (q.marks === 1 ? " mark" : " marks");
-    $("#questionPrompt").textContent = quote(q.prompt);
+    $("#questionPrompt").innerHTML = rich(q.prompt);
     const codeSnippet=$("#questionSnippet");
-    if(codeSnippet){codeSnippet.hidden=!q.snippet;codeSnippet.textContent=q.snippet||"";}
+    if(codeSnippet){
+      codeSnippet.hidden=!q.snippet;
+      codeSnippet.replaceChildren();
+      if(q.snippet){
+        const code=document.createElement("code");
+        code.className="language-"+snippetLanguage(q);
+        code.textContent=q.snippet;
+        codeSnippet.appendChild(code);
+        highlightCode(codeSnippet);
+      }
+    }
+    const context=$("#questionContext");
+    if(context){context.hidden=!q.contextMd&&!q.referenceNote;context.innerHTML=(q.contextMd?rich(q.contextMd):"")+(q.referenceNote?`<p class="reference-note">${esc(q.referenceNote)}</p>`:"");}
+    const diagram=$("#questionDiagram");
+    if(diagram){diagram.hidden=!q.diagram;diagram.innerHTML=q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:"";}
     $("#answerArea").innerHTML = renderInput(q);
+    $("#itsDatabaseQuickLink").hidden=DATA.module!=="ITS";
+    drawDiagrams(diagram);
     $("#flagButton").classList.toggle("flagged",attempt.flags.includes(current));
     $("#flagButton").textContent = attempt.flags.includes(current) ? "⚑ Flagged for review" : "⚑ Flag for review";
     $("#previousButton").disabled = current === 1;
     $("#previousButton").style.opacity = current === 1 ? ".45" : "1";
-    $("#nextButton").textContent = current === 80 ? "Submit paper" : "Next question";
+    $("#nextButton").textContent = current === DATA.questions.length ? "Submit paper" : "Next question";
     renderNav();
-    if (scroll) { $("#answerArea").scrollTop=0; const card=document.querySelector(".question-card"); if(card)card.scrollTop=0; }
+    if (scroll) window.scrollTo({top:0,behavior:"instant"});
   }
   function renderExam() {
     show("exam");
@@ -361,8 +435,8 @@
     save();
     // Update progress without replacing focused input controls.
     const count = numberAnswered();
-    $("#answeredSummary").textContent = count + " / 80 answered";
-    $("#answeredBar").style.width = (count / 80 * 100) + "%";
+    $("#answeredSummary").textContent = count + " / " + DATA.questions.length + " answered";
+    $("#answeredBar").style.width = (count / DATA.questions.length * 100) + "%";
     const dot = $("#questionNavigator button.current");
     if (dot) dot.classList.toggle("answered", isAnswered(qOf(current)));
   }
@@ -443,10 +517,11 @@
     const s=scoreStats();
     $("#resultScore").textContent=s.score+" / "+DATA.totalMarks;
     $("#scoreLabel").textContent=s.pending===0 ? "TOTAL SCORE" : "SCORE SO FAR";
+    $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
     $("#scoreContext").textContent=s.pending===0 ?
       (Math.round(s.score/DATA.totalMarks*100)+"% · Fully reviewed") :
       (s.pending+" marks still need your review. This is not a final grade.");
-    $("#reviewProgress").textContent=s.marked+" / 80";
+    $("#reviewProgress").textContent=s.marked+" / "+DATA.questions.length;
     $("#timeUsed").textContent=mins(elapsed());
     const wrong=DATA.questions.filter(q=>{const g=grade(q);return g.marked&&g.score<q.marks;}).length;
     const el=$("#wrongCount");if(el)el.textContent=String(wrong);
@@ -463,8 +538,9 @@
       return `<details class="review-item" data-review-question="${q.id}">
         <summary><span class="review-index">${String(q.id).padStart(2,"0")}</span><span class="review-title">${esc(quote(q.prompt))}</span><span class="review-status ${state.className}">${state.label}</span><span class="review-chevron">⌄</span></summary>
         <div class="review-body">
+          ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet"><code class="language-${esc(snippetLanguage(q))}">${esc(q.snippet)}</code></pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
-          <div class="review-answer right"><h4>Model answer / marking guidance</h4><p>${esc(q.memo)}</p></div>
+          <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div></div>
           <div class="review-mark">
             <div><strong>${q.marks} marks available</strong><br><small>${g.pending ? "Compare your answer to the memorandum and award only earned marks." : "Checked automatically or no answer provided."}</small></div>
             ${g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
@@ -472,6 +548,8 @@
         </div></details>`;
     }).join("") : '<div class="review-empty">Nothing in this filter. Keep going ✳</div>';
     document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
+    drawDiagrams($("#reviewList"));
+    highlightCode($("#reviewList"));
   }
   function renderResults() {
     show("results");
@@ -483,10 +561,14 @@
   }
   function renderIntro() {
     show("intro");
-    $("#introKicker").textContent="CHAPTER "+DATA.chapter+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
-    $("#introDescription").textContent=DATA.intro || (DATA.title+". Eighty exam-style questions, one focused hour, and room to think.");
+    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
+    $("#introDescription").textContent=DATA.intro || (DATA.title+". "+DATA.questions.length+" exam-style questions and room to think.");
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
-    $("#introSheetTitle").innerHTML="Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
+    $("#introQuestionCount").textContent=String(DATA.questions.length);
+    $("#introDuration").textContent=String(Math.round(DATA.limitSeconds/60));
+    $("#introSheetModule").textContent=DATA.module==="ADP"?"APPLICATION DEVELOPMENT":DATA.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT";
+    $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
+    $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":"Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");
     if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
     $("#introSheetSession").textContent="Practice session "+String(DATA.session).padStart(2,"0");
@@ -494,7 +576,7 @@
   }
   function route() {
     const path=location.hash || "#/home";
-    const routeMatch=path.match(/^#\/(practice|results)\/(prm|its)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
+    const routeMatch=path.match(/^#\/(practice|results)\/(prm|its|adp)\/ch(\d+)\/s(\d+)(?:\/(\d+))?$/);
     if(routeMatch) {
       const [,kind,module,ch,session,savedId]=routeMatch;
       if(!selectPaper(module,ch,session)){location.hash="#/module/"+module;return;}
@@ -538,7 +620,7 @@
   $("#beginButton").addEventListener("click",startSession);
   $("#previousButton").addEventListener("click",()=>showQuestion(current-1,true));
   $("#nextButton").addEventListener("click",()=> {
-    if(current>=80){submitAttempt();return;}
+    if(current>=DATA.questions.length){submitAttempt();return;}
     showQuestion(current+1,true);
   });
   $("#flagButton").addEventListener("click",flagQuestion);

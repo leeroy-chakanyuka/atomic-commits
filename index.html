@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,15,0;9..144,600,15,0;9..144,700,15,0&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
   <link rel="stylesheet" href="styles.css">
   <script src="exam-data.js" defer></script>
   <script src="papers/prm/ch11-session-2.js" defer></script>
@@ -27,6 +28,15 @@
   <script src="papers/prm/ch15-session-2.js" defer></script>
   <script src="papers/prm/ch15-session-3.js" defer></script>
   <script src="papers/its/ch08-session-1.js" defer></script>
+  <!-- Markdown is parsed and then sanitized before insertion. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/lib/marked.umd.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js" defer></script>
+  <script src="papers/adp/chain-of-responsibility.js" defer></script>
+  <script src="papers/adp/proxy-pattern.js" defer></script>
+  <script src="papers/adp/spring-security.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" defer></script>
+  <script src="rich-content.js" defer></script>
   <script src="pdf-export.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -52,7 +62,7 @@
         <div class="hero-copy">
           <div class="eyebrow"><span class="eyebrow-line"></span> YOUR EXAM PREP, REIMAGINED</div>
           <h1>Know it well.<br><em>Know it fast.</em></h1>
-          <p class="hero-description">A quieter place to put your knowledge to the test. Proper practice papers, thoughtful review, and sixty minutes to show yourself what you know.</p>
+          <p class="hero-description">A quieter place to put your knowledge to the test. Proper practice papers, thoughtful review, and time to show yourself what you know.</p>
           <div class="hero-actions">
             <a href="#/module/prm" class="button button-dark">Explore practice papers</a>
             <a href="#/practice/prm/ch11/s1" class="text-link">Try Chapter 11</a>
@@ -95,7 +105,7 @@
       </section>
 
       <section class="principles shell" aria-label="Practice principles">
-        <div><span class="principle-icon">↗</span><strong>One focused hour</strong><span>Every paper ends after 60 minutes.</span></div>
+        <div><span class="principle-icon">↗</span><strong>Focused practice</strong><span>Timed sessions help you practise with focus.</span></div>
         <div><span class="principle-icon">✳</span><strong>Real exam-style questions</strong><span>Definitions, application, numbers and more.</span></div>
         <div><span class="principle-icon">◎</span><strong>Review with clarity</strong><span>See the answer and understand the gaps.</span></div>
       </section>
@@ -131,10 +141,10 @@
     <div id="introScreen" class="screen" hidden>
       <section class="shell page-section intro-layout">
         <div class="intro-left"><a href="#/module/prm" class="back-link">Back to PRM</a><span class="section-kicker" id="introKicker">CHAPTER 11 · PRACTICE SESSION 01</span><h1>Ready when<br><em>you are.</em></h1><p id="introDescription">Project Uncertainty Planning. Eighty carefully prepared questions, a single focused hour, and space to think.</p>
-        <div class="intro-facts"><div><strong>80</strong><span>questions</span></div><div><strong>60</strong><span>minutes</span></div><div><strong id="introTotalMarks">224</strong><span>marks</span></div></div>
+        <div class="intro-facts"><div><strong id="introQuestionCount">80</strong><span>questions</span></div><div><strong id="introDuration">60</strong><span>minutes</span></div><div><strong id="introTotalMarks">224</strong><span>marks</span></div></div>
         <div class="intro-notes"><p>✳ Your timer starts only when you press <b>Begin session</b>.</p><p>✳ You may submit at any point, even if some questions are unanswered.</p><p>✳ At 00:00, your work submits automatically, even if incomplete.</p><p>✳ Answers and marking guidance unlock after submission.</p><p>✳ Progress is saved on this device, so a refresh won't restart your timer.</p></div>
         <button class="button button-dark" id="beginButton" type="button">Begin practice session</button></div>
-        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label">PROJECT MANAGEMENT</span><div class="sheet-line"></div><h3 id="introSheetTitle">Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note" id="introSheetSession">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
+        <div class="intro-art" aria-hidden="true"><div class="intro-sheet"><span class="tiny-label" id="introSheetModule">PROJECT MANAGEMENT</span><div class="sheet-line"></div><h3 id="introSheetTitle">Chapter 11<br><em>Uncertainty.</em></h3><span class="sheet-note" id="introSheetSession">Practice session 01</span><div class="sheet-stamp">ONE<br>GOOD<br>HOUR ✳</div></div></div>
       </section>
     </div>
 
@@ -142,13 +152,13 @@
       <div class="exam-bar"><div class="shell exam-bar-inner"><div class="exam-clock-wrap"><span>Time left</span><strong id="examClock" class="exam-clock" aria-live="off">60:00</strong></div></div><div id="timeProgress" class="time-progress"></div></div>
       <div class="shell exam-layout">
         <aside class="question-sidebar"><div class="sidebar-sticky"><div class="sidebar-heading"><span>YOUR PAPER</span><strong id="answeredSummary">0 / 80 answered</strong></div><div class="sidebar-track"><div id="answeredBar"></div></div><div class="navigator-explain"><span><i class="legend-dot is-answered"></i>Answered</span><span><i class="legend-dot is-flagged"></i>Flagged</span></div><div id="questionNavigator" class="question-nav" aria-label="Choose a question"></div><p class="sidebar-small">Your answers are saved automatically on this device.</p></div></aside>
-        <section class="question-workspace"><div class="question-overline"><span id="questionSection">SECTION A · DEFINITIONS</span><button type="button" id="flagButton" class="flag-button">⚑ Flag for review</button></div><div class="question-card"><div class="question-meta"><span id="questionNumber">QUESTION 01 OF 80</span><span id="questionMarks">2 marks</span></div><h2 id="questionPrompt"></h2><pre id="questionSnippet" class="question-snippet" hidden></pre><div id="answerArea" class="answer-area"></div></div><div class="exam-controls"><button id="previousButton" class="button button-outline" type="button">Previous</button><button type="button" class="exam-exit" id="examExit">Leave &amp; save</button><button id="nextButton" class="button button-dark" type="button">Next question</button></div><div class="submit-panel"><div><strong>Ready to submit?</strong><p>Unanswered questions count as zero. Answers unlock after submission.</p></div><button id="submitExam" class="button button-soft" type="button">Submit paper</button></div></section>
+        <section class="question-workspace"><div class="question-overline"><span id="questionSection">SECTION A · DEFINITIONS</span><a id="itsDatabaseQuickLink" class="its-database-quick-link" href="https://github.com/leeroy-chakanyuka/atomic-commits/blob/preview-pr-2/notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer" hidden>Shared ITS database <span aria-hidden="true">↗</span></a><button type="button" id="flagButton" class="flag-button">⚑ Flag for review</button></div><div class="question-card"><div class="question-meta"><span id="questionNumber">QUESTION 01 OF 80</span><span id="questionMarks">2 marks</span></div><h2 id="questionPrompt"></h2><pre id="questionSnippet" class="question-snippet" hidden></pre><div id="questionContext" class="question-context md-body" hidden></div><div id="questionDiagram" class="question-diagram" hidden></div><div id="answerArea" class="answer-area"></div></div><div class="exam-controls"><button id="previousButton" class="button button-outline" type="button">Previous</button><button type="button" class="exam-exit" id="examExit">Leave &amp; save</button><button id="nextButton" class="button button-dark" type="button">Next question</button></div><div class="submit-panel"><div><strong>Ready to submit?</strong><p>Unanswered questions count as zero. Answers unlock after submission.</p></div><button id="submitExam" class="button button-soft" type="button">Submit paper</button></div></section>
       </div>
     </div>
 
     <div id="resultsScreen" class="screen" hidden>
       <section class="shell results-shell"><div class="results-top"><a href="#/module/prm" class="back-link">PRM library</a><span class="section-kicker">SESSION COMPLETE</span><h1>Every answer tells<br><em>you something.</em></h1><p>Review each response alongside the memorandum. Your marks, mistakes and completed attempts are saved in this browser for tomorrow's revision.</p></div>
-      <div class="results-cards"><div class="results-card highlight"><span id="scoreLabel">PROVISIONAL SCORE</span><strong id="resultScore">0 / 224</strong><small id="scoreContext">Review your written answers to complete your mark.</small></div><div class="results-card"><span>TIME USED</span><strong id="timeUsed">—</strong><small>of 60 minutes allowed</small></div><div class="results-card"><span>REVIEW STATUS</span><strong id="reviewProgress">0 / 80</strong><small>questions completely marked</small></div><div class="results-card"><span>NEEDS WORK</span><strong id="wrongCount">0</strong><small>questions to revisit later</small></div></div>
+      <div class="results-cards"><div class="results-card highlight"><span id="scoreLabel">PROVISIONAL SCORE</span><strong id="resultScore">0 / 224</strong><small id="scoreContext">Review your written answers to complete your mark.</small></div><div class="results-card"><span>TIME USED</span><strong id="timeUsed">—</strong><small id="resultsTimeAllowed">of 60 minutes allowed</small></div><div class="results-card"><span>REVIEW STATUS</span><strong id="reviewProgress">0 / 80</strong><small>questions completely marked</small></div><div class="results-card"><span>NEEDS WORK</span><strong id="wrongCount">0</strong><small>questions to revisit later</small></div></div>
       <div class="review-heading"><div><span class="section-kicker">YOUR REVIEW</span><h2>Learn from <em>every question.</em></h2></div><div class="review-filters"><button type="button" data-filter="all" class="filter active">All questions</button><button type="button" data-filter="wrong" class="filter">Needs work</button><button type="button" data-filter="pending" class="filter">Needs marking</button></div></div><div id="reviewList" class="review-list"></div><div class="results-bottom"><button id="restartExam" type="button" class="button button-outline">Start a fresh attempt</button><a href="#/module/prm" class="button button-dark">Back to module</a></div></section>
     </div>
   </main>

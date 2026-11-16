@@ -1,2 +1,1149 @@
 window.PAPERROOM_LIBRARY=window.PAPERROOM_LIBRARY||{};
-window.PAPERROOM_LIBRARY["its-8-1"]={"module":"ITS","moduleName":"Information Systems 3","chapter":8,"title":"Advanced SQL — Practical Challenge","session":1,"limitSeconds":3600,"version":2,"source":"Database Systems: Design, Implementation, and Management, Tenth Edition, Chapter 8 (user-provided slides)","intro":"Mostly SQL: complete queries, debug statements, match syntax, predict results and solve realistic database cases. A small number of contextual vocabulary checks remain. Oracle SQL/PL-SQL unless otherwise stated.","notice":"One-hour speed challenge. It is normal not to finish every case study. Submit with blanks whenever you need; written SQL requires rubric-guided self-review.","questions":[{"id":1,"kind":"Identify the term","prompt":"A report must keep all customers, even those who have never placed an order. Which JOIN type preserves customers when CUSTOMERS is on the left?","memo":"LEFT [OUTER] JOIN keeps every row from the left table, filling missing right-side values with NULL.","marks":1,"accepted":[["LEFT JOIN","LEFT OUTER JOIN"]]},{"id":2,"kind":"Identify the term","prompt":"A subquery checks each employee against the average salary of that employee's own department. What type of subquery is this?","memo":"Correlated subquery: the inner SELECT references the outer query row.","marks":1,"accepted":[["correlated subquery","correlated query"]]},{"id":3,"kind":"Identify the term","prompt":"A department report must filter aggregate groups after GROUP BY. Which SQL clause does that?","memo":"HAVING filters groups after aggregation; WHERE filters rows before grouping.","marks":1,"accepted":[["HAVING"]]},{"id":4,"kind":"Identify the term","prompt":"Two SELECT statements must be combined while retaining duplicate rows. Name the set operator.","memo":"UNION ALL keeps duplicate rows, unlike UNION.","marks":1,"accepted":[["UNION ALL"]]},{"id":5,"kind":"Identify the term","prompt":"A database event should automatically run PL/SQL after an INSERT. Name the database object.","memo":"Trigger: automatically runs for a specified DML event and timing.","marks":1,"accepted":[["trigger","database trigger"]]},{"id":6,"kind":"Identify the term","prompt":"An Oracle PL/SQL routine needs to process every row returned by a multirow query. Name the construct used.","memo":"Explicit cursor: opened and fetched to process multiple rows.","marks":1,"accepted":[["explicit cursor","cursor"]]},{"id":7,"kind":"Identify the term","prompt":"A query stored under a name behaves like a virtual table but stores no separate result by default. Name it.","memo":"VIEW: a stored SELECT exposed like a virtual table.","marks":1,"accepted":[["view","sql view"]]},{"id":8,"kind":"Identify the term","prompt":"A program constructs SQL text after the user chooses filters at runtime. Is this static or dynamic SQL?","memo":"Dynamic SQL: SQL text is assembled at runtime; static SQL is predefined.","marks":1,"accepted":[["dynamic sql","dynamic"]]},{"id":9,"kind":"Matching","prompt":"Match each report requirement to the most suitable join.","memo":"1 -> INNER JOIN (B); 2 -> LEFT JOIN (D); 3 -> CROSS JOIN (A)","marks":3,"matchItems":[{"text":"Only customers with orders","correct":"B"},{"text":"All customers, including those without orders","correct":"D"},{"text":"Every customer paired with every available promotion","correct":"A"}],"matchOptions":[{"letter":"A","text":"CROSS JOIN"},{"letter":"B","text":"INNER JOIN"},{"letter":"C","text":"RIGHT JOIN"},{"letter":"D","text":"LEFT JOIN"}]},{"id":10,"kind":"Matching","prompt":"Match each subquery requirement to the operator.","memo":"1 -> > ALL (C); 2 -> IN (A); 3 -> EXISTS (D)","marks":3,"matchItems":[{"text":"Salary exceeds every listed salary","correct":"C"},{"text":"Employee belongs to any department ID returned","correct":"A"},{"text":"At least one matching payment exists","correct":"D"}],"matchOptions":[{"letter":"A","text":"IN"},{"letter":"B","text":"NOT IN"},{"letter":"C","text":"> ALL"},{"letter":"D","text":"EXISTS"}]},{"id":11,"kind":"Matching","prompt":"Match the desired set result to the operator.","memo":"1 -> UNION (A); 2 -> INTERSECT (D); 3 -> MINUS (B)","marks":3,"matchItems":[{"text":"All distinct IDs from either query","correct":"A"},{"text":"Only IDs appearing in both queries","correct":"D"},{"text":"IDs from first query absent from second, Oracle","correct":"B"}],"matchOptions":[{"letter":"A","text":"UNION"},{"letter":"B","text":"MINUS"},{"letter":"C","text":"UNION ALL"},{"letter":"D","text":"INTERSECT"}]},{"id":12,"kind":"Matching","prompt":"Match each SQL statement to the outcome it produces.","memo":"1 -> Number of rows (C); 2 -> Number of unique customer IDs (A); 3 -> Sum of order totals (D)","marks":3,"matchItems":[{"text":"COUNT(*) over all orders","correct":"C"},{"text":"COUNT(DISTINCT customer_id)","correct":"A"},{"text":"SUM(total)","correct":"D"}],"matchOptions":[{"letter":"A","text":"Number of unique customer IDs"},{"letter":"B","text":"Maximum order total"},{"letter":"C","text":"Number of rows"},{"letter":"D","text":"Sum of order totals"}]},{"id":13,"kind":"Matching","prompt":"Match each function to the task in an Oracle query.","memo":"1 -> TO_CHAR (B); 2 -> TO_DATE (D); 3 -> UPPER (A)","marks":3,"matchItems":[{"text":"Render order_date as YYYY-MM-DD","correct":"B"},{"text":"Convert a date string to DATE","correct":"D"},{"text":"Make customer name uppercase","correct":"A"}],"matchOptions":[{"letter":"A","text":"UPPER"},{"letter":"B","text":"TO_CHAR"},{"letter":"C","text":"LENGTH"},{"letter":"D","text":"TO_DATE"}]},{"id":14,"kind":"Matching","prompt":"Match a data-change requirement to its SQL mechanism.","memo":"1 -> ROW-LEVEL TRIGGER (C); 2 -> STORED PROCEDURE (B); 3 -> SEQUENCE NEXTVAL (D)","marks":3,"matchItems":[{"text":"Automatically log each inserted order row","correct":"C"},{"text":"Call reusable server-side steps by name","correct":"B"},{"text":"Generate a fresh numeric ID in Oracle","correct":"D"}],"matchOptions":[{"letter":"A","text":"VIEW"},{"letter":"B","text":"STORED PROCEDURE"},{"letter":"C","text":"ROW-LEVEL TRIGGER"},{"letter":"D","text":"SEQUENCE NEXTVAL"}]},{"id":15,"kind":"Matching","prompt":"Match each multirow comparison expression to its meaning.","memo":"1 -> Above every result (D); 2 -> Equals at least one result (A); 3 -> Below at least one result (B)","marks":3,"matchItems":[{"text":"price > ALL (subquery)","correct":"D"},{"text":"price = ANY (subquery)","correct":"A"},{"text":"price < ANY (subquery)","correct":"B"}],"matchOptions":[{"letter":"A","text":"Equals at least one result"},{"letter":"B","text":"Below at least one result"},{"letter":"C","text":"Above at least one result"},{"letter":"D","text":"Above every result"}]},{"id":16,"kind":"Matching","prompt":"Match each SELECT clause to the relevant operation.","memo":"1 -> Filters input rows (B); 2 -> Filters groups (C); 3 -> Sorts output (D)","marks":3,"matchItems":[{"text":"WHERE status = 'PAID'","correct":"B"},{"text":"HAVING COUNT(*) > 2","correct":"C"},{"text":"ORDER BY total DESC","correct":"D"}],"matchOptions":[{"letter":"A","text":"Joins source tables"},{"letter":"B","text":"Filters input rows"},{"letter":"C","text":"Filters groups"},{"letter":"D","text":"Sorts output"}]},{"id":17,"kind":"Matching","prompt":"Match each kind of view to its relevant constraint.","memo":"1 -> Potentially updatable (A); 2 -> Normally not updatable because of grouping (B); 3 -> Normally not updatable because of set operation (C)","marks":3,"matchItems":[{"text":"View based on one table without aggregates","correct":"A"},{"text":"View with GROUP BY and SUM","correct":"B"},{"text":"View built from UNION queries","correct":"C"}],"matchOptions":[{"letter":"A","text":"Potentially updatable"},{"letter":"B","text":"Normally not updatable because of grouping"},{"letter":"C","text":"Normally not updatable because of set operation"},{"letter":"D","text":"Always materialized"}]},{"id":18,"kind":"Matching","prompt":"Match each PL/SQL component to its use.","memo":"1 -> Number of rows affected by most recent SQL statement (C); 2 -> Accesses incoming row value (B); 3 -> Executes dynamically built SQL (D)","marks":3,"matchItems":[{"text":"SQL%ROWCOUNT","correct":"C"},{"text":":NEW.total in a row trigger","correct":"B"},{"text":"EXECUTE IMMEDIATE","correct":"D"}],"matchOptions":[{"letter":"A","text":"Closes any cursor"},{"letter":"B","text":"Accesses incoming row value"},{"letter":"C","text":"Number of rows affected by most recent SQL statement"},{"letter":"D","text":"Executes dynamically built SQL"}]},{"id":19,"kind":"SQL completion","prompt":"Complete the join to return each order ID with its customer name.","memo":"JOIN links rows using ON o.customer_id = c.customer_id.","marks":2,"snippet":"SELECT o.order_id, c.name\nFROM ORDERS o __1__ CUSTOMERS c\n  __2__ o.customer_id = c.customer_id;","blanks":2,"accepted":[["JOIN"],["ON"]]},{"id":20,"kind":"SQL completion","prompt":"Complete the query to retain customers even if no order exists.","memo":"LEFT JOIN retains customers; NULL identifies unmatched orders.","marks":2,"snippet":"SELECT c.name, o.order_id\nFROM CUSTOMERS c __1__ JOIN ORDERS o\n  ON c.customer_id = o.customer_id\nWHERE o.order_id IS __2__;","blanks":2,"accepted":[["LEFT"],["NULL"]]},{"id":21,"kind":"SQL completion","prompt":"Complete the query for order counts per customer, limited to groups with three or more orders.","memo":"COUNT(*) and GROUP BY customer_id.","marks":2,"snippet":"SELECT customer_id, __1__(*) AS n\nFROM ORDERS\n__2__ customer_id\nHAVING COUNT(*) >= 3;","blanks":2,"accepted":[["COUNT"],["GROUP BY"]]},{"id":22,"kind":"SQL completion","prompt":"Complete the query using a subquery to select customers with paid orders.","memo":"IN (... WHERE status = 'PAID').","marks":2,"snippet":"SELECT name FROM CUSTOMERS\nWHERE customer_id __1__ (\n SELECT customer_id FROM ORDERS\n WHERE status = __2__);","blanks":2,"accepted":[["IN"],["'PAID'"]]},{"id":23,"kind":"SQL completion","prompt":"Complete the query to select employees whose salary exceeds every salary in department 7.","memo":"Use > ALL with the subquery for department 7; assumes the subquery is non-empty.","marks":2,"snippet":"SELECT name FROM EMPLOYEES\nWHERE salary > __1__ (\n SELECT salary FROM EMPLOYEES\n WHERE dept_id = __2__);","blanks":2,"accepted":[["ALL"],["7"]]},{"id":24,"kind":"SQL completion","prompt":"Complete the query to find departments having no employees.","memo":"COUNT(*) in a scalar correlated subquery returns 0 for departments with no matches.","marks":2,"snippet":"SELECT d.dept_id FROM DEPARTMENTS d\nWHERE (SELECT __1__(*) FROM EMPLOYEES e\n WHERE e.dept_id = d.dept_id) = __2__;","blanks":2,"accepted":[["COUNT"],["0"]]},{"id":25,"kind":"SQL completion","prompt":"Complete an Oracle date conversion used in an order-date filter.","memo":"TO_DATE('2026-11-01','YYYY-MM-DD').","marks":2,"snippet":"SELECT order_id FROM ORDERS\nWHERE order_date >= __1__('2026-11-01', __2__);","blanks":2,"accepted":[["TO_DATE"],["'YYYY-MM-DD'"]]},{"id":26,"kind":"SQL completion","prompt":"Complete the expression that produces upper-case names and their length.","memo":"UPPER(name) converts case; LENGTH(name) counts characters.","marks":2,"snippet":"SELECT __1__(name), __2__(name)\nFROM CUSTOMERS;","blanks":2,"accepted":[["UPPER"],["LENGTH"]]},{"id":27,"kind":"SQL completion","prompt":"Complete a query that returns distinct customers from either of two sources.","memo":"UNION eliminates duplicates; ORDER BY sorts the combined result.","marks":2,"snippet":"SELECT customer_id FROM CUSTOMERS\n__1__\nSELECT customer_id FROM ARCHIVE_CUSTOMERS\n__2__ customer_id;","blanks":2,"accepted":[["UNION"],["ORDER BY"]]},{"id":28,"kind":"SQL completion","prompt":"Complete Oracle set difference for customers not present in the archive.","memo":"MINUS returns distinct IDs only in the first query; ORDER BY is final.","marks":2,"snippet":"SELECT customer_id FROM CUSTOMERS\n__1__\nSELECT customer_id FROM ARCHIVE_CUSTOMERS\n__2__ customer_id;","blanks":2,"accepted":[["MINUS"],["ORDER BY"]]},{"id":29,"kind":"SQL completion","prompt":"Complete a view containing employees and their department names.","memo":"CREATE VIEW ... JOIN ... ON.","marks":2,"snippet":"CREATE __1__ employee_depts AS\nSELECT e.name, d.dept_name\nFROM EMPLOYEES e\nJOIN DEPARTMENTS d __2__ e.dept_id=d.dept_id;","blanks":2,"accepted":[["VIEW"],["ON"]]},{"id":30,"kind":"SQL completion","prompt":"Complete the trigger heading: log every newly inserted order row after insertion.","memo":"AFTER INSERT ... FOR EACH ROW specifies a row-level trigger.","marks":2,"snippet":"CREATE OR REPLACE TRIGGER log_order\n__1__ INSERT ON ORDERS\nFOR EACH __2__\nBEGIN NULL; END;","blanks":2,"accepted":[["AFTER"],["ROW"]]},{"id":31,"kind":"SQL completion","prompt":"Complete the Oracle sequence call for a generated primary key.","memo":"customer_seq.NEXTVAL generates a value; 'Asha' is a string literal.","marks":2,"snippet":"INSERT INTO CUSTOMERS(customer_id,name,city)\nVALUES (customer_seq.__1__, __2__, 'Cape Town');","blanks":2,"accepted":[["NEXTVAL"],["'Asha'"]]},{"id":32,"kind":"SQL completion","prompt":"Complete the explicit cursor loop actions in PL/SQL.","memo":"FETCH obtains a row; %NOTFOUND stops after end of results.","marks":2,"snippet":"OPEN c_orders;\nLOOP\n  __1__ c_orders INTO v_order_id;\n  EXIT WHEN c_orders%__2__;\nEND LOOP;\nCLOSE c_orders;","blanks":2,"accepted":[["FETCH"],["NOTFOUND"]]},{"id":33,"kind":"Debugging SQL","prompt":"A customer report duplicates and mismatches orders. Repair the missing join condition and show the corrected SQL.","memo":"SELECT c.name, o.order_id FROM CUSTOMERS c JOIN ORDERS o ON c.customer_id=o.customer_id WHERE o.total>500; (2 marks for ON, 1 for correct SELECT/filter).","marks":3,"snippet":"SELECT c.name, o.order_id\nFROM CUSTOMERS c, ORDERS o\nWHERE o.total > 500;"},{"id":34,"kind":"Debugging SQL","prompt":"A developer placed aggregate filtering in WHERE. Rewrite the query.","memo":"SELECT customer_id, COUNT(*) n FROM ORDERS GROUP BY customer_id HAVING COUNT(*)>=2; (2 HAVING; 1 valid grouping).","marks":3,"snippet":"SELECT customer_id, COUNT(*) n\nFROM ORDERS\nWHERE COUNT(*) >= 2\nGROUP BY customer_id;"},{"id":35,"kind":"Debugging SQL","prompt":"This left-join query silently loses customers with no orders. Fix it to retain all customers but report PAID orders only.","memo":"Move o.status='PAID' into the ON predicate: LEFT JOIN ORDERS o ON c.customer_id=o.customer_id AND o.status='PAID'; (2 predicate positioning, 1 preserved outer join).","marks":3,"snippet":"SELECT c.name, o.order_id\nFROM CUSTOMERS c LEFT JOIN ORDERS o\n ON c.customer_id=o.customer_id\nWHERE o.status='PAID';"},{"id":36,"kind":"Debugging SQL","prompt":"Fix this Oracle query: it tries to compare one number to a multirow subquery.","memo":"Use salary IN (SELECT salary FROM EMPLOYEES WHERE dept_id=3) when matching any department-3 salary. (2 marks for IN and valid syntax, 1 intent).","marks":3,"snippet":"SELECT name FROM EMPLOYEES\nWHERE salary = (SELECT salary FROM EMPLOYEES WHERE dept_id=3);"},{"id":37,"kind":"Debugging SQL","prompt":"Fix the scalar subquery so it returns one value: list employees above the company average salary.","memo":"SELECT name FROM EMPLOYEES WHERE salary > (SELECT AVG(salary) FROM EMPLOYEES); (2 AVG, 1 comparison).","marks":3,"snippet":"SELECT name FROM EMPLOYEES\nWHERE salary > (SELECT salary FROM EMPLOYEES);"},{"id":38,"kind":"Debugging SQL","prompt":"Fix the aggregate count: one query must return only distinct customer IDs across both sources.","memo":"Use UNION (not UNION ALL) to remove duplicate customer IDs, while preserving the same SELECT lists. (2 operator, 1 compatible columns).","marks":3,"snippet":"SELECT customer_id FROM CUSTOMERS\nUNION ALL\nSELECT customer_id FROM ARCHIVE_CUSTOMERS;"},{"id":39,"kind":"Debugging SQL","prompt":"The query compares an order date against a badly formatted string in Oracle. Correct it using explicit date conversion.","memo":"SELECT order_id FROM ORDERS WHERE order_date=TO_DATE('30/11/2026','DD/MM/YYYY'); (2 conversion, 1 valid date format).","marks":3,"snippet":"SELECT order_id FROM ORDERS WHERE order_date='30/11/2026';"},{"id":40,"kind":"Debugging SQL","prompt":"This view is expected to allow updating total salary, but the view definition uses an aggregate. Explain the problem and show a suitable read-only alternative.","memo":"The aggregate/GROUP BY view is not normally updatable. Keep it as a reporting view; update base EMPLOYEES rows directly instead. (2 restriction, 1 actionable approach).","marks":3,"snippet":"CREATE VIEW dept_totals AS\nSELECT dept_id, SUM(salary) total_salary\nFROM EMPLOYEES GROUP BY dept_id;"},{"id":41,"kind":"Debugging SQL","prompt":"A row-level trigger mistakenly omits FOR EACH ROW and references :NEW. Supply a corrected trigger skeleton.","memo":"CREATE OR REPLACE TRIGGER order_audit AFTER INSERT ON ORDERS FOR EACH ROW BEGIN INSERT INTO ORDER_LOG(order_id) VALUES (:NEW.order_id); END; (2 FOR EACH ROW, 1 correct context).","marks":3,"snippet":"CREATE OR REPLACE TRIGGER order_audit\nAFTER INSERT ON ORDERS\nBEGIN\n INSERT INTO ORDER_LOG(order_id) VALUES (:NEW.order_id);\nEND;"},{"id":42,"kind":"Debugging SQL","prompt":"Repair the Oracle procedure: an IN parameter is being assigned a new value.","memo":"An IN parameter is read-only; use a local variable v_price NUMBER; BEGIN v_price:=p_new*2; END; or declare appropriate OUT/IN OUT when assignment to parameter is intended. (2 parameter mode/local variable, 1 valid code).","marks":3,"snippet":"CREATE PROCEDURE set_price(p_new IN NUMBER) AS\nBEGIN p_new := p_new*2; END;"},{"id":43,"kind":"Debugging SQL","prompt":"Fix the explicit cursor loop so it does not process an extra invalid row.","memo":"Move EXIT WHEN c%NOTFOUND immediately after FETCH and before processing v_id. (2 ordering, 1 valid iteration).","marks":3,"snippet":"OPEN c;\nLOOP\n FETCH c INTO v_id;\n DBMS_OUTPUT.PUT_LINE(v_id);\n EXIT WHEN c%NOTFOUND;\nEND LOOP;\nCLOSE c;"},{"id":44,"kind":"Debugging SQL","prompt":"This dynamic SQL concatenates untrusted user input into executable SQL. Rewrite the call using a bind value.","memo":"EXECUTE IMMEDIATE 'DELETE FROM ORDERS WHERE order_id = :id' USING p_id; (2 placeholder, 1 USING bind; avoids string concatenation).","marks":3,"snippet":"EXECUTE IMMEDIATE 'DELETE FROM ORDERS WHERE order_id='||p_id;"},{"id":45,"kind":"SQL writing","prompt":"Write a query listing each order ID, customer name, and total for orders exceeding R1,000. Include only matched customers.","memo":"SELECT o.order_id,c.name,o.total FROM ORDERS o JOIN CUSTOMERS c ON c.customer_id=o.customer_id WHERE o.total>1000; Rubric: 2 correct join, 1 filter, 1 columns.","marks":4},{"id":46,"kind":"SQL writing","prompt":"List every customer name and the number of orders placed, including customers with zero orders.","memo":"SELECT c.name,COUNT(o.order_id) AS order_count FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id GROUP BY c.customer_id,c.name; Rubric: 2 LEFT JOIN, 1 COUNT(non-null right key), 1 GROUP BY.","marks":4},{"id":47,"kind":"SQL writing","prompt":"List product names that have never appeared in an order item.","memo":"SELECT p.product_name FROM PRODUCTS p WHERE NOT EXISTS (SELECT 1 FROM ORDER_ITEMS i WHERE i.product_id=p.product_id); Rubric: 2 NOT EXISTS with correlated keys, 1 correct projection, 1 no false inner join.","marks":4},{"id":48,"kind":"SQL writing","prompt":"Write a query returning each department ID and its average employee salary, only if its average exceeds R25,000.","memo":"SELECT dept_id, AVG(salary) AS avg_salary FROM EMPLOYEES GROUP BY dept_id HAVING AVG(salary)>25000; Rubric: 1 AVG, 1 GROUP BY, 2 HAVING.","marks":4},{"id":49,"kind":"SQL writing","prompt":"List employees whose salary is above the average salary in their own department.","memo":"SELECT e.name,e.salary FROM EMPLOYEES e WHERE e.salary>(SELECT AVG(x.salary) FROM EMPLOYEES x WHERE x.dept_id=e.dept_id); Rubric: 2 correlated subquery, 1 AVG, 1 greater-than comparison.","marks":4},{"id":50,"kind":"SQL writing","prompt":"Return customers who placed at least one order in November 2026 using a correlated EXISTS subquery (Oracle DATE functions).","memo":"SELECT c.customer_id,c.name FROM CUSTOMERS c WHERE EXISTS (SELECT 1 FROM ORDERS o WHERE o.customer_id=c.customer_id AND o.order_date>=DATE '2026-11-01' AND o.order_date<DATE '2026-12-01'); Rubric: 2 EXISTS+correlation, 1 correct November date range, 1 projection.","marks":4},{"id":51,"kind":"SQL writing","prompt":"Show each customer name and an inline scalar column last_order containing the maximum date of their orders.","memo":"SELECT c.name,(SELECT MAX(o.order_date) FROM ORDERS o WHERE o.customer_id=c.customer_id) AS last_order FROM CUSTOMERS c; Rubric: 2 scalar correlated select, 1 MAX, 1 alias.","marks":4},{"id":52,"kind":"SQL writing","prompt":"Show the number of days since each customer order, assuming Oracle SYSDATE.","memo":"SELECT order_id, TRUNC(SYSDATE)-TRUNC(order_date) AS days_old FROM ORDERS; Rubric: 2 correct date arithmetic, 1 TRUNC to eliminate time portions, 1 alias.","marks":4},{"id":53,"kind":"SQL writing","prompt":"Display order IDs and totals rounded to two decimals and label the result rounded_total.","memo":"SELECT order_id,ROUND(total,2) AS rounded_total FROM ORDERS; Rubric: 2 ROUND(total,2), 1 alias, 1 columns.","marks":4},{"id":54,"kind":"SQL writing","prompt":"Return names formatted as uppercase and the name length for every customer.","memo":"SELECT UPPER(name) AS upper_name,LENGTH(name) AS name_length FROM CUSTOMERS; Rubric: 2 correct functions, 1 projection, 1 labels.","marks":4},{"id":55,"kind":"SQL writing","prompt":"Return a distinct list of customer IDs that appear in both the current and archive customer tables, Oracle syntax.","memo":"SELECT customer_id FROM CUSTOMERS INTERSECT SELECT customer_id FROM ARCHIVE_CUSTOMERS; Rubric: 2 INTERSECT, 1 compatible projections, 1 correct result.","marks":4},{"id":56,"kind":"SQL writing","prompt":"Return customer IDs in current records but not archives, Oracle syntax.","memo":"SELECT customer_id FROM CUSTOMERS MINUS SELECT customer_id FROM ARCHIVE_CUSTOMERS; Rubric: 2 MINUS with correct order, 1 compatible columns, 1 correct result.","marks":4},{"id":57,"kind":"SQL writing","prompt":"Create a view named paid_order_totals showing customer_id and the total value of their PAID orders.","memo":"CREATE VIEW paid_order_totals AS SELECT customer_id,SUM(total) AS total_paid FROM ORDERS WHERE status='PAID' GROUP BY customer_id; Rubric: 1 CREATE VIEW, 1 filtered SUM, 1 GROUP BY, 1 correct aliases.","marks":4},{"id":58,"kind":"SQL writing","prompt":"Write an INSERT statement for a new customer, taking customer_id from Oracle sequence customer_seq.","memo":"INSERT INTO CUSTOMERS(customer_id,name,city) VALUES (customer_seq.NEXTVAL,'Sia','Paarl'); Rubric: 2 NEXTVAL usage, 1 valid columns, 1 values. Name and city may vary.","marks":4},{"id":59,"kind":"SQL writing","prompt":"Write a trigger skeleton to log deletion of each order into ORDER_LOG(order_id) using Oracle :OLD.","memo":"CREATE OR REPLACE TRIGGER orders_deleted AFTER DELETE ON ORDERS FOR EACH ROW BEGIN INSERT INTO ORDER_LOG(order_id) VALUES (:OLD.order_id); END; Rubric: 1 AFTER DELETE, 1 FOR EACH ROW, 1 :OLD, 1 INSERT.","marks":4},{"id":60,"kind":"SQL writing","prompt":"Write a simple Oracle procedure named raise_salary that accepts p_emp_id and p_amount as IN parameters and increases salary for that employee.","memo":"CREATE OR REPLACE PROCEDURE raise_salary(p_emp_id IN NUMBER,p_amount IN NUMBER) AS BEGIN UPDATE EMPLOYEES SET salary=salary+p_amount WHERE emp_id=p_emp_id; END; Rubric: 1 procedure signature, 1 parameters, 1 UPDATE math, 1 WHERE targeted employee.","marks":4},{"id":61,"kind":"Query interpretation","prompt":"How many rows does this CROSS JOIN return?","memo":"3 × 2 = 6 rows. Every customer is paired with every promotion. (1 number, 1 reason, 1 product.)","marks":3,"snippet":"CUSTOMERS: (1,Asha),(2,Bongani),(3,Chloe)\nPROMOTIONS: (10,SALE),(20,WINTER)\nSELECT * FROM CUSTOMERS CROSS JOIN PROMOTIONS;"},{"id":62,"kind":"Query interpretation","prompt":"Which customer IDs appear in the result? Preserve unmatched customers.","memo":"Four rows: (1,101), (1,102), (2,NULL), (3,103). Customer 2 remains with a NULL order. (2 full result, 1 preservation.)","marks":3,"snippet":"CUSTOMERS: IDs 1,2,3\nORDERS: (101,customer_id=1),(102,customer_id=1),(103,customer_id=3)\nSELECT c.customer_id,o.order_id FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id;"},{"id":63,"kind":"Query interpretation","prompt":"What IDs does Oracle UNION return in sorted order?","memo":"1,2,3,4. UNION removes duplicates across both inputs. (2 IDs,1 dedup explanation.)","marks":3,"snippet":"A: 1,1,2,4\nB: 2,3,4,4\nSELECT id FROM A UNION SELECT id FROM B ORDER BY id;"},{"id":64,"kind":"Query interpretation","prompt":"What rows does UNION ALL return, counting duplicates?","memo":"Six rows: 1,1,2,2,2,3 (order unspecified without ORDER BY). (2 values,1 duplicates.)","marks":3,"snippet":"A: 1,1,2\nB: 2,2,3\nSELECT id FROM A UNION ALL SELECT id FROM B;"},{"id":65,"kind":"Query interpretation","prompt":"What IDs are returned by INTERSECT and MINUS (A MINUS B)?","memo":"INTERSECT = 2,4; A MINUS B = 1. Duplicate rows removed by these operators. (1+1 results,1 note.)","marks":3,"snippet":"A: 1,1,2,4\nB: 2,3,4,4\nA INTERSECT B\nA MINUS B"},{"id":66,"kind":"Query interpretation","prompt":"Is employee 1 returned by > ALL and > ANY? Explain.","memo":"> ALL is false (35,000 not above 40,000); > ANY is true (above 20,000 and 30,000). (1 each +1 reasoning.)","marks":3,"snippet":"Reference salaries from subquery: 20000,30000,40000\nEmployee 1 salary=35000\nTests: salary > ALL(...), salary > ANY(...)"},{"id":67,"kind":"Query interpretation","prompt":"For this data, how many customers appear in the COUNT(*) groups?","memo":"One row: customer_id=1,count=2. WHERE discards unpaid, HAVING keeps only a group with at least 2. (2 row/count,1 reason.)","marks":3,"snippet":"ORDERS: (cust=1,status='PAID'),(cust=1,status='PAID'),(cust=2,status='PENDING'),(cust=3,status='PAID')\nSELECT customer_id,COUNT(*) FROM ORDERS WHERE status='PAID' GROUP BY customer_id HAVING COUNT(*)>=2;"},{"id":68,"kind":"Query interpretation","prompt":"What will NVL return for unmatched orders on a LEFT JOIN?","memo":"Asha 150; Bongani 0. Missing right row makes o.total NULL; NVL substitutes zero. (2 rows,1 reason.)","marks":3,"snippet":"CUSTOMERS: (1,Asha),(2,Bongani)\nORDERS: (101,cust=1,total=150)\nSELECT c.name,NVL(o.total,0) total FROM CUSTOMERS c LEFT JOIN ORDERS o ON o.customer_id=c.customer_id;"},{"id":69,"kind":"Query interpretation","prompt":"What columns are produced by this scalar correlated subquery?","memo":"Rows: (1,250) and (2,NULL). MAX of no matching rows is NULL. (2 outputs,1 note.)","marks":3,"snippet":"CUSTOMERS: IDs 1,2\nORDERS: (101,cust=1,total=100),(102,cust=1,total=250)\nSELECT customer_id,(SELECT MAX(total) FROM ORDERS o WHERE o.customer_id=c.customer_id) mx FROM CUSTOMERS c;"},{"id":70,"kind":"Query interpretation","prompt":"Predict the display strings from these Oracle functions.","memo":"'CAPE TOWN', 3, 19.88. (One mark for each result.)","marks":3,"snippet":"SELECT UPPER('Cape Town'), LENGTH('SQL'), ROUND(19.876,2) FROM dual;"},{"id":71,"kind":"SQL case study","prompt":"Retail database: the owner wants a customer revenue report including customers with no orders. Write a single SELECT with customer name, count of PAID orders and sum of PAID order totals; include zero-revenue customers. Explain where the PAID condition belongs.","memo":"SELECT c.name,COUNT(o.order_id) AS paid_orders,NVL(SUM(o.total),0) AS revenue FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id AND o.status='PAID' GROUP BY c.customer_id,c.name; Required result Asha 2/500, Bongani 0/0, Chipo 0/0. Rubric: 2 LEFT JOIN+ON status, 1 COUNT, 1 SUM/NVL, 1 GROUP, 1 result reasoning.","marks":6,"snippet":"CUSTOMERS(customer_id, name)\nORDERS(order_id, customer_id, status, total)\nCustomers: 1 Asha,2 Bongani,3 Chipo\nPaid orders: (101,1,200),(102,1,300); pending: (103,2,100)"},{"id":72,"kind":"SQL case study","prompt":"School system: list students whose most recent mark is greater than their own course average. Write a correlated query and explain why an uncorrelated average is wrong.","memo":"SELECT a.student_id,a.course_id,a.mark FROM ASSESSMENTS a WHERE a.mark>(SELECT AVG(x.mark) FROM ASSESSMENTS x WHERE x.student_id=a.student_id AND x.course_id=a.course_id); This selects every above-average assessment, not specifically the latest. For latest add a.assessed_at=(SELECT MAX(z.assessed_at) FROM ASSESSMENTS z WHERE z.student_id=a.student_id AND z.course_id=a.course_id), with deterministic tie handling if necessary. Rubric: 2 correlated average, 2 latest selection, 1 correct comparison, 1 explain scope. ","marks":6,"snippet":"STUDENTS(student_id,name)\nASSESSMENTS(assessment_id,student_id,course_id,mark,assessed_at)\nAssume each course is identified by course_id. Return assessment rows that exceed their student/course average."},{"id":73,"kind":"SQL case study","prompt":"Clinic reporting: write one query for patient IDs who attended in both 2025 and 2026, and a second for those who attended in 2025 but not 2026. Use Oracle set operators.","memo":"SELECT patient_id FROM VISITS WHERE visit_date>=DATE '2025-01-01' AND visit_date<DATE '2026-01-01' INTERSECT SELECT patient_id FROM VISITS WHERE visit_date>=DATE '2026-01-01' AND visit_date<DATE '2027-01-01'; Replace INTERSECT with MINUS for 2025-only. Rubric: 2 correct ranges, 2 INTERSECT, 2 MINUS with order.","marks":6,"snippet":"VISITS(patient_id, visit_date)\nUse DATE '2025-01-01' to DATE '2026-01-01', and DATE '2026-01-01' to DATE '2027-01-01' ranges."},{"id":74,"kind":"SQL case study","prompt":"Online bookstore: design a reusable view for category sales and decide whether it can be updated. Provide SQL and an explanation of the limitation.","memo":"CREATE VIEW category_sales AS SELECT p.category,SUM(i.qty*i.unit_price) revenue FROM PRODUCTS p JOIN ORDER_ITEMS i ON p.product_id=i.product_id GROUP BY p.category; A grouped/aggregated view is normally not updatable; update base tables for corrections. Rubric: 2 join+expression, 1 group, 1 CREATE VIEW, 2 updateability explanation.","marks":6,"snippet":"PRODUCTS(product_id,category)\nORDER_ITEMS(order_id,product_id,qty,unit_price)"},{"id":75,"kind":"SQL case study","prompt":"Warehouse auditing: write an Oracle row-level trigger that logs changes to product prices, preserving old and new values. Explain when it fires.","memo":"CREATE OR REPLACE TRIGGER price_audit_tr AFTER UPDATE OF price ON PRODUCTS FOR EACH ROW BEGIN INSERT INTO PRICE_AUDIT(product_id,old_price,new_price,changed_at) VALUES (:OLD.product_id,:OLD.price,:NEW.price,SYSDATE); END; Fires after each changed product row. Rubric: 1 timing/event, 1 row, 2 :OLD/:NEW, 1 INSERT, 1 timing explanation.","marks":6,"snippet":"PRODUCTS(product_id,price)\nPRICE_AUDIT(product_id,old_price,new_price,changed_at)"},{"id":76,"kind":"SQL case study","prompt":"Payroll import: create a stored procedure that updates one employee salary by a percentage; make it safe to call for any employee and explain how a stored procedure reduces repeated app logic.","memo":"CREATE OR REPLACE PROCEDURE bump_salary(p_emp_id IN NUMBER,p_percent IN NUMBER) AS BEGIN UPDATE EMPLOYEES SET salary=salary*(1+p_percent/100) WHERE emp_id=p_emp_id; END; Rubric: 1 declaration, 2 update, 1 targeted WHERE, 1 parameters, 1 shared server-side logic explanation.","marks":6,"snippet":"EMPLOYEES(emp_id, salary)\nInput: employee ID and percent_raise, e.g. 5 for 5%"},{"id":77,"kind":"SQL case study","prompt":"Municipal system: an Oracle procedure processes each unpaid invoice, computing a penalty. Write a valid explicit cursor-loop skeleton with OPEN, FETCH, EXIT WHEN %NOTFOUND and CLOSE.","memo":"DECLARE CURSOR c IS SELECT invoice_id,amount FROM INVOICES WHERE status='UNPAID'; v_id NUMBER; v_amount NUMBER; BEGIN OPEN c; LOOP FETCH c INTO v_id,v_amount; EXIT WHEN c%NOTFOUND; DBMS_OUTPUT.PUT_LINE(v_id||':'||(v_amount*.05)); END LOOP; CLOSE c; END; Rubric: 1 cursor declaration, 1 OPEN, 1 FETCH, 1 EXIT WHEN after FETCH, 1 calculation, 1 CLOSE.","marks":6,"snippet":"INVOICES(invoice_id,status,amount)\nPenalty is 5% of the amount. Output each invoice ID and penalty using DBMS_OUTPUT."},{"id":78,"kind":"SQL case study","prompt":"Banking report: create a report of customers with total paid transactions above R5,000, but include only transactions from November 2026. Write the SQL and explain WHERE versus HAVING.","memo":"SELECT c.customer_id,c.name,SUM(p.paid_amount) AS total_paid FROM CUSTOMERS c JOIN PAYMENTS p ON p.customer_id=c.customer_id WHERE p.paid_at>=DATE '2026-11-01' AND p.paid_at<DATE '2026-12-01' GROUP BY c.customer_id,c.name HAVING SUM(p.paid_amount)>5000; Rubric: 1 join, 1 date filtering, 1 SUM, 1 grouping, 1 HAVING, 1 WHERE-vs-HAVING explanation.","marks":6,"snippet":"CUSTOMERS(customer_id,name)\nPAYMENTS(payment_id,customer_id,paid_at,paid_amount)\nOracle DATE literal syntax permitted."},{"id":79,"kind":"SQL case study","prompt":"Web search: the UI lets users choose department name and minimum salary at runtime. Show the secure dynamic PL/SQL update/query approach using bind variables; explain why concatenating raw values is unsafe.","memo":"A valid dynamic example: EXECUTE IMMEDIATE 'UPDATE EMPLOYEES SET salary=salary WHERE dept_id=:id AND salary>=:min' USING p_dept_id,p_min_salary; preferable to static SQL for fixed query shapes. For genuinely dynamic projections, validate identifiers by allowlist (identifiers cannot be bound as values). Rubric: 2 placeholders, 1 USING binds, 1 safety reasoning, 1 static-vs-dynamic choice, 1 handling identifiers.","marks":6,"snippet":"EMPLOYEES(emp_id,name,dept_id,salary)\nUse bind variables for values; assume p_dept_id and p_min_salary exist."},{"id":80,"kind":"SQL case study","prompt":"Final integrated problem: sales analyst needs a view showing monthly paid-order revenue, a query selecting months exceeding R20,000, and an explanation of whether the view can be updated directly.","memo":"CREATE VIEW monthly_paid_sales AS SELECT TRUNC(order_date,'MM') month_start,SUM(total) revenue FROM ORDERS WHERE status='PAID' GROUP BY TRUNC(order_date,'MM'); SELECT month_start,revenue FROM monthly_paid_sales WHERE revenue>20000; This aggregated view isn't normally updatable. Rubric: 1 TRUNC, 1 SUM and PAID filter, 1 GROUP BY, 1 CREATE VIEW, 1 outer filter, 1 explanation.","marks":6,"snippet":"ORDERS(order_id,order_date,status,total)\nOracle: use TRUNC(order_date,'MM') to identify month."}],"totalMarks":256};
+window.PAPERROOM_LIBRARY["its-8-1"]={
+  "module": "ITS",
+  "moduleName": "Information Systems 3",
+  "chapter": 8,
+  "title": "Advanced SQL — Practical Challenge",
+  "session": 1,
+  "limitSeconds": 3600,
+  "version": 2,
+  "source": "Database Systems: Design, Implementation, and Management, Tenth Edition, Chapter 8 (user-provided slides)",
+  "intro": "Mostly SQL: complete queries, debug statements, match syntax, predict results and solve realistic database cases. A small number of contextual vocabulary checks remain. Oracle SQL/PL-SQL unless otherwise stated.",
+  "notice": "One-hour speed challenge. It is normal not to finish every case study. Submit with blanks whenever you need; written SQL requires rubric-guided self-review.",
+  "questions": [
+    {
+      "id": 1,
+      "kind": "Identify the term",
+      "prompt": "A report must keep all customers, even those who have never placed an order. Which JOIN type preserves customers when CUSTOMERS is on the left?",
+      "memo": "LEFT [OUTER] JOIN keeps every row from the left table, filling missing right-side values with NULL.",
+      "marks": 1,
+      "accepted": [
+        [
+          "LEFT JOIN",
+          "LEFT OUTER JOIN"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "Identify the term",
+      "prompt": "A subquery checks each employee against the average salary of that employee's own department. What type of subquery is this?",
+      "memo": "Correlated subquery: the inner SELECT references the outer query row.",
+      "marks": 1,
+      "accepted": [
+        [
+          "correlated subquery",
+          "correlated query"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "Identify the term",
+      "prompt": "A department report must filter aggregate groups after GROUP BY. Which SQL clause does that?",
+      "memo": "HAVING filters groups after aggregation; WHERE filters rows before grouping.",
+      "marks": 1,
+      "accepted": [
+        [
+          "HAVING"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "Identify the term",
+      "prompt": "Two SELECT statements must be combined while retaining duplicate rows. Name the set operator.",
+      "memo": "UNION ALL keeps duplicate rows, unlike UNION.",
+      "marks": 1,
+      "accepted": [
+        [
+          "UNION ALL"
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "Identify the term",
+      "prompt": "A database event should automatically run PL/SQL after an INSERT. Name the database object.",
+      "memo": "Trigger: automatically runs for a specified DML event and timing.",
+      "marks": 1,
+      "accepted": [
+        [
+          "trigger",
+          "database trigger"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "Identify the term",
+      "prompt": "An Oracle PL/SQL routine needs to process every row returned by a multirow query. Name the construct used.",
+      "memo": "Explicit cursor: opened and fetched to process multiple rows.",
+      "marks": 1,
+      "accepted": [
+        [
+          "explicit cursor",
+          "cursor"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "Identify the term",
+      "prompt": "A query stored under a name behaves like a virtual table but stores no separate result by default. Name it.",
+      "memo": "VIEW: a stored SELECT exposed like a virtual table.",
+      "marks": 1,
+      "accepted": [
+        [
+          "view",
+          "sql view"
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "kind": "Identify the term",
+      "prompt": "A program constructs SQL text after the user chooses filters at runtime. Is this static or dynamic SQL?",
+      "memo": "Dynamic SQL: SQL text is assembled at runtime; static SQL is predefined.",
+      "marks": 1,
+      "accepted": [
+        [
+          "dynamic sql",
+          "dynamic"
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "kind": "Matching",
+      "prompt": "Match each report requirement to the most suitable join.",
+      "memo": "1 -> INNER JOIN (B); 2 -> LEFT JOIN (D); 3 -> CROSS JOIN (A)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "Only customers with orders",
+          "correct": "B"
+        },
+        {
+          "text": "All customers, including those without orders",
+          "correct": "D"
+        },
+        {
+          "text": "Every customer paired with every available promotion",
+          "correct": "A"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "CROSS JOIN"
+        },
+        {
+          "letter": "B",
+          "text": "INNER JOIN"
+        },
+        {
+          "letter": "C",
+          "text": "RIGHT JOIN"
+        },
+        {
+          "letter": "D",
+          "text": "LEFT JOIN"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "kind": "Matching",
+      "prompt": "Match each subquery requirement to the operator.",
+      "memo": "1 -> > ALL (C); 2 -> IN (A); 3 -> EXISTS (D)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "Salary exceeds every listed salary",
+          "correct": "C"
+        },
+        {
+          "text": "Employee belongs to any department ID returned",
+          "correct": "A"
+        },
+        {
+          "text": "At least one matching payment exists",
+          "correct": "D"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "IN"
+        },
+        {
+          "letter": "B",
+          "text": "NOT IN"
+        },
+        {
+          "letter": "C",
+          "text": "> ALL"
+        },
+        {
+          "letter": "D",
+          "text": "EXISTS"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "kind": "Matching",
+      "prompt": "Match the desired set result to the operator.",
+      "memo": "1 -> UNION (A); 2 -> INTERSECT (D); 3 -> MINUS (B)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "All distinct IDs from either query",
+          "correct": "A"
+        },
+        {
+          "text": "Only IDs appearing in both queries",
+          "correct": "D"
+        },
+        {
+          "text": "IDs from first query absent from second, Oracle",
+          "correct": "B"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "UNION"
+        },
+        {
+          "letter": "B",
+          "text": "MINUS"
+        },
+        {
+          "letter": "C",
+          "text": "UNION ALL"
+        },
+        {
+          "letter": "D",
+          "text": "INTERSECT"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "kind": "Matching",
+      "prompt": "Match each SQL statement to the outcome it produces.",
+      "memo": "1 -> Number of rows (C); 2 -> Number of unique customer IDs (A); 3 -> Sum of order totals (D)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "COUNT(*) over all orders",
+          "correct": "C"
+        },
+        {
+          "text": "COUNT(DISTINCT customer_id)",
+          "correct": "A"
+        },
+        {
+          "text": "SUM(total)",
+          "correct": "D"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "Number of unique customer IDs"
+        },
+        {
+          "letter": "B",
+          "text": "Maximum order total"
+        },
+        {
+          "letter": "C",
+          "text": "Number of rows"
+        },
+        {
+          "letter": "D",
+          "text": "Sum of order totals"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "kind": "Matching",
+      "prompt": "Match each function to the task in an Oracle query.",
+      "memo": "1 -> TO_CHAR (B); 2 -> TO_DATE (D); 3 -> UPPER (A)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "Render order_date as YYYY-MM-DD",
+          "correct": "B"
+        },
+        {
+          "text": "Convert a date string to DATE",
+          "correct": "D"
+        },
+        {
+          "text": "Make customer name uppercase",
+          "correct": "A"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "UPPER"
+        },
+        {
+          "letter": "B",
+          "text": "TO_CHAR"
+        },
+        {
+          "letter": "C",
+          "text": "LENGTH"
+        },
+        {
+          "letter": "D",
+          "text": "TO_DATE"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "kind": "Matching",
+      "prompt": "Match a data-change requirement to its SQL mechanism.",
+      "memo": "1 -> ROW-LEVEL TRIGGER (C); 2 -> STORED PROCEDURE (B); 3 -> SEQUENCE NEXTVAL (D)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "Automatically log each inserted order row",
+          "correct": "C"
+        },
+        {
+          "text": "Call reusable server-side steps by name",
+          "correct": "B"
+        },
+        {
+          "text": "Generate a fresh numeric ID in Oracle",
+          "correct": "D"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "VIEW"
+        },
+        {
+          "letter": "B",
+          "text": "STORED PROCEDURE"
+        },
+        {
+          "letter": "C",
+          "text": "ROW-LEVEL TRIGGER"
+        },
+        {
+          "letter": "D",
+          "text": "SEQUENCE NEXTVAL"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "kind": "Matching",
+      "prompt": "Match each multirow comparison expression to its meaning.",
+      "memo": "1 -> Above every result (D); 2 -> Equals at least one result (A); 3 -> Below at least one result (B)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "price > ALL (subquery)",
+          "correct": "D"
+        },
+        {
+          "text": "price = ANY (subquery)",
+          "correct": "A"
+        },
+        {
+          "text": "price < ANY (subquery)",
+          "correct": "B"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "Equals at least one result"
+        },
+        {
+          "letter": "B",
+          "text": "Below at least one result"
+        },
+        {
+          "letter": "C",
+          "text": "Above at least one result"
+        },
+        {
+          "letter": "D",
+          "text": "Above every result"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "kind": "Matching",
+      "prompt": "Match each SELECT clause to the relevant operation.",
+      "memo": "1 -> Filters input rows (B); 2 -> Filters groups (C); 3 -> Sorts output (D)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "WHERE status = 'PAID'",
+          "correct": "B"
+        },
+        {
+          "text": "HAVING COUNT(*) > 2",
+          "correct": "C"
+        },
+        {
+          "text": "ORDER BY total DESC",
+          "correct": "D"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "Joins source tables"
+        },
+        {
+          "letter": "B",
+          "text": "Filters input rows"
+        },
+        {
+          "letter": "C",
+          "text": "Filters groups"
+        },
+        {
+          "letter": "D",
+          "text": "Sorts output"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "kind": "Matching",
+      "prompt": "Match each kind of view to its relevant constraint.",
+      "memo": "1 -> Potentially updatable (A); 2 -> Normally not updatable because of grouping (B); 3 -> Normally not updatable because of set operation (C)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "View based on one table without aggregates",
+          "correct": "A"
+        },
+        {
+          "text": "View with GROUP BY and SUM",
+          "correct": "B"
+        },
+        {
+          "text": "View built from UNION queries",
+          "correct": "C"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "Potentially updatable"
+        },
+        {
+          "letter": "B",
+          "text": "Normally not updatable because of grouping"
+        },
+        {
+          "letter": "C",
+          "text": "Normally not updatable because of set operation"
+        },
+        {
+          "letter": "D",
+          "text": "Always materialized"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "kind": "Matching",
+      "prompt": "Match each PL/SQL component to its use.",
+      "memo": "1 -> Number of rows affected by most recent SQL statement (C); 2 -> Accesses incoming row value (B); 3 -> Executes dynamically built SQL (D)",
+      "marks": 3,
+      "matchItems": [
+        {
+          "text": "SQL%ROWCOUNT",
+          "correct": "C"
+        },
+        {
+          "text": ":NEW.total in a row trigger",
+          "correct": "B"
+        },
+        {
+          "text": "EXECUTE IMMEDIATE",
+          "correct": "D"
+        }
+      ],
+      "matchOptions": [
+        {
+          "letter": "A",
+          "text": "Closes any cursor"
+        },
+        {
+          "letter": "B",
+          "text": "Accesses incoming row value"
+        },
+        {
+          "letter": "C",
+          "text": "Number of rows affected by most recent SQL statement"
+        },
+        {
+          "letter": "D",
+          "text": "Executes dynamically built SQL"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "kind": "SQL completion",
+      "prompt": "Complete the join to return each order ID with its customer name.",
+      "memo": "JOIN links rows using ON o.customer_id = c.customer_id.",
+      "marks": 2,
+      "snippet": "SELECT o.order_id, c.name\nFROM ORDERS o __1__ CUSTOMERS c\n  __2__ o.customer_id = c.customer_id;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "JOIN"
+        ],
+        [
+          "ON"
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "kind": "SQL completion",
+      "prompt": "Complete the query to retain customers even if no order exists.",
+      "memo": "LEFT JOIN retains customers; NULL identifies unmatched orders.",
+      "marks": 2,
+      "snippet": "SELECT c.name, o.order_id\nFROM CUSTOMERS c __1__ JOIN ORDERS o\n  ON c.customer_id = o.customer_id\nWHERE o.order_id IS __2__;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "LEFT"
+        ],
+        [
+          "NULL"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "kind": "SQL completion",
+      "prompt": "Complete the query for order counts per customer, limited to groups with three or more orders.",
+      "memo": "COUNT(*) and GROUP BY customer_id.",
+      "marks": 2,
+      "snippet": "SELECT customer_id, __1__(*) AS n\nFROM ORDERS\n__2__ customer_id\nHAVING COUNT(*) >= 3;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "COUNT"
+        ],
+        [
+          "GROUP BY"
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "kind": "SQL completion",
+      "prompt": "Complete the query using a subquery to select customers with paid orders.",
+      "memo": "IN (... WHERE status = 'PAID').",
+      "marks": 2,
+      "snippet": "SELECT name FROM CUSTOMERS\nWHERE customer_id __1__ (\n SELECT customer_id FROM ORDERS\n WHERE status = __2__);",
+      "blanks": 2,
+      "accepted": [
+        [
+          "IN"
+        ],
+        [
+          "'PAID'"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "kind": "SQL completion",
+      "prompt": "Complete the query to select employees whose salary exceeds every salary in department 7.",
+      "memo": "Use > ALL with the subquery for department 7; assumes the subquery is non-empty.",
+      "marks": 2,
+      "snippet": "SELECT name FROM EMPLOYEES\nWHERE salary > __1__ (\n SELECT salary FROM EMPLOYEES\n WHERE dept_id = __2__);",
+      "blanks": 2,
+      "accepted": [
+        [
+          "ALL"
+        ],
+        [
+          "7"
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "kind": "SQL completion",
+      "prompt": "Complete the query to find departments having no employees.",
+      "memo": "COUNT(*) in a scalar correlated subquery returns 0 for departments with no matches.",
+      "marks": 2,
+      "snippet": "SELECT d.dept_id FROM DEPARTMENTS d\nWHERE (SELECT __1__(*) FROM EMPLOYEES e\n WHERE e.dept_id = d.dept_id) = __2__;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "COUNT"
+        ],
+        [
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "kind": "SQL completion",
+      "prompt": "Complete an Oracle date conversion used in an order-date filter.",
+      "memo": "TO_DATE('2026-11-01','YYYY-MM-DD').",
+      "marks": 2,
+      "snippet": "SELECT order_id FROM ORDERS\nWHERE order_date >= __1__('2026-11-01', __2__);",
+      "blanks": 2,
+      "accepted": [
+        [
+          "TO_DATE"
+        ],
+        [
+          "'YYYY-MM-DD'"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "kind": "SQL completion",
+      "prompt": "Complete the expression that produces upper-case names and their length.",
+      "memo": "UPPER(name) converts case; LENGTH(name) counts characters.",
+      "marks": 2,
+      "snippet": "SELECT __1__(name), __2__(name)\nFROM CUSTOMERS;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "UPPER"
+        ],
+        [
+          "LENGTH"
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "kind": "SQL completion",
+      "prompt": "Complete a query that returns distinct customers from either of two sources.",
+      "memo": "UNION eliminates duplicates; ORDER BY sorts the combined result.",
+      "marks": 2,
+      "snippet": "SELECT customer_id FROM CUSTOMERS\n__1__\nSELECT customer_id FROM ARCHIVE_CUSTOMERS\n__2__ customer_id;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "UNION"
+        ],
+        [
+          "ORDER BY"
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "kind": "SQL completion",
+      "prompt": "Complete Oracle set difference for customers not present in the archive.",
+      "memo": "MINUS returns distinct IDs only in the first query; ORDER BY is final.",
+      "marks": 2,
+      "snippet": "SELECT customer_id FROM CUSTOMERS\n__1__\nSELECT customer_id FROM ARCHIVE_CUSTOMERS\n__2__ customer_id;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "MINUS"
+        ],
+        [
+          "ORDER BY"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "kind": "SQL completion",
+      "prompt": "Complete a view containing employees and their department names.",
+      "memo": "CREATE VIEW ... JOIN ... ON.",
+      "marks": 2,
+      "snippet": "CREATE __1__ employee_depts AS\nSELECT e.name, d.dept_name\nFROM EMPLOYEES e\nJOIN DEPARTMENTS d __2__ e.dept_id=d.dept_id;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "VIEW"
+        ],
+        [
+          "ON"
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "kind": "SQL completion",
+      "prompt": "Complete the trigger heading: log every newly inserted order row after insertion.",
+      "memo": "AFTER INSERT ... FOR EACH ROW specifies a row-level trigger.",
+      "marks": 2,
+      "snippet": "CREATE OR REPLACE TRIGGER log_order\n__1__ INSERT ON ORDERS\nFOR EACH __2__\nBEGIN NULL; END;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "AFTER"
+        ],
+        [
+          "ROW"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "kind": "SQL completion",
+      "prompt": "Complete the Oracle sequence call for a generated primary key.",
+      "memo": "customer_seq.NEXTVAL generates a value; 'Asha' is a string literal.",
+      "marks": 2,
+      "snippet": "INSERT INTO CUSTOMERS(customer_id,name,city)\nVALUES (customer_seq.__1__, __2__, 'Cape Town');",
+      "blanks": 2,
+      "accepted": [
+        [
+          "NEXTVAL"
+        ],
+        [
+          "'Asha'"
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "kind": "SQL completion",
+      "prompt": "Complete the explicit cursor loop actions in PL/SQL.",
+      "memo": "FETCH obtains a row; %NOTFOUND stops after end of results.",
+      "marks": 2,
+      "snippet": "OPEN c_orders;\nLOOP\n  __1__ c_orders INTO v_order_id;\n  EXIT WHEN c_orders%__2__;\nEND LOOP;\nCLOSE c_orders;",
+      "blanks": 2,
+      "accepted": [
+        [
+          "FETCH"
+        ],
+        [
+          "NOTFOUND"
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "kind": "Debugging SQL",
+      "prompt": "A customer report duplicates and mismatches orders. Repair the missing join condition and show the corrected SQL.",
+      "memo": "SELECT c.name, o.order_id FROM CUSTOMERS c JOIN ORDERS o ON c.customer_id=o.customer_id WHERE o.total>500; (2 marks for ON, 1 for correct SELECT/filter).",
+      "marks": 3,
+      "snippet": "SELECT c.name, o.order_id\nFROM CUSTOMERS c, ORDERS o\nWHERE o.total > 500;"
+    },
+    {
+      "id": 34,
+      "kind": "Debugging SQL",
+      "prompt": "A developer placed aggregate filtering in WHERE. Rewrite the query.",
+      "memo": "SELECT customer_id, COUNT(*) n FROM ORDERS GROUP BY customer_id HAVING COUNT(*)>=2; (2 HAVING; 1 valid grouping).",
+      "marks": 3,
+      "snippet": "SELECT customer_id, COUNT(*) n\nFROM ORDERS\nWHERE COUNT(*) >= 2\nGROUP BY customer_id;"
+    },
+    {
+      "id": 35,
+      "kind": "Debugging SQL",
+      "prompt": "This left-join query silently loses customers with no orders. Fix it to retain all customers but report PAID orders only.",
+      "memo": "Move o.status='PAID' into the ON predicate: LEFT JOIN ORDERS o ON c.customer_id=o.customer_id AND o.status='PAID'; (2 predicate positioning, 1 preserved outer join).",
+      "marks": 3,
+      "snippet": "SELECT c.name, o.order_id\nFROM CUSTOMERS c LEFT JOIN ORDERS o\n ON c.customer_id=o.customer_id\nWHERE o.status='PAID';"
+    },
+    {
+      "id": 36,
+      "kind": "Debugging SQL",
+      "prompt": "Fix this Oracle query: it tries to compare one number to a multirow subquery.",
+      "memo": "Use salary IN (SELECT salary FROM EMPLOYEES WHERE dept_id=3) when matching any department-3 salary. (2 marks for IN and valid syntax, 1 intent).",
+      "marks": 3,
+      "snippet": "SELECT name FROM EMPLOYEES\nWHERE salary = (SELECT salary FROM EMPLOYEES WHERE dept_id=3);"
+    },
+    {
+      "id": 37,
+      "kind": "Debugging SQL",
+      "prompt": "Fix the scalar subquery so it returns one value: list employees above the company average salary.",
+      "memo": "SELECT name FROM EMPLOYEES WHERE salary > (SELECT AVG(salary) FROM EMPLOYEES); (2 AVG, 1 comparison).",
+      "marks": 3,
+      "snippet": "SELECT name FROM EMPLOYEES\nWHERE salary > (SELECT salary FROM EMPLOYEES);"
+    },
+    {
+      "id": 38,
+      "kind": "Debugging SQL",
+      "prompt": "Fix the aggregate count: one query must return only distinct customer IDs across both sources.",
+      "memo": "Use UNION (not UNION ALL) to remove duplicate customer IDs, while preserving the same SELECT lists. (2 operator, 1 compatible columns).",
+      "marks": 3,
+      "snippet": "SELECT customer_id FROM CUSTOMERS\nUNION ALL\nSELECT customer_id FROM ARCHIVE_CUSTOMERS;"
+    },
+    {
+      "id": 39,
+      "kind": "Debugging SQL",
+      "prompt": "The query compares an order date against a badly formatted string in Oracle. Correct it using explicit date conversion.",
+      "memo": "SELECT order_id FROM ORDERS WHERE order_date=TO_DATE('30/11/2026','DD/MM/YYYY'); (2 conversion, 1 valid date format).",
+      "marks": 3,
+      "snippet": "SELECT order_id FROM ORDERS WHERE order_date='30/11/2026';"
+    },
+    {
+      "id": 40,
+      "kind": "Debugging SQL",
+      "prompt": "This view is expected to allow updating total salary, but the view definition uses an aggregate. Explain the problem and show a suitable read-only alternative.",
+      "memo": "The aggregate/GROUP BY view is not normally updatable. Keep it as a reporting view; update base EMPLOYEES rows directly instead. (2 restriction, 1 actionable approach).",
+      "marks": 3,
+      "snippet": "CREATE VIEW dept_totals AS\nSELECT dept_id, SUM(salary) total_salary\nFROM EMPLOYEES GROUP BY dept_id;"
+    },
+    {
+      "id": 41,
+      "kind": "Debugging SQL",
+      "prompt": "A row-level trigger mistakenly omits FOR EACH ROW and references :NEW. Supply a corrected trigger skeleton.",
+      "memo": "CREATE OR REPLACE TRIGGER order_audit AFTER INSERT ON ORDERS FOR EACH ROW BEGIN INSERT INTO ORDER_LOG(order_id) VALUES (:NEW.order_id); END; (2 FOR EACH ROW, 1 correct context).",
+      "marks": 3,
+      "snippet": "CREATE OR REPLACE TRIGGER order_audit\nAFTER INSERT ON ORDERS\nBEGIN\n INSERT INTO ORDER_LOG(order_id) VALUES (:NEW.order_id);\nEND;"
+    },
+    {
+      "id": 42,
+      "kind": "Debugging SQL",
+      "prompt": "Repair the Oracle procedure: an IN parameter is being assigned a new value.",
+      "memo": "An IN parameter is read-only; use a local variable v_price NUMBER; BEGIN v_price:=p_new*2; END; or declare appropriate OUT/IN OUT when assignment to parameter is intended. (2 parameter mode/local variable, 1 valid code).",
+      "marks": 3,
+      "snippet": "CREATE PROCEDURE set_price(p_new IN NUMBER) AS\nBEGIN p_new := p_new*2; END;"
+    },
+    {
+      "id": 43,
+      "kind": "Debugging SQL",
+      "prompt": "Fix the explicit cursor loop so it does not process an extra invalid row.",
+      "memo": "Move EXIT WHEN c%NOTFOUND immediately after FETCH and before processing v_id. (2 ordering, 1 valid iteration).",
+      "marks": 3,
+      "snippet": "OPEN c;\nLOOP\n FETCH c INTO v_id;\n DBMS_OUTPUT.PUT_LINE(v_id);\n EXIT WHEN c%NOTFOUND;\nEND LOOP;\nCLOSE c;"
+    },
+    {
+      "id": 44,
+      "kind": "Debugging SQL",
+      "prompt": "This dynamic SQL concatenates untrusted user input into executable SQL. Rewrite the call using a bind value.",
+      "memo": "EXECUTE IMMEDIATE 'DELETE FROM ORDERS WHERE order_id = :id' USING p_id; (2 placeholder, 1 USING bind; avoids string concatenation).",
+      "marks": 3,
+      "snippet": "EXECUTE IMMEDIATE 'DELETE FROM ORDERS WHERE order_id='||p_id;"
+    },
+    {
+      "id": 45,
+      "kind": "SQL writing",
+      "prompt": "Write a query listing each order ID, customer name, and total for orders exceeding R1,000. Include only matched customers.",
+      "memo": "SELECT o.order_id,c.name,o.total FROM ORDERS o JOIN CUSTOMERS c ON c.customer_id=o.customer_id WHERE o.total>1000; Rubric: 2 correct join, 1 filter, 1 columns.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 46,
+      "kind": "SQL writing",
+      "prompt": "List every customer name and the number of orders placed, including customers with zero orders.",
+      "memo": "SELECT c.name,COUNT(o.order_id) AS order_count FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id GROUP BY c.customer_id,c.name; Rubric: 2 LEFT JOIN, 1 COUNT(non-null right key), 1 GROUP BY.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 47,
+      "kind": "SQL writing",
+      "prompt": "List product names that have never appeared in an order item.",
+      "memo": "SELECT p.product_name FROM PRODUCTS p WHERE NOT EXISTS (SELECT 1 FROM ORDER_ITEMS i WHERE i.product_id=p.product_id); Rubric: 2 NOT EXISTS with correlated keys, 1 correct projection, 1 no false inner join.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 48,
+      "kind": "SQL writing",
+      "prompt": "Write a query returning each department ID and its average employee salary, only if its average exceeds R25,000.",
+      "memo": "SELECT dept_id, AVG(salary) AS avg_salary FROM EMPLOYEES GROUP BY dept_id HAVING AVG(salary)>25000; Rubric: 1 AVG, 1 GROUP BY, 2 HAVING.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 49,
+      "kind": "SQL writing",
+      "prompt": "List employees whose salary is above the average salary in their own department.",
+      "memo": "SELECT e.name,e.salary FROM EMPLOYEES e WHERE e.salary>(SELECT AVG(x.salary) FROM EMPLOYEES x WHERE x.dept_id=e.dept_id); Rubric: 2 correlated subquery, 1 AVG, 1 greater-than comparison.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 50,
+      "kind": "SQL writing",
+      "prompt": "Return customers who placed at least one order in November 2026 using a correlated EXISTS subquery (Oracle DATE functions).",
+      "memo": "SELECT c.customer_id,c.name FROM CUSTOMERS c WHERE EXISTS (SELECT 1 FROM ORDERS o WHERE o.customer_id=c.customer_id AND o.order_date>=DATE '2026-11-01' AND o.order_date<DATE '2026-12-01'); Rubric: 2 EXISTS+correlation, 1 correct November date range, 1 projection.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 51,
+      "kind": "SQL writing",
+      "prompt": "Show each customer name and an inline scalar column last_order containing the maximum date of their orders.",
+      "memo": "SELECT c.name,(SELECT MAX(o.order_date) FROM ORDERS o WHERE o.customer_id=c.customer_id) AS last_order FROM CUSTOMERS c; Rubric: 2 scalar correlated select, 1 MAX, 1 alias.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 52,
+      "kind": "SQL writing",
+      "prompt": "Show the number of days since each customer order, assuming Oracle SYSDATE.",
+      "memo": "SELECT order_id, TRUNC(SYSDATE)-TRUNC(order_date) AS days_old FROM ORDERS; Rubric: 2 correct date arithmetic, 1 TRUNC to eliminate time portions, 1 alias.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 53,
+      "kind": "SQL writing",
+      "prompt": "Display order IDs and totals rounded to two decimals and label the result rounded_total.",
+      "memo": "SELECT order_id,ROUND(total,2) AS rounded_total FROM ORDERS; Rubric: 2 ROUND(total,2), 1 alias, 1 columns.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 54,
+      "kind": "SQL writing",
+      "prompt": "Return names formatted as uppercase and the name length for every customer.",
+      "memo": "SELECT UPPER(name) AS upper_name,LENGTH(name) AS name_length FROM CUSTOMERS; Rubric: 2 correct functions, 1 projection, 1 labels.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 55,
+      "kind": "SQL writing",
+      "prompt": "Return a distinct list of customer IDs that appear in both the current and archive customer tables, Oracle syntax.",
+      "memo": "SELECT customer_id FROM CUSTOMERS INTERSECT SELECT customer_id FROM ARCHIVE_CUSTOMERS; Rubric: 2 INTERSECT, 1 compatible projections, 1 correct result.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 56,
+      "kind": "SQL writing",
+      "prompt": "Return customer IDs in current records but not archives, Oracle syntax.",
+      "memo": "SELECT customer_id FROM CUSTOMERS MINUS SELECT customer_id FROM ARCHIVE_CUSTOMERS; Rubric: 2 MINUS with correct order, 1 compatible columns, 1 correct result.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 57,
+      "kind": "SQL writing",
+      "prompt": "Create a view named paid_order_totals showing customer_id and the total value of their PAID orders.",
+      "memo": "CREATE VIEW paid_order_totals AS SELECT customer_id,SUM(total) AS total_paid FROM ORDERS WHERE status='PAID' GROUP BY customer_id; Rubric: 1 CREATE VIEW, 1 filtered SUM, 1 GROUP BY, 1 correct aliases.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 58,
+      "kind": "SQL writing",
+      "prompt": "Write an INSERT statement for a new customer, taking customer_id from Oracle sequence customer_seq.",
+      "memo": "INSERT INTO CUSTOMERS(customer_id,name,city) VALUES (customer_seq.NEXTVAL,'Sia','Paarl'); Rubric: 2 NEXTVAL usage, 1 valid columns, 1 values. Name and city may vary.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 59,
+      "kind": "SQL writing",
+      "prompt": "Write a trigger skeleton to log deletion of each order into ORDER_LOG(order_id) using Oracle :OLD.",
+      "memo": "CREATE OR REPLACE TRIGGER orders_deleted AFTER DELETE ON ORDERS FOR EACH ROW BEGIN INSERT INTO ORDER_LOG(order_id) VALUES (:OLD.order_id); END; Rubric: 1 AFTER DELETE, 1 FOR EACH ROW, 1 :OLD, 1 INSERT.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 60,
+      "kind": "SQL writing",
+      "prompt": "Write a simple Oracle procedure named raise_salary that accepts p_emp_id and p_amount as IN parameters and increases salary for that employee.",
+      "memo": "CREATE OR REPLACE PROCEDURE raise_salary(p_emp_id IN NUMBER,p_amount IN NUMBER) AS BEGIN UPDATE EMPLOYEES SET salary=salary+p_amount WHERE emp_id=p_emp_id; END; Rubric: 1 procedure signature, 1 parameters, 1 UPDATE math, 1 WHERE targeted employee.",
+      "marks": 4,
+      "referenceNote": "Use the shared Chapter 8 practice database. The SQL schema and seed data are linked from the ITS module page."
+    },
+    {
+      "id": 61,
+      "kind": "Query interpretation",
+      "prompt": "How many rows does this CROSS JOIN return?",
+      "memo": "3 × 2 = 6 rows. Every customer is paired with every promotion. (1 number, 1 reason, 1 product.)",
+      "marks": 3,
+      "snippet": "CUSTOMERS: (1,Asha),(2,Bongani),(3,Chloe)\nPROMOTIONS: (10,SALE),(20,WINTER)\nSELECT * FROM CUSTOMERS CROSS JOIN PROMOTIONS;",
+      "contextMd": "**CUSTOMERS**\n\n| customer_id | name |\n| --- | --- |\n| 1 | Asha |\n| 2 | Bongani |\n| 3 | Chloe |\n\n**PROMOTIONS**\n\n| promotion_id | name |\n| --- | --- |\n| 10 | SALE |\n| 20 | WINTER |"
+    },
+    {
+      "id": 62,
+      "kind": "Query interpretation",
+      "prompt": "Which customer IDs appear in the result? Preserve unmatched customers.",
+      "memo": "Four rows: (1,101), (1,102), (2,NULL), (3,103). Customer 2 remains with a NULL order. (2 full result, 1 preservation.)",
+      "marks": 3,
+      "snippet": "CUSTOMERS: IDs 1,2,3\nORDERS: (101,customer_id=1),(102,customer_id=1),(103,customer_id=3)\nSELECT c.customer_id,o.order_id FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id;",
+      "contextMd": "**CUSTOMERS**\n\n| customer_id |\n| --- |\n| 1 |\n| 2 |\n| 3 |\n\n**ORDERS**\n\n| order_id | customer_id |\n| --- | --- |\n| 101 | 1 |\n| 102 | 1 |\n| 103 | 3 |"
+    },
+    {
+      "id": 63,
+      "kind": "Query interpretation",
+      "prompt": "What IDs does Oracle UNION return in sorted order?",
+      "memo": "1,2,3,4. UNION removes duplicates across both inputs. (2 IDs,1 dedup explanation.)",
+      "marks": 3,
+      "snippet": "A: 1,1,2,4\nB: 2,3,4,4\nSELECT id FROM A UNION SELECT id FROM B ORDER BY id;",
+      "contextMd": "**A**\n\n| id |\n| --- |\n| 1 |\n| 1 |\n| 2 |\n| 4 |\n\n**B**\n\n| id |\n| --- |\n| 2 |\n| 3 |\n| 4 |\n| 4 |"
+    },
+    {
+      "id": 64,
+      "kind": "Query interpretation",
+      "prompt": "What rows does UNION ALL return, counting duplicates?",
+      "memo": "Six rows: 1,1,2,2,2,3 (order unspecified without ORDER BY). (2 values,1 duplicates.)",
+      "marks": 3,
+      "snippet": "A: 1,1,2\nB: 2,2,3\nSELECT id FROM A UNION ALL SELECT id FROM B;",
+      "contextMd": "**A**\n\n| id |\n| --- |\n| 1 |\n| 1 |\n| 2 |\n\n**B**\n\n| id |\n| --- |\n| 2 |\n| 2 |\n| 3 |"
+    },
+    {
+      "id": 65,
+      "kind": "Query interpretation",
+      "prompt": "What IDs are returned by INTERSECT and MINUS (A MINUS B)?",
+      "memo": "INTERSECT = 2,4; A MINUS B = 1. Duplicate rows removed by these operators. (1+1 results,1 note.)",
+      "marks": 3,
+      "snippet": "A: 1,1,2,4\nB: 2,3,4,4\nA INTERSECT B\nA MINUS B",
+      "contextMd": "**A**\n\n| id |\n| --- |\n| 1 |\n| 1 |\n| 2 |\n| 4 |\n\n**B**\n\n| id |\n| --- |\n| 2 |\n| 3 |\n| 4 |\n| 4 |"
+    },
+    {
+      "id": 66,
+      "kind": "Query interpretation",
+      "prompt": "Is employee 1 returned by > ALL and > ANY? Explain.",
+      "memo": "> ALL is false (35,000 not above 40,000); > ANY is true (above 20,000 and 30,000). (1 each +1 reasoning.)",
+      "marks": 3,
+      "snippet": "Reference salaries from subquery: 20000,30000,40000\nEmployee 1 salary=35000\nTests: salary > ALL(...), salary > ANY(...)",
+      "contextMd": "**Reference salaries from the subquery**\n\n| salary |\n| --- |\n| 20000 |\n| 30000 |\n| 40000 |\n\n**Employee being tested**\n\n| employee_id | salary |\n| --- | --- |\n| 1 | 35000 |"
+    },
+    {
+      "id": 67,
+      "kind": "Query interpretation",
+      "prompt": "For this data, how many customers appear in the COUNT(*) groups?",
+      "memo": "One row: customer_id=1,count=2. WHERE discards unpaid, HAVING keeps only a group with at least 2. (2 row/count,1 reason.)",
+      "marks": 3,
+      "snippet": "ORDERS: (cust=1,status='PAID'),(cust=1,status='PAID'),(cust=2,status='PENDING'),(cust=3,status='PAID')\nSELECT customer_id,COUNT(*) FROM ORDERS WHERE status='PAID' GROUP BY customer_id HAVING COUNT(*)>=2;",
+      "contextMd": "**ORDERS**\n\n| customer_id | status |\n| --- | --- |\n| 1 | PAID |\n| 1 | PAID |\n| 2 | PENDING |\n| 3 | PAID |"
+    },
+    {
+      "id": 68,
+      "kind": "Query interpretation",
+      "prompt": "What will NVL return for unmatched orders on a LEFT JOIN?",
+      "memo": "Asha 150; Bongani 0. Missing right row makes o.total NULL; NVL substitutes zero. (2 rows,1 reason.)",
+      "marks": 3,
+      "snippet": "CUSTOMERS: (1,Asha),(2,Bongani)\nORDERS: (101,cust=1,total=150)\nSELECT c.name,NVL(o.total,0) total FROM CUSTOMERS c LEFT JOIN ORDERS o ON o.customer_id=c.customer_id;",
+      "contextMd": "**CUSTOMERS**\n\n| customer_id | name |\n| --- | --- |\n| 1 | Asha |\n| 2 | Bongani |\n\n**ORDERS**\n\n| order_id | customer_id | total |\n| --- | --- | --- |\n| 101 | 1 | 150 |"
+    },
+    {
+      "id": 69,
+      "kind": "Query interpretation",
+      "prompt": "What columns are produced by this scalar correlated subquery?",
+      "memo": "Rows: (1,250) and (2,NULL). MAX of no matching rows is NULL. (2 outputs,1 note.)",
+      "marks": 3,
+      "snippet": "CUSTOMERS: IDs 1,2\nORDERS: (101,cust=1,total=100),(102,cust=1,total=250)\nSELECT customer_id,(SELECT MAX(total) FROM ORDERS o WHERE o.customer_id=c.customer_id) mx FROM CUSTOMERS c;",
+      "contextMd": "**CUSTOMERS**\n\n| customer_id |\n| --- |\n| 1 |\n| 2 |\n\n**ORDERS**\n\n| order_id | customer_id | total |\n| --- | --- | --- |\n| 101 | 1 | 100 |\n| 102 | 1 | 250 |"
+    },
+    {
+      "id": 70,
+      "kind": "Query interpretation",
+      "prompt": "Predict the display strings from these Oracle functions.",
+      "memo": "'CAPE TOWN', 3, 19.88. (One mark for each result.)",
+      "marks": 3,
+      "snippet": "SELECT UPPER('Cape Town'), LENGTH('SQL'), ROUND(19.876,2) FROM dual;"
+    },
+    {
+      "id": 71,
+      "kind": "SQL case study",
+      "prompt": "Retail database: the owner wants a customer revenue report including customers with no orders. Write a single SELECT with customer name, count of PAID orders and sum of PAID order totals; include zero-revenue customers. Explain where the PAID condition belongs.",
+      "memo": "SELECT c.name,COUNT(o.order_id) AS paid_orders,NVL(SUM(o.total),0) AS revenue FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.customer_id=o.customer_id AND o.status='PAID' GROUP BY c.customer_id,c.name; Required result Asha 2/500, Bongani 0/0, Chipo 0/0. Rubric: 2 LEFT JOIN+ON status, 1 COUNT, 1 SUM/NVL, 1 GROUP, 1 result reasoning.",
+      "marks": 6,
+      "snippet": "CUSTOMERS(customer_id, name)\nORDERS(order_id, customer_id, status, total)\nCustomers: 1 Asha,2 Bongani,3 Chipo\nPaid orders: (101,1,200),(102,1,300); pending: (103,2,100)",
+      "contextMd": "**CUSTOMERS**\n\n| customer_id | name |\n| --- | --- |\n| 1 | Asha |\n| 2 | Bongani |\n| 3 | Chipo |\n\n**ORDERS**\n\n| order_id | customer_id | status | total |\n| --- | --- | --- | --- |\n| 101 | 1 | PAID | 200 |\n| 102 | 1 | PAID | 300 |\n| 103 | 2 | PENDING | 100 |"
+    },
+    {
+      "id": 72,
+      "kind": "SQL case study",
+      "prompt": "School system: list students whose most recent mark is greater than their own course average. Write a correlated query and explain why an uncorrelated average is wrong.",
+      "memo": "SELECT a.student_id,a.course_id,a.mark FROM ASSESSMENTS a WHERE a.mark>(SELECT AVG(x.mark) FROM ASSESSMENTS x WHERE x.student_id=a.student_id AND x.course_id=a.course_id); This selects every above-average assessment, not specifically the latest. For latest add a.assessed_at=(SELECT MAX(z.assessed_at) FROM ASSESSMENTS z WHERE z.student_id=a.student_id AND z.course_id=a.course_id), with deterministic tie handling if necessary. Rubric: 2 correlated average, 2 latest selection, 1 correct comparison, 1 explain scope. ",
+      "marks": 6,
+      "snippet": "STUDENTS(student_id,name)\nASSESSMENTS(assessment_id,student_id,course_id,mark,assessed_at)\nAssume each course is identified by course_id. Return assessment rows that exceed their student/course average.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 73,
+      "kind": "SQL case study",
+      "prompt": "Clinic reporting: write one query for patient IDs who attended in both 2025 and 2026, and a second for those who attended in 2025 but not 2026. Use Oracle set operators.",
+      "memo": "SELECT patient_id FROM VISITS WHERE visit_date>=DATE '2025-01-01' AND visit_date<DATE '2026-01-01' INTERSECT SELECT patient_id FROM VISITS WHERE visit_date>=DATE '2026-01-01' AND visit_date<DATE '2027-01-01'; Replace INTERSECT with MINUS for 2025-only. Rubric: 2 correct ranges, 2 INTERSECT, 2 MINUS with order.",
+      "marks": 6,
+      "snippet": "VISITS(patient_id, visit_date)\nUse DATE '2025-01-01' to DATE '2026-01-01', and DATE '2026-01-01' to DATE '2027-01-01' ranges.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 74,
+      "kind": "SQL case study",
+      "prompt": "Online bookstore: design a reusable view for category sales and decide whether it can be updated. Provide SQL and an explanation of the limitation.",
+      "memo": "CREATE VIEW category_sales AS SELECT p.category,SUM(i.qty*i.unit_price) revenue FROM PRODUCTS p JOIN ORDER_ITEMS i ON p.product_id=i.product_id GROUP BY p.category; A grouped/aggregated view is normally not updatable; update base tables for corrections. Rubric: 2 join+expression, 1 group, 1 CREATE VIEW, 2 updateability explanation.",
+      "marks": 6,
+      "snippet": "PRODUCTS(product_id,category)\nORDER_ITEMS(order_id,product_id,qty,unit_price)",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 75,
+      "kind": "SQL case study",
+      "prompt": "Warehouse auditing: write an Oracle row-level trigger that logs changes to product prices, preserving old and new values. Explain when it fires.",
+      "memo": "CREATE OR REPLACE TRIGGER price_audit_tr AFTER UPDATE OF price ON PRODUCTS FOR EACH ROW BEGIN INSERT INTO PRICE_AUDIT(product_id,old_price,new_price,changed_at) VALUES (:OLD.product_id,:OLD.price,:NEW.price,SYSDATE); END; Fires after each changed product row. Rubric: 1 timing/event, 1 row, 2 :OLD/:NEW, 1 INSERT, 1 timing explanation.",
+      "marks": 6,
+      "snippet": "PRODUCTS(product_id,price)\nPRICE_AUDIT(product_id,old_price,new_price,changed_at)",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 76,
+      "kind": "SQL case study",
+      "prompt": "Payroll import: create a stored procedure that updates one employee salary by a percentage; make it safe to call for any employee and explain how a stored procedure reduces repeated app logic.",
+      "memo": "CREATE OR REPLACE PROCEDURE bump_salary(p_emp_id IN NUMBER,p_percent IN NUMBER) AS BEGIN UPDATE EMPLOYEES SET salary=salary*(1+p_percent/100) WHERE emp_id=p_emp_id; END; Rubric: 1 declaration, 2 update, 1 targeted WHERE, 1 parameters, 1 shared server-side logic explanation.",
+      "marks": 6,
+      "snippet": "EMPLOYEES(emp_id, salary)\nInput: employee ID and percent_raise, e.g. 5 for 5%",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 77,
+      "kind": "SQL case study",
+      "prompt": "Municipal system: an Oracle procedure processes each unpaid invoice, computing a penalty. Write a valid explicit cursor-loop skeleton with OPEN, FETCH, EXIT WHEN %NOTFOUND and CLOSE.",
+      "memo": "DECLARE CURSOR c IS SELECT invoice_id,amount FROM INVOICES WHERE status='UNPAID'; v_id NUMBER; v_amount NUMBER; BEGIN OPEN c; LOOP FETCH c INTO v_id,v_amount; EXIT WHEN c%NOTFOUND; DBMS_OUTPUT.PUT_LINE(v_id||':'||(v_amount*.05)); END LOOP; CLOSE c; END; Rubric: 1 cursor declaration, 1 OPEN, 1 FETCH, 1 EXIT WHEN after FETCH, 1 calculation, 1 CLOSE.",
+      "marks": 6,
+      "snippet": "INVOICES(invoice_id,status,amount)\nPenalty is 5% of the amount. Output each invoice ID and penalty using DBMS_OUTPUT.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 78,
+      "kind": "SQL case study",
+      "prompt": "Banking report: create a report of customers with total paid transactions above R5,000, but include only transactions from November 2026. Write the SQL and explain WHERE versus HAVING.",
+      "memo": "SELECT c.customer_id,c.name,SUM(p.paid_amount) AS total_paid FROM CUSTOMERS c JOIN PAYMENTS p ON p.customer_id=c.customer_id WHERE p.paid_at>=DATE '2026-11-01' AND p.paid_at<DATE '2026-12-01' GROUP BY c.customer_id,c.name HAVING SUM(p.paid_amount)>5000; Rubric: 1 join, 1 date filtering, 1 SUM, 1 grouping, 1 HAVING, 1 WHERE-vs-HAVING explanation.",
+      "marks": 6,
+      "snippet": "CUSTOMERS(customer_id,name)\nPAYMENTS(payment_id,customer_id,paid_at,paid_amount)\nOracle DATE literal syntax permitted.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 79,
+      "kind": "SQL case study",
+      "prompt": "Web search: the UI lets users choose department name and minimum salary at runtime. Show the secure dynamic PL/SQL update/query approach using bind variables; explain why concatenating raw values is unsafe.",
+      "memo": "A valid dynamic example: EXECUTE IMMEDIATE 'UPDATE EMPLOYEES SET salary=salary WHERE dept_id=:id AND salary>=:min' USING p_dept_id,p_min_salary; preferable to static SQL for fixed query shapes. For genuinely dynamic projections, validate identifiers by allowlist (identifiers cannot be bound as values). Rubric: 2 placeholders, 1 USING binds, 1 safety reasoning, 1 static-vs-dynamic choice, 1 handling identifiers.",
+      "marks": 6,
+      "snippet": "EMPLOYEES(emp_id,name,dept_id,salary)\nUse bind variables for values; assume p_dept_id and p_min_salary exist.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    },
+    {
+      "id": 80,
+      "kind": "SQL case study",
+      "prompt": "Final integrated problem: sales analyst needs a view showing monthly paid-order revenue, a query selecting months exceeding R20,000, and an explanation of whether the view can be updated directly.",
+      "memo": "CREATE VIEW monthly_paid_sales AS SELECT TRUNC(order_date,'MM') month_start,SUM(total) revenue FROM ORDERS WHERE status='PAID' GROUP BY TRUNC(order_date,'MM'); SELECT month_start,revenue FROM monthly_paid_sales WHERE revenue>20000; This aggregated view isn't normally updatable. Rubric: 1 TRUNC, 1 SUM and PAID filter, 1 GROUP BY, 1 CREATE VIEW, 1 outer filter, 1 explanation.",
+      "marks": 6,
+      "snippet": "ORDERS(order_id,order_date,status,total)\nOracle: use TRUNC(order_date,'MM') to identify month.",
+      "referenceNote": "Use the named tables/columns in this question. The shared Chapter 8 database provides extra context where relevant."
+    }
+  ],
+  "totalMarks": 256
+};

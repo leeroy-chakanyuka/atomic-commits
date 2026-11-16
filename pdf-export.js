@@ -19,7 +19,7 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
   const draw=(t,x,yy,size=10,bold=false)=>{page.push("BT /"+(bold?"F2":"F1")+" "+size+" Tf "+x+" "+yy+" Td ("+escapePDF(t)+") Tj ET");};
   const newPage=()=>{
     page=[];pages.push(page);y=781;
-    draw("PAPERROOM / "+(paper.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT")+" / CHAPTER "+paper.chapter,44,810,9,true);
+    draw("PAPERROOM / "+(paper.module==="ITS"?"INFORMATION SYSTEMS 3":paper.module==="ADP"?"APPLICATION DEVELOPMENT":"PROJECT MANAGEMENT")+" / "+(paper.module==="ADP"?"TOPIC ":"CHAPTER ")+paper.chapter,44,810,9,true);
     page.push("0.84 0.86 0.82 RG 0.6 w 44 800 m 550 800 l S");
   };
   const need=h=>{if(y-h<64)newPage();};
@@ -27,9 +27,9 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
     for(const line of wrap(t,max)){need(leading+4);draw(line,49,y,size,bold);y-=leading;}
   };
   newPage();
-  write("CHAPTER "+paper.chapter+" - PRACTICE SESSION "+String(paper.session).padStart(2,"0"),18,true,52,25);
+  write((paper.module==="ADP"?"TOPIC ":"CHAPTER ")+paper.chapter+" - PRACTICE SESSION "+String(paper.session).padStart(2,"0"),18,true,52,25);
   write(paper.title,12,false,78,18);
-  write("80 questions | "+paper.totalMarks+" marks | 60-minute training target",10,true,90,15);
+  write(paper.questions.length+" questions | "+paper.totalMarks+" marks | "+Math.round(paper.limitSeconds/60)+"-minute training target",10,true,90,15);
   write("Questions only. Online model answers unlock after submission.",9,false,95,13);
   y-=18;
   let prev="";
@@ -40,6 +40,18 @@ window.PAPERROOM_DOWNLOAD_PDF = function (paper) {
     need(Math.min(estimated,175));
     if(kind!==prev){y-=7;need(24);draw(kind,47,y,10,true);y-=21;prev=kind;}
     write(q.id+".  "+q.prompt+"  ["+q.marks+" marks]",10,true,92,14);
+    if(q.contextMd){
+      y-=7;
+      write("QUESTION DATA (rows override the general database):",9,true,95,13);
+      for(const line of String(q.contextMd).split(/\r?\n/).filter(x=>x.trim())) write(line,8,false,101,12);
+      y-=5;
+    }
+    if(q.diagram){
+      y-=7;
+      write("DIAGRAM (full visual is in the online paper):",9,true,90,13);
+      for(const line of String(q.diagram).split(/\r?\n/).filter(x=>x.trim())) write(line,8,false,101,11);
+      y-=5;
+    }
     if(q.snippet){
       y-=6;
       for(const codeLine of String(q.snippet).split(/\r?\n/)){
