@@ -1,7 +1,6 @@
 "use strict";
 (function paperroomConceptGraph(){
-  const root=document.getElementById("itsConceptMap");
-  if(!root)return;
+  let root=document.getElementById("itsConceptMap");
   const T=[
     {id:"advanced",title:"Advanced SQL",sub:"Chapter 08",group:"core",x:485,y:267,w:202,why:"The central idea: query across tables, transform results, and automate database work with Oracle SQL and PL/SQL.",qs:[],links:["joins","subqueries","views","plsql"]},
     {id:"joins",title:"Joins",sub:"INNER · OUTER · CROSS",group:"query",x:32,y:38,w:196,why:"Bring rows from different tables together. Know which rows each join retains, where filters belong, and how to avoid accidental Cartesian products.",qs:[1,9,19,20,33,35,45,46,47,61,62,68,71],links:["grouping"]},
@@ -245,6 +244,6 @@
       if(state.active===id){drawMessages();const b=state.drawer?.querySelector("#conceptChatForm button");if(b){b.disabled=false;b.textContent="Send";}}
     }
   }
-  mount();
-  window.PAPERROOM_CONCEPT_MAP={refresh:()=>{if(root.isConnected)sync();},open};
+  window.PAPERROOM_CONCEPT_MAP={mount:()=>{root=document.getElementById("itsConceptMap");if(root)mount();},refresh:()=>{if(root?.isConnected)sync();},open};
+  if(root)mount();
 })();
