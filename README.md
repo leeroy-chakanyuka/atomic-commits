@@ -7,13 +7,30 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 | Module | Exam date | Status |
 |---|---|---|
 | ADP | 18 November 2026 | **3 pilot papers live**: two design patterns + one intermediate Spring Security |
-| ITS | 19 November 2026 | **Chapter 8 pilot live** |
+| ITS | 19 November 2026 | **18 playable papers**: 3 each for Chapters 8–12 plus 3 integrated mixed papers |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
 
 ADP and ITS exams are **confirmed by the student at 14:00**. PRM and ADT show 14:00 as provisional pending confirmation on the final institutional timetable.
 
 For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-question practice sessions** (15 total). Each chapter has its own expandable session folder with downloadable question-only PDF versions, a 60-minute limit, mark allocations, self-marking for written answers, and a local attempt archive. Six combined revision papers remain labelled *coming soon*. No separate question-paper PDFs are published.
+
+### ITS practice papers: Chapters 8–12
+
+**18 timed sessions are playable from the ITS library, with downloadable question-only PDFs:**
+
+| Scope | Sessions | Coverage |
+|---|---:|---|
+| Chapter 8 · Advanced SQL | 3 | Joins, grouping, subqueries, functions, set operations, views, cursors, triggers and PL/SQL |
+| Chapter 9 · Database Design | 3 | SDLC/DBLC, requirements, ER modeling, design stages, verification, design approaches |
+| Chapter 10 · Transaction Management | 3 | ACID, COMMIT/ROLLBACK, concurrency anomalies, locks, deadlocks, isolation and recovery |
+| Chapter 11 · Performance and Query Optimization | 3 | Statistics, cardinality, selectivity, indexes, joins, optimizer plans and bottlenecks |
+| Chapter 12 · Distributed DBMS | 3 | Fragmentation, replication, transparency, distribution, distributed queries and 2PC |
+| Mixed Chapters 8–12 | 3 | 16 questions from each chapter, including 5 integrated cross-chapter cases per session |
+
+Each session contains **80 questions with its own memo**. The original Chapter 8 pilot is preserved unchanged as Paper 1, including any existing attempts. The other papers are reproducibly assembled from original, concept-specific question blueprints with varied prompts and scenarios across three sets; they are **revision papers, not official university exam papers**. Each contains terminology checks, objective concept discrimination, true/false corrections, and substantial written application cases. Written responses use transparent self-marking rubrics after submission. Session limits remain **60 minutes** (an intensive speed target), and student results, flags and attempts remain local.
+
+The source scope follows the textbook *Database Systems: Design, Implementation, and Management*, 10th edition. Full question-by-question verification against every image or diagram in the uploaded lecture PDFs has not been performed, so learners should use their official course material to check terminology and emphasis.
 
 ### Exam workflow
 - Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
