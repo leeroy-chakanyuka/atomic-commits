@@ -128,3 +128,169 @@
   .study-return{font-size:11px}
   .study-map-pane .atlas-toolbar{flex-wrap:wrap}
 }
+
+/* Quiet, chat-first study pane. Context now lives in the first assistant message. */
+.study-chat-panel .concept-drawer-top{display:none}
+.study-chat-panel .concept-drawer-content{
+  display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:0
+}
+.study-chat-panel .atlas-chat-shell{
+  flex:1;min-height:0;display:flex;flex-direction:column;background:#fffefa
+}
+.study-chat-panel .atlas-chat-header{
+  flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:17px 20px 14px;border-bottom:1px solid #e7ece3;background:#fffefa
+}
+.study-chat-panel .atlas-chat-header .section-kicker{font-size:10px;letter-spacing:.12em}
+.study-chat-panel .atlas-chat-header h2{
+  font:600 25px/1.2 var(--serif,Georgia,serif);letter-spacing:-.045em;
+  margin:5px 0 0;color:#3f5e42
+}
+.study-chat-panel .atlas-chat-settings-button{
+  flex:none;display:grid;place-items:center;width:34px;height:34px;
+  border:1px solid #e2e9dc;border-radius:10px;background:#f7f9f4;color:#668162;
+  font-size:19px;cursor:pointer
+}
+.study-chat-panel .atlas-chat-settings-button:hover{background:#eaf2e6}
+.study-chat-panel .atlas-chat-messages{
+  flex:1;min-height:0;max-height:none;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:18px;
+  margin:0;border:0;border-radius:0;padding:22px 19px 26px;
+  background:#fffefa
+}
+.study-chat-panel .atlas-chat-row{display:flex;min-width:0}
+.study-chat-panel .atlas-chat-row.student-row{justify-content:flex-end}
+.study-chat-panel .atlas-chat-row.assistant-row{justify-content:flex-start}
+.study-chat-panel .atlas-bubble{
+  max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere;
+  font-size:13px;line-height:1.7;padding:0;border:0;border-radius:0;
+  box-shadow:none
+}
+.study-chat-panel .atlas-bubble.intro,
+.study-chat-panel .atlas-bubble.gemini{
+  background:transparent;color:#435646;width:100%
+}
+.study-chat-panel .atlas-bubble.student{
+  max-width:90%;background:#e9f1e5;color:#375737;
+  padding:11px 15px;border-radius:16px 16px 4px 16px;white-space:pre-wrap
+}
+.study-chat-panel .atlas-bubble.error{
+  max-width:95%;color:#8a4d40;background:#fff1e9;padding:11px 14px;
+  border-radius:12px;white-space:pre-wrap;border:1px solid #f0d8c9
+}
+.study-chat-panel .atlas-message-label{
+  display:block;font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  font-weight:700;color:#749071;margin-bottom:8px
+}
+.study-chat-panel .atlas-message-body{white-space:normal;min-width:0;overflow-wrap:anywhere}
+.study-chat-panel .atlas-message-body>:first-child{margin-top:0}
+.study-chat-panel .atlas-message-body>:last-child{margin-bottom:0}
+.study-chat-panel .atlas-message-body p{margin:0 0 12px;line-height:1.76}
+.study-chat-panel .atlas-message-body h1,
+.study-chat-panel .atlas-message-body h2,
+.study-chat-panel .atlas-message-body h3{
+  color:#37533b;letter-spacing:-.025em;line-height:1.3;margin:19px 0 9px;
+  font-family:var(--serif,Georgia,serif);font-weight:600
+}
+.study-chat-panel .atlas-message-body h1{font-size:22px}
+.study-chat-panel .atlas-message-body h2{font-size:19px}
+.study-chat-panel .atlas-message-body h3{font-size:17px}
+.study-chat-panel .atlas-message-body strong{color:#38573b;font-weight:700}
+.study-chat-panel .atlas-message-body a{
+  color:#4e7b50;text-decoration:underline;text-decoration-color:#aac9aa;
+  text-underline-offset:3px
+}
+.study-chat-panel .atlas-message-body a:hover{color:#244f32}
+.study-chat-panel .atlas-message-body ul,
+.study-chat-panel .atlas-message-body ol{padding-left:20px;margin:0 0 14px}
+.study-chat-panel .atlas-message-body li{padding-left:2px;margin:4px 0}
+.study-chat-panel .atlas-message-body blockquote{
+  border-left:3px solid #b6ccb0;margin:14px 0;padding:1px 0 1px 13px;color:#778c73
+}
+.study-chat-panel .atlas-message-body :not(pre)>code{
+  padding:2px 5px;border-radius:5px;background:#edf1e7;font-size:.9em;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace
+}
+.study-chat-panel .atlas-message-body pre{
+  padding:15px;max-width:100%;overflow-x:auto;white-space:pre;
+  background:#f2f5ef;border:1px solid #e0e8dc;border-radius:11px;
+  margin:12px 0 15px;font-size:12px;line-height:1.6
+}
+.study-chat-panel .atlas-message-body pre code{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  padding:0!important;border:0!important;background:none!important;
+  white-space:pre;font-size:12px
+}
+.study-chat-panel .atlas-message-body table{
+  display:block;overflow-x:auto;border-collapse:collapse;width:max-content;max-width:100%;
+  margin:12px 0 16px;font-size:12px
+}
+.study-chat-panel .atlas-message-body th,
+.study-chat-panel .atlas-message-body td{padding:9px 11px;border:1px solid #dbe6d7;text-align:left}
+.study-chat-panel .atlas-message-body th{background:#eef3eb;font-weight:700}
+.study-chat-panel .atlas-message-body hr{border:0;border-top:1px solid #e2e8dd;margin:18px 0}
+.study-chat-panel .atlas-chat-bottom{
+  flex:none;position:relative;background:#fffefa;padding:12px 18px 18px;
+  border-top:1px solid #e5ebe0
+}
+.study-chat-panel .atlas-quick-prompts{
+  margin:0 0 12px;display:flex;flex-wrap:wrap;gap:6px
+}
+.study-chat-panel .atlas-quick-prompts button{
+  background:#f5f8f1;border-color:#dae5d5;padding:7px 10px;color:#607d5e
+}
+.study-chat-panel .atlas-chat-form textarea{
+  display:block;width:100%;min-height:62px;max-height:150px;
+  padding:12px 13px;background:#f8faf5;border:1px solid #dce6d7;
+  border-radius:11px;resize:vertical;font-size:12px;line-height:1.6
+}
+.study-chat-panel .atlas-chat-form textarea:focus{
+  outline:2px solid #91b38d;outline-offset:1px
+}
+.study-chat-panel .atlas-sendbar{margin-top:8px;min-height:34px}
+.study-chat-panel .atlas-sendbar span{color:#91a08d;font-size:10px}
+.study-chat-panel .atlas-sendbar button{border-radius:9px}
+.study-chat-panel .atlas-key-form{
+  background:transparent;border:0;padding:0;margin:0
+}
+.study-chat-panel .atlas-key-form label{
+  color:#547152;font-weight:700;font-size:12px;margin:0 0 9px
+}
+.study-chat-panel .atlas-key-inline{display:flex;gap:8px}
+.study-chat-panel .atlas-key-inline input{
+  width:100%;min-width:0;padding:11px 12px;border:1px solid #cfdeca;
+  border-radius:9px;background:#f8faf5;font-size:12px
+}
+.study-chat-panel .atlas-key-inline button{flex:none;border-radius:9px;padding:10px 13px}
+.study-chat-panel .atlas-text-button{
+  padding:8px 0 0;border:0;background:none;color:#5c7757;
+  text-decoration:underline;text-underline-offset:3px;font-size:11px;cursor:pointer
+}
+.study-chat-panel .atlas-key-form small{
+  display:block;margin-top:7px;font-size:10px;color:#96a592
+}
+.study-chat-panel .atlas-offline-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:11px;color:#849780
+}
+.study-chat-panel .atlas-offline-bar button{
+  background:#eaf1e5;border:1px solid #d4e3cf;
+  color:#51754f;font-size:11px;font-weight:700;
+  padding:9px 12px;border-radius:9px;cursor:pointer
+}
+.study-chat-panel .atlas-settings{
+  position:absolute;bottom:calc(100% + 8px);left:14px;right:14px;z-index:15;
+  padding:15px;max-height:65vh;overflow-y:auto;
+  background:#fcfdf9;box-shadow:0 12px 32px #2e513b26
+}
+@media(max-width:900px){
+  .study-chat-panel{height:min(78dvh,720px);min-height:520px;overflow:hidden}
+  .study-chat-panel .concept-drawer-content{overflow:hidden;min-height:0;padding:0}
+  .study-chat-panel .atlas-chat-messages{min-height:0}
+}
+@media(max-width:480px){
+  .study-chat-panel .atlas-chat-header{padding:14px 16px 12px}
+  .study-chat-panel .atlas-chat-messages{padding:17px 15px 23px}
+  .study-chat-panel .atlas-chat-bottom{padding:10px 13px 14px}
+  .study-chat-panel .atlas-message-body pre{padding:12px}
+}
