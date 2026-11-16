@@ -144,7 +144,8 @@
     }
     if(e.target.closest("[data-focus]")){
       state.focus=!state.focus;
-      root.querySelectorAll(".concept-filter").forEach(b=>b.classList.toggle("is-active",b===e.target.closest("[data-focus]")));
+      if(!state.focus)state.group="all";
+      root.querySelectorAll(".concept-filter").forEach(b=>b.classList.toggle("is-active",state.focus?b===e.target.closest("[data-focus]"):b.dataset.group==="all"));
       sync();return;
     }
     if(e.target.closest("#conceptGenerate"))makePaper();
@@ -154,7 +155,7 @@
     const s=stats();
     const n=T.filter(t=>t.qs.length&&s.topics[t.id]?.questions>=2).sort((a,b)=>s.topics[a.id].rate-s.topics[b.id].rate).slice(0,3);
     const ids=[...new Set(n.flatMap(t=>t.qs))].slice(0,24);
-    const qs=ids.map(id=>paper.questions.find(x=>x.id===id)).filter(Boolean);
+    const qs=ids.map(id=>paper.questions.find(x=>x.id===id)).filter(Boolean).map((q,i)=>({...q,id:i+1}));
     if(!qs.length)return;
     window.PAPERROOM_DOWNLOAD_PDF({...paper,session:99,title:"Weakness drill: "+n.map(t=>t.title).join(", "),limitSeconds:2700,questions:qs,totalMarks:qs.reduce((sum,q)=>sum+q.marks,0)});
   }
@@ -241,7 +242,8 @@
       history.push({role:"model",text:"Unable to reach Gemini: "+String(err?.message||err).slice(0,250)});state.messages.set(id,history);
     }finally{
       state.busy=false;
-      if(state.active===id){drawMessages();const b=state.drawer?.querySelector("#conceptChatForm button");if(b){b.disabled=false;b.textContent="Send";}}
+      if(state.active===id)drawMessages();
+      const b=state.drawer?.querySelector("#conceptChatForm button");if(b){b.disabled=false;b.textContent="Send";}
     }
   }
   window.PAPERROOM_CONCEPT_MAP={mount:()=>{root=document.getElementById("itsConceptMap");if(root)mount();},refresh:()=>{if(root?.isConnected)sync();},open};
