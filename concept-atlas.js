@@ -396,6 +396,10 @@
     root=host;
     if(needsMount)mount();
     open(valid);
+    // On narrow screens the two panes stack; bring the selected discussion into view.
+    if(window.matchMedia?.("(max-width: 900px)")?.matches){
+      requestAnimationFrame(()=>panel.scrollIntoView({behavior:"smooth",block:"start"}));
+    }
   }
   window.PAPERROOM_CONCEPT_MAP={
     mount:()=>{
