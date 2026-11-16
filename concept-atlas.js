@@ -267,42 +267,110 @@
     state.drawer=panel;
     return true;
   }
+
+  // This introductory explanation is a locally authored study-guide message,
+  // not a Gemini response and not included in the model conversation history.
+  function introduction(n){
+    const chapter=n.chapter||8;
+    const connections=(n.links||[]).filter(id=>byId[id]).map(id=>{
+      const next=byId[id];
+      return "[**"+next.title+"**](#/study/its/ch"+(next.chapter||8)+"/"+id+")";
+    });
+    const parts=["**"+n.title+"**",n.why];
+    if(connections.length)parts.push("**Connected concepts:** "+connections.join(" · "));
+    const references=["[Chapter "+chapter+" notes]("+paths[chapter]+")"];
+    if(chapter===8){
+      references.push("[Practice paper](#/practice/its/ch8/s1)");
+      if(n.qs?.length)references.push(n.qs.length+" related questions");
+    }
+    parts.push("**Study materials:** "+references.join(" · "));
+    parts.push("Ask me for an explanation, an example, or a practice question.");
+    return parts.join("\n\n");
+  }
   function open(id){
     const n=byId[id];if(!n)return;
     state.active=id;if(!ensureDrawer())return;
     const chapter=n.chapter||8;
     state.drawer.querySelector("#conceptDrawerChapter").textContent="ITS · CHAPTER "+String(chapter).padStart(2,"0");
-    const count=n.qs?.length||0,links=(n.links||[]).filter(k=>byId[k]);
     const firstTime=!state.key&&!state.asked&&!state.offline;
+    const hasHistory=!!state.messages.get(id)?.length;
     state.drawer.querySelector("#conceptDrawerContent").innerHTML=`
-      <div class="atlas-drawer-heading"><span class="section-kicker">EXPLORE A CONCEPT</span><h2 id="conceptDrawerTitle">${escape(n.title)}</h2><p>${escape(n.why)}</p>
-        <div class="atlas-related">${links.map(id=>`<button type="button" data-related="${escape(id)}">${escape(byId[id].title)}</button>`).join("")}</div>
-      </div>
-      <div class="atlas-chat"><div class="atlas-chat-head"><div><span class="section-kicker">DISCUSSION</span><h3>Ask about ${escape(n.title)}.</h3></div>
-        ${state.key?'<button type="button" data-settings="true" class="atlas-small-button">Gemini settings</button>':""}</div>
-        ${firstTime?`<form id="atlasKeyForm" class="atlas-key-form"><strong>Connect Gemini</strong><p>Use your own API key for questions grounded in Chapter ${chapter}. Your key stays in this tab and goes directly to Google.</p><label for="atlasKey">Gemini API key</label><input id="atlasKey" type="password" spellcheck="false" autocomplete="off" placeholder="Paste your API key" required><div class="atlas-inline-actions"><button type="submit" class="button button-dark">Connect and discuss</button><button type="button" data-offline="true">Continue without AI</button></div><small>For personal browser use only. Browser-based keys aren't as protected as server-held keys.</small></form>`:""}
-        ${state.key?`<div class="atlas-chat-messages" id="atlasChatMessages" role="log" aria-live="polite"></div><div class="atlas-quick-prompts"><button type="button" data-prompt="explain">Explain simply</button><button type="button" data-prompt="example">Give an example</button><button type="button" data-prompt="test">Test me</button></div><form id="atlasChatForm" class="atlas-chat-form"><label class="sr-only" for="atlasMessage">Your question</label><textarea id="atlasMessage" maxlength="2500" rows="3" placeholder="Ask a question about this section..."></textarea><div class="atlas-sendbar"><span id="atlasChatStatus">Source: Chapter ${chapter} notes</span><button class="button button-dark" type="submit" ${state.busy?"disabled":""}>${state.busy?"Working...":"Send"}</button></div></form>`:""}
-        ${!state.key&&!firstTime?`<div class="atlas-offline"><p>You can study this topic without AI. Read the notes or work through the relevant paper questions.</p><div class="atlas-offline-actions"><button type="button" data-settings="true">Connect Gemini</button><a href="${paths[chapter]}" target="_blank" rel="noopener noreferrer">Open chapter notes</a></div></div>`:""}
-      </div>
-      <details class="atlas-extra"><summary>Notes, questions and study details</summary><div><a href="${paths[chapter]}" target="_blank" rel="noopener noreferrer">Chapter ${chapter} PDF</a>${chapter===8?`<a href="#/practice/its/ch8/s1">Chapter 8 practice paper</a><p>${count} question-bank questions linked to this concept. This mapping supports local progress, not automatic AI grading.</p>${count?`<p>Question IDs: ${n.qs.join(", ")}</p>`:""}`:"<p>Chapter 9 practice paper is not available yet.</p>"}</div></details>
-      <div id="atlasSettings" class="atlas-settings" hidden><label for="atlasModel">Gemini model</label><select id="atlasModel"><option value="gemini-3.5-flash" ${state.model==="gemini-3.5-flash"?"selected":""}>Gemini 3.5 Flash (default)</option><option value="gemini-3.5-flash-lite" ${state.model==="gemini-3.5-flash-lite"?"selected":""}>Gemini 3.5 Flash-Lite</option><option value="gemini-3.8-flash" ${state.model==="gemini-3.8-flash"?"selected":""}>Gemini 3.8 Flash</option></select><label for="atlasChangeKey">Change API key (optional)</label><input type="password" id="atlasChangeKey" placeholder="Paste new key"><div class="atlas-inline-actions"><button type="button" data-replace-key="true">Save settings</button><button type="button" data-clear-key="true">Disconnect</button></div><p>API key and chat history are stored in this tab's memory only. Prompts and chapter text are sent directly to Google when you use AI. Calls time out after 25 seconds.</p></div>`;
+      <section class="atlas-chat-shell" aria-label="${escape(n.title)} study chat">
+        <div class="atlas-chat-header">
+          <div><span class="section-kicker">CHAPTER ${String(chapter).padStart(2,"0")} · STUDY CHAT</span><h2 id="conceptDrawerTitle">${escape(n.title)}</h2></div>
+          <button type="button" class="atlas-chat-settings-button" data-settings="true" title="Gemini settings" aria-label="Gemini settings">⚙</button>
+        </div>
+        <div class="atlas-chat-messages" id="atlasChatMessages" role="log" aria-label="Conversation" aria-live="polite"></div>
+        <div class="atlas-chat-bottom">
+          ${state.key?`
+            ${!hasHistory?`<div class="atlas-quick-prompts" aria-label="Suggested questions">
+              <button type="button" data-prompt="explain">Explain simply</button>
+              <button type="button" data-prompt="example">Show an example</button>
+              <button type="button" data-prompt="test">Test me</button>
+            </div>`:""}
+            <form id="atlasChatForm" class="atlas-chat-form">
+              <label class="sr-only" for="atlasMessage">Your question</label>
+              <textarea id="atlasMessage" maxlength="2500" rows="2" placeholder="Ask about ${escape(n.title)}..."></textarea>
+              <div class="atlas-sendbar"><span id="atlasChatStatus">${escape(state.model.replace("gemini-","Gemini "))} · Chapter ${chapter} notes</span><button class="button button-dark" type="submit" ${state.busy?"disabled":""}>${state.busy?"Working...":"Send ↗"}</button></div>
+            </form>`:
+            firstTime?`<form id="atlasKeyForm" class="atlas-key-form">
+              <label for="atlasKey">Connect Gemini to ask questions</label>
+              <div class="atlas-key-inline"><input id="atlasKey" type="password" spellcheck="false" autocomplete="off" placeholder="Your Gemini API key" required><button type="submit" class="button button-dark">Connect</button></div>
+              <button type="button" class="atlas-text-button" data-offline="true">Continue without AI</button>
+              <small>Optional. The key stays in this tab; browser keys are not production-secure.</small>
+            </form>`:
+            `<div class="atlas-offline-bar"><span>Studying without AI</span><button type="button" data-settings="true">Connect Gemini</button></div>`
+          }
+          <div id="atlasSettings" class="atlas-settings" hidden>
+            <label for="atlasModel">Gemini model</label>
+            <select id="atlasModel">
+              <option value="gemini-3.5-flash" ${state.model==="gemini-3.5-flash"?"selected":""}>Gemini 3.5 Flash</option>
+              <option value="gemini-3.5-flash-lite" ${state.model==="gemini-3.5-flash-lite"?"selected":""}>Gemini 3.5 Flash-Lite</option>
+              <option value="gemini-3.8-flash" ${state.model==="gemini-3.8-flash"?"selected":""}>Gemini 3.8 Flash</option>
+            </select>
+            <label for="atlasChangeKey">Replace API key (optional)</label>
+            <input type="password" id="atlasChangeKey" autocomplete="off" placeholder="New API key">
+            <div class="atlas-inline-actions"><button type="button" data-replace-key="true">Save</button><button type="button" data-clear-key="true">Disconnect</button></div>
+            <p>Prompts and chapter text go to Google when using Gemini. Keys and chats remain in this tab's memory.</p>
+          </div>
+        </div>
+      </section>`;
     state.drawer.hidden=false;
     root?.querySelectorAll(".atlas-node[data-node]").forEach(button=>{
       const chosen=button.dataset.node===id;
       button.classList.toggle("is-selected",chosen);
       button.setAttribute("aria-pressed",String(chosen));
     });
-    if(firstTime)state.drawer.querySelector("#atlasKey")?.focus();
     renderMessages();
   }
-  function close(){ /* The study sidebar stays visible for the lifetime of the study page. */ }
+  function close(){ /* The study sidebar stays visible with the study page. */ }
   function renderMessages(){
     const list=state.drawer?.querySelector("#atlasChatMessages");
     if(!list)return;
-    const ms=state.messages.get(state.active)||[];
+    const n=byId[state.active];if(!n)return;
+    const ms=[{role:"intro",text:introduction(n)},...(state.messages.get(n.id)||[])];
     list.replaceChildren();
-    if(!ms.length){const note=document.createElement("p");note.className="atlas-empty-message";note.textContent="Ask a question grounded in this chapter, or use a suggestion below.";list.appendChild(note);}
-    for(const m of ms){const box=document.createElement("div");box.className="atlas-bubble "+(m.role==="model"?"gemini":m.role==="error"?"error":"student");box.textContent=m.text;list.appendChild(box);}
+    for(const m of ms){
+      const isAssistant=m.role==="intro"||m.role==="model";
+      const row=document.createElement("div");
+      row.className="atlas-chat-row "+(m.role==="user"?"student-row":"assistant-row");
+      const box=document.createElement("div");
+      box.className="atlas-bubble "+(m.role==="intro"?"intro":m.role==="model"?"gemini":m.role==="error"?"error":"student");
+      if(isAssistant){
+        const label=document.createElement("span");
+        label.className="atlas-message-label";
+        label.textContent=m.role==="intro"?"Study guide":"Gemini";
+        box.appendChild(label);
+        const body=document.createElement("div");
+        body.className="atlas-message-body";
+        // Shared renderer parses GFM and sanitizes HTML before insertion.
+        if(window.PAPERROOM_RICH?.render)body.innerHTML=window.PAPERROOM_RICH.render(m.text);
+        else body.textContent=m.text;
+        box.appendChild(body);
+      }else box.textContent=m.text;
+      row.appendChild(box);list.appendChild(row);
+    }
+    window.PAPERROOM_RICH?.highlightCode?.(list);
     list.scrollTop=list.scrollHeight;
   }
   function onDrawerClick(e){
@@ -360,8 +428,8 @@
       setStatus("Asking "+state.model.replace("gemini-","Gemini ")+"...");
       const controller=new AbortController();
       timer=setTimeout(()=>controller.abort(),25000);
-      const messages=history.slice(-10).map(m=>({role:m.role==="model"?"model":"user",parts:[{text:m.text}]}));
-      const system=`You are a careful tutor for Information Systems Chapter ${chapter}. Selected concept: ${n.title}. Description: ${n.why}. The full text extracted from the provided Chapter ${chapter} PDF follows. Focus on the selected concept and its dependencies. Use the chapter as your primary source; you may supplement it with clearly labeled general explanation. Do not invent citations, scores or facts missing from the notes. Some diagrams may not be extractable from the PDF. Keep responses concise. If testing the learner, ask one question at a time without revealing the answer until they attempt it.\n\nCHAPTER SOURCE:\n${source}`;
+      const messages=history.filter(m=>m.role==="model"||m.role==="user").slice(-10).map(m=>({role:m.role,parts:[{text:m.text}]}));
+      const system=`You are a careful tutor for Information Systems Chapter ${chapter}. Format responses in readable Markdown, with fenced SQL code blocks for SQL examples. Selected concept: ${n.title}. Description: ${n.why}. The full text extracted from the provided Chapter ${chapter} PDF follows. Focus on the selected concept and its dependencies. Use the chapter as your primary source; you may supplement it with clearly labeled general explanation. Do not invent citations, scores or facts missing from the notes. Some diagrams may not be extractable from the PDF. Keep responses concise. If testing the learner, ask one question at a time without revealing the answer until they attempt it.\n\nCHAPTER SOURCE:\n${source}`;
       const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent`,{
         method:"POST",signal:controller.signal,
         headers:{"Content-Type":"application/json","x-goog-api-key":state.key},
@@ -377,9 +445,9 @@
       history.push({role:"error",text:"Couldn't complete the request: "+why});
     }finally{
       if(timer)clearTimeout(timer);
-      state.busy=false;renderMessages();
-      const b=state.drawer?.querySelector("#atlasChatForm button[type=submit]");if(b){b.disabled=false;b.textContent="Send";}
-      const statusEl=state.drawer?.querySelector("#atlasChatStatus");if(statusEl)statusEl.textContent="Chapter "+chapter+" source · "+state.model;
+      state.busy=false;if(state.active===id)renderMessages();
+      const b=state.drawer?.querySelector("#atlasChatForm button[type=submit]");if(b){b.disabled=false;b.textContent="Send ↗";}
+      const statusEl=state.drawer?.querySelector("#atlasChatStatus");if(statusEl&&state.active===id)statusEl.textContent="Chapter "+chapter+" notes · "+state.model;
     }
   }
 
