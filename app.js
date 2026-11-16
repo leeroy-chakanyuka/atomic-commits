@@ -191,7 +191,7 @@
     }
     const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
     const isPractice=m.id==="prm"||m.id==="its";
-    const chapterList=m.id==="its"?[{n:8,title:"Advanced SQL",sessions:[1]}]:CHAPTERS;
+    const chapterList=m.id==="its"?[{n:8,title:"Advanced SQL",sessions:[1]},{n:9,title:"Database Design",sessions:[]}]:CHAPTERS;
     const keys=m.id==="its"?ITS_PAPER_KEYS:PAPER_KEYS;
     const tiles=chapterList.map(c=>{
       const ready=Boolean(c.sessions?.length);
@@ -235,12 +235,12 @@
       </a>`;
     }).join("");
     const running=keys.map(key=>({key,item:readAttemptFor(key)})).filter(x=>x.item&&!x.item.submittedAt&&x.item.endsAt>Date.now());
-    const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"FIRST PILOT SESSION":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Start with Advanced SQL.":"Choose your focus."}</h2></div>
-       <small>${m.id==="its"?"1 session · for your feedback":"15 ready · 6 combined sessions coming soon"}</small></div>
+    const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"FIRST PILOT SESSION":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Choose a chapter.":"Choose your focus."}</h2></div>
+       <small>${m.id==="its"?"Chapter 8 practice · Chapter 9 notes":"15 ready · 6 combined sessions coming soon"}</small></div>
        <div class="chapter-tiles ${m.id==="its"?"its-one-chapter":""}">${tiles}</div>`:"";
     const combinedSection=m.id==="prm"?`<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
         <div class="combined-sessions">${Array.from({length:6},(_,i)=>`<span class="combined-slot">Session ${String(i+1).padStart(2,"0")} · Soon</span>`).join("")}</div></section>`:"";
-    const sourceNotes=m.id==="its"?moduleNotes.filter(n=>n.chapter!==8):moduleNotes;
+    const sourceNotes=m.id==="its"?moduleNotes.filter(n=>![8,9].includes(n.chapter)):moduleNotes;
     const notesCards=sourceNotes.length?`<div class="notes-grid">${sourceNotes.map(n=>`
         <article class="note-card">
           <div class="note-card-heading"><span class="note-chapter">CHAPTER ${String(n.chapter).padStart(2,"0")}</span><span class="note-filetype">PDF</span></div>
@@ -263,7 +263,7 @@
     $("#moduleContent").innerHTML=`<div class="module-compact-head">
       <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
       <div class="module-title-line"><div><span class="section-kicker">${isPractice?"EXAM PRACTICE LIBRARY":"READING LIBRARY"}</span><h1>${esc(m.name)}<span class="title-period">.</span></h1>
-        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"An Advanced SQL pilot: mostly SQL practice, a little essential vocabulary, and step-by-step review.":"Study notes and resources for this module."}</p></div>
+        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"Explore Chapters 8 and 9 through the concept atlas, source notes and practical SQL revision.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
       ${m.id==="its"?`<div id="itsConceptMap"></div>`:""}
