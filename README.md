@@ -60,28 +60,36 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
 - `papers/adp/*.js`: two design patterns papers and one Spring Security pilot
 - `rich-content.js`: sanitized Markdown and diagrams
-- `concept-map.js` / `concept-map.css`: ITS Chapter 8 concept graph, topic drawer and local learning signals
+- `concept-atlas.js` / `concept-atlas.css`: ITS master/Chapter 8/Chapter 9 concept maps, zoomable viewport, streamlined concept chat and local learning signals
 - `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference
 - `notes/`: user-uploaded study content folders
 
 This site is plain HTML/CSS/JS, deployable directly from the repo root with GitHub Pages.
 
-## ITS Chapter 8 concept graph
+## ITS concept atlas: Chapters 8 and 9
 
-The ITS module includes a scrollable cloud-like **concept graph** mapping 16 connected Chapter 8 topics. Selecting a node opens an accessible right-side drawer with an explanation, related concepts, a link to the source chapter notes, question references and a concept-focused Gemini chat. On small screens the graph scrolls horizontally while the discussion opens full width. This is a learning tool, not a strict dependency graph.
+The ITS module now has a **master concept map** connecting two separate, clickable chapter graphs:
 
-The topic tracker reads only existing `paperroom:history:its:ch8:s1:v2` and submitted current attempts on the same device. Its percentages count objective graded questions and *self-reviewed* written questions; unreviewed written answers are excluded. With limited completed attempts, percentages are preliminary. **Gemini does not score or inspect a student's submitted answers.** The weakness-paper action creates a **question-only PDF from the existing Chapter 8 bank** using the least successful topic groups. It does not invent AI questions or change saved practice results.
+- **Chapter 8 — Advanced SQL:** 16 concept bubbles mapped to the existing 80-question practice paper; covers joins, grouping, subqueries, functions, views, set operators, PL/SQL and related database programming tools.
+- **Chapter 9 — Database Design:** 16 concept bubbles covering information systems, SDLC, DBLC, requirements, conceptual/ER design, DBMS selection, logical and physical design, verification, security, performance and design strategies. Chapter 9 has notes but no published quiz yet.
 
-### Gemini BYOK prototype and privacy
+The graph **fits the viewport automatically** and can be explored using Fit/zoom buttons, mouse drag or touch drag. The graph's SVG lines are solid, with no dot markers. On smaller screens, the initial fit overview can be zoomed for readability. The concept sidebar focuses on a description, connected topics, and immediate discussion; extra resources are in an expandable section.
 
-- The concept drawer accepts an optional **user-supplied** Gemini API key in the browser for direct requests to Google's `generateContent` API using Gemini 3.8 Flash. The repo contains **no hardcoded key**.
-- The key and chat history are kept only in JavaScript memory for that tab. They are not written to browser localStorage or sent to Paperroom servers. Chat messages are transmitted **directly to Google**, which will handle them under its applicable terms. Paperroom still has no backend.
-- **Client-side API keys are not fully secure.** Browser extensions, a compromised device or injected code may access an entered key, and Google advises against exposing keys client-side in production. Use only a separately restricted, low-quota test key. The long-term production alternative requires a protected backend or another credential architecture.
-- Chat is concept-context only. It does not automatically send question responses, marking data, history or performance signals. That Gemini-based analysis, along with generating *new* weakness-specific questions, remains future work.
+### Gemini and no-AI path
+
+Opening the first concept prompts for an optional Gemini key immediately, with **Continue without AI** available. Without AI, the chapter explanation, concept links and source notes still work. Key selection and model are tab-local; the default is **Gemini 3.5 Flash** at minimal thinking, with Gemini 3.5 Flash-Lite and Gemini 3.8 Flash (low thinking) selectable. Requests abort after 25 seconds of waiting for Gemini, rather than hanging indefinitely.
+
+On first chat request for a chapter, PDF.js loads and extracts text from the **complete local Chapter 8 or 9 source PDF** in the browser, caching that text in memory for subsequent messages. The selected concept and the extracted chapter text are passed to Google as context for tutoring. **Embedded images, graphics and other non-text PDF objects may not be extracted**, so this is not yet perfect diagram-aware tutoring. The entire extracted chapter text is currently resent with each request; a provider cache for longer sessions would reduce repeated token use and is future optimisation.
+
+No API key, PDF text, response history or saved score is sent to a Paperroom backend, and no API key is stored in localStorage. However, **the key and chat prompts are sent directly to Google** when Gemini is used, and browser-based credentials are not production-grade secrets. Use a separately restricted testing key.
+
+### Progress and targeted drilling
+
+Chapter 8's optional progress section reads only the existing v2 submitted history and self-reviewed marks on this device. It can build a **question-only PDF from the existing Chapter 8 bank** based on observed weak topics. Gemini does **not** score existing answers or generate entirely new papers yet. Chapter 9 has no performance statistics until a practice bank is created.
 
 ### Next
 
-Gemini-assisted rubric-driven marking of written answers is tracked in [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1). Before enabling it, design an explicit consent and data-sharing screen, a versioned topic-tagging schema, a human-reviewable rubric output, and an export/import path for local-only histories.
+Future features: explicit opt-in to AI marking of written answers (see [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1)), human-reviewable rubrics and topic tagging, generated original weakness papers, and a safer credential strategy for production.
 
 ## Reading resources for ADP
 
