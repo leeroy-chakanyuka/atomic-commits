@@ -24,7 +24,7 @@
   const repoNoteDownloadUrl=(module,file)=>"https://raw.githubusercontent.com/leeroy-chakanyuka/atomic-commits/main/notes/"+module+"/"+encodeURIComponent(file);
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
-  const ITS_PAPER_KEYS=["its-8-1"];
+  const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
   const ADP_PAPER_KEYS=["adp-1-1","adp-2-1","adp-3-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"1 advanced SQL pilot session":m.id==="adp"?"3 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"3 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -192,7 +192,13 @@
     }
     const moduleNotes=NOTE_FILES[m.id.toUpperCase()]||[];
     const isPractice=m.id==="prm"||m.id==="its";
-    const chapterList=m.id==="its"?[{n:8,title:"Advanced SQL",sessions:[1]},{n:9,title:"Database Design",sessions:[]}]:CHAPTERS;
+    const chapterList=m.id==="its"?[
+      {n:8,title:"Advanced SQL",sessions:[1,2,3]},
+      {n:9,title:"Database Design",sessions:[1,2,3]},
+      {n:10,title:"Transaction Management and Concurrency Control",sessions:[1,2,3]},
+      {n:11,title:"Database Performance Tuning and Query Optimization",sessions:[1,2,3]},
+      {n:12,title:"Distributed Database Management Systems",sessions:[1,2,3]}
+    ]:CHAPTERS;
     const keys=m.id==="its"?ITS_PAPER_KEYS:PAPER_KEYS;
     const tiles=chapterList.map(c=>{
       const ready=Boolean(c.sessions?.length);
@@ -236,10 +242,23 @@
       </a>`;
     }).join("");
     const running=keys.map(key=>({key,item:readAttemptFor(key)})).filter(x=>x.item&&!x.item.submittedAt&&x.item.endsAt>Date.now());
-    const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"FIRST PILOT SESSION":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Choose a chapter.":"Choose your focus."}</h2></div>
-       <small>${m.id==="its"?"Chapter 8 practice · Chapter 9 notes":"15 ready · 6 combined sessions coming soon"}</small></div>
+    const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"ITS PRACTICE PAPERS":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Choose a chapter.":"Choose your focus."}</h2></div>
+       <small>${m.id==="its"?"15 chapter papers · 3 mixed papers":"15 ready · 6 combined sessions coming soon"}</small></div>
        <div class="chapter-tiles ${m.id==="its"?"its-one-chapter":""}">${tiles}</div>`:"";
-    const combinedSection=m.id==="prm"?`<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
+    const combinedSection=m.id==="its"?
+      `<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION · ALL FIVE CHAPTERS</span>
+        <h2>Combined papers.</h2><p>Three integrated 80-question papers spanning Chapters 8–12, including cross-chapter cases on SQL, design, transactions, optimization and distributed systems.</p></div>
+        <div class="combined-sessions">
+          ${[1,2,3].map(session=>{
+            const key="its-812-"+session,prior=readAttemptFor(key);
+            const active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+            return `<div class="session-file"><div class="session-file-info"><span class="session-file-title">Mixed paper ${String(session).padStart(2,"0")}</span>
+              <small>80 questions · 1 hour · ${PAPERBANK[key].totalMarks} marks</small></div>
+              <div class="session-file-actions"><a class="session-start-link" href="${sessionHash(key)}">${active?"Resume":"Start"}</a>
+              <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download mixed session ${session} as PDF">PDF</button></div></div>`;
+          }).join("")}
+        </div></section>`:
+      m.id==="prm"?`<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION</span><h2>Combined papers.</h2><p>Six comprehensive sessions for Chapters 9, 11, 12, 14 and 15 are coming next.</p></div>
         <div class="combined-sessions">${Array.from({length:6},(_,i)=>`<span class="combined-slot">Session ${String(i+1).padStart(2,"0")} · Soon</span>`).join("")}</div></section>`:"";
     const sourceNotes=m.id==="its"?moduleNotes.filter(n=>![8,9].includes(n.chapter)):moduleNotes;
     const notesCards=sourceNotes.length?`<div class="notes-grid">${sourceNotes.map(n=>`
@@ -253,18 +272,18 @@
           <div class="reading-recs"><a href="https://www.baeldung.com/security-spring" target="_blank" rel="noopener noreferrer"><strong>Baeldung · Security with Spring</strong><span>Practical guides to authentication, authorization, and OAuth.</span></a>
             <a href="https://www.manning.com/books/spring-security-in-action-second-edition" target="_blank" rel="noopener noreferrer"><strong>Spring Security in Action · 2nd edition</strong><span>Laurențiu Spilcă's book on securing Spring applications.</span></a></div>
         </div>`;
-    const notesSection=m.id==="its"||!isPractice?`<section class="module-notes-library">
+    const notesSection=!isPractice?`<section class="module-notes-library">
       <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>${m.id==="its"?"Other chapter notes.":"Your notes."}</h2></div><small>${sourceNotes.length} chapter${sourceNotes.length===1?"":"s"}</small></div>
       ${notesCards}</section>`:"";
     const historySection=isPractice?`<section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
-      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume Chapter ${PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
       ${recent?'<div class="history-list">'+recent+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
       <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p></section>`:"";
-    const sessions=m.id==="prm"?15:m.id==="its"?1:0;
+    const sessions=m.id==="prm"?15:m.id==="its"?18:0;
     $("#moduleContent").innerHTML=`<div class="module-compact-head">
       <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
       <div class="module-title-line"><div><span class="section-kicker">${isPractice?"EXAM PRACTICE LIBRARY":"READING LIBRARY"}</span><h1>${esc(m.name)}<span class="title-period">.</span></h1>
-        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"Explore Chapters 8 and 9 through the concept atlas, source notes and practical SQL revision.":"Study notes and resources for this module."}</p></div>
+        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"Five chapters, eighteen practice papers, one focused hour per paper. Chapter 8 and 9 concept maps remain available.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
       ${m.id==="its"?`<div id="itsConceptMap"></div>`:""}
@@ -564,14 +583,16 @@
   }
   function renderIntro() {
     show("intro");
-    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
+    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():DATA.chapter===812?"CHAPTERS 8–12":"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
     $("#introDescription").textContent=DATA.intro || (DATA.title+". "+DATA.questions.length+" exam-style questions and room to think.");
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
     $("#introQuestionCount").textContent=String(DATA.questions.length);
     $("#introDuration").textContent=String(Math.round(DATA.limitSeconds/60));
     $("#introSheetModule").textContent=DATA.module==="ADP"?"APPLICATION DEVELOPMENT":DATA.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT";
     $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
-    $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":"Chapter "+DATA.chapter+"<br><em>"+(DATA.module==="ITS"?"Advanced SQL.":DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
+    $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":
+      DATA.module==="ITS"?(DATA.chapter===812?"Chapters 8–12":"Chapter "+DATA.chapter)+"<br><em>"+esc(({8:"Advanced SQL.",9:"Database design.",10:"Transactions.",11:"Query tuning.",12:"Distributed DB.",812:"Mixed revision."})[DATA.chapter]||DATA.title)+"</em>":
+      "Chapter "+DATA.chapter+"<br><em>"+(DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");
     if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
     $("#introSheetSession").textContent="Practice session "+String(DATA.session).padStart(2,"0");
