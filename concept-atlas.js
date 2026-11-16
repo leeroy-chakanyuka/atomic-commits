@@ -59,7 +59,17 @@
     ["dml","sequences"]
   ];
   const paper=window.PAPERROOM_LIBRARY?.["its-8-1"];
-  const state={active:"joins",view:"master",workspace:false,mountedView:null,mountedRoot:null,key:"",model:"gemini-3.5-flash",busy:false,messages:new Map(),drawer:null,offline:false,asked:false,viewSize:null,scale:1,x:0,y:0,cleanup:null,chapterText:new Map()};
+  const KEY_STORAGE="paperroom:gemini:api-key:v1";
+  // A BYOK key is device-local; never put it in a URL or model prompt.
+  const readKey=()=>{try{return (localStorage.getItem(KEY_STORAGE)||"").trim();}catch(_e){return "";}};
+  const persistKey=key=>{
+    try{
+      if(key)localStorage.setItem(KEY_STORAGE,key);
+      else localStorage.removeItem(KEY_STORAGE);
+      return true;
+    }catch(_e){return false;}
+  };
+  const state={active:"joins",view:"master",workspace:false,mountedView:null,mountedRoot:null,key:readKey(),model:"gemini-3.5-flash",busy:false,messages:new Map(),drawer:null,offline:false,asked:false,viewSize:null,scale:1,x:0,y:0,cleanup:null,chapterText:new Map()};
   const escape=s=>String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]));
   const canon=s=>String(s||"").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
   const accepted=(v,options)=>options.some(o=>canon(v)===canon(o));
@@ -370,7 +380,7 @@
               <label for="atlasKey">Connect Gemini to ask questions</label>
               <div class="atlas-key-inline"><input id="atlasKey" type="password" spellcheck="false" autocomplete="off" placeholder="Your Gemini API key" required><button type="submit" class="button button-dark">Connect</button></div>
               <button type="button" class="atlas-text-button" data-offline="true">Continue without AI</button>
-              <small>Optional. The key stays in this tab; browser keys are not production-secure.</small>
+              <small>Optional. Saved on this device until you disconnect. Browser extensions and other scripts may access it. Use a restricted key.</small>
             </form>`:
             `<div class="atlas-offline-bar"><span>Studying without AI</span><button type="button" data-settings="true">Connect Gemini</button></div>`
           }
@@ -384,7 +394,7 @@
             <label for="atlasChangeKey">Replace API key (optional)</label>
             <input type="password" id="atlasChangeKey" autocomplete="off" placeholder="New API key">
             <div class="atlas-inline-actions"><button type="button" data-replace-key="true">Save</button><button type="button" data-clear-key="true">Disconnect</button></div>
-            <p>Prompts and chapter text go to Google when using Gemini. Keys and chats remain in this tab's memory.</p>
+            <p>Prompts and chapter text go to Google when using Gemini. Your key is saved in this browser until you disconnect. Browser scripts or extensions could read it; chats stay in this tab.</p>
           </div>
         </div>
       </section>`;
@@ -428,6 +438,7 @@
       }else box.textContent=m.text;
       row.appendChild(box);list.appendChild(row);
     }
+    window.PAPERROOM_RICH?.renderDiagrams?.(list);
     window.PAPERROOM_RICH?.highlightCode?.(list);
     list.scrollTop=list.scrollHeight;
   }
@@ -436,8 +447,8 @@
     const rel=e.target.closest("[data-related]");if(rel){const n=byId[rel.dataset.related];if(n)location.hash="#/study/its/ch"+(n.chapter||8)+"/"+n.id;return;}
     if(e.target.closest("[data-offline]")){state.asked=true;state.offline=true;open(state.active);return;}
     if(e.target.closest("[data-settings]")){if(!state.key){state.asked=false;state.offline=false;open(state.active);}else{const box=state.drawer.querySelector("#atlasSettings");box.hidden=!box.hidden;}return;}
-    if(e.target.closest("[data-clear-key]")){state.key="";state.offline=true;open(state.active);return;}
-    if(e.target.closest("[data-replace-key]")){const k=state.drawer.querySelector("#atlasChangeKey").value.trim();if(k)state.key=k;state.model=state.drawer.querySelector("#atlasModel").value;open(state.active);return;}
+    if(e.target.closest("[data-clear-key]")){state.key="";persistKey("");state.offline=true;open(state.active);return;}
+    if(e.target.closest("[data-replace-key]")){const k=state.drawer.querySelector("#atlasChangeKey").value.trim();if(k){state.key=k;persistKey(k);}state.model=state.drawer.querySelector("#atlasModel").value;state.offline=false;open(state.active);return;}
     const p=e.target.closest("[data-prompt]");if(p){
       const n=byId[state.active],prompts={explain:`Explain ${n.title} in Chapter ${n.chapter||8} from first principles.`,example:`Show a practical example of ${n.title} grounded in the provided chapter.`,test:`Ask me one targeted exam-style question on ${n.title}, without giving me the answer yet.`};
       const input=state.drawer.querySelector("#atlasMessage");if(input){input.value=prompts[p.dataset.prompt];input.focus();}
@@ -446,7 +457,7 @@
   function onDrawerSubmit(e){
     if(e.target.id==="atlasKeyForm"){
       e.preventDefault();const k=e.target.querySelector("#atlasKey")?.value?.trim();
-      if(!k)return;state.key=k;state.asked=true;state.offline=false;open(state.active);
+      if(!k)return;state.key=k;persistKey(k);state.asked=true;state.offline=false;open(state.active);
     }else if(e.target.id==="atlasChatForm"){e.preventDefault();send(e.target);}
   }
   async function chapterText(chapter,onStatus){
@@ -487,7 +498,7 @@
       const controller=new AbortController();
       timer=setTimeout(()=>controller.abort(),25000);
       const messages=history.filter(m=>m.role==="model"||m.role==="user").slice(-10).map(m=>({role:m.role,parts:[{text:m.text}]}));
-      const system=`You are a careful tutor for Information Systems Chapter ${chapter}. Format responses in readable Markdown, with fenced SQL code blocks for SQL examples. Selected concept: ${n.title}. Description: ${n.why}. The full text extracted from the provided Chapter ${chapter} PDF follows. Focus on the selected concept and its dependencies. Use the chapter as your primary source; you may supplement it with clearly labeled general explanation. Do not invent citations, scores or facts missing from the notes. Some diagrams may not be extractable from the PDF. Keep responses concise. If testing the learner, ask one question at a time without revealing the answer until they attempt it.\n\nCHAPTER SOURCE:\n${source}`;
+      const system=`You are a careful tutor for Information Systems Chapter ${chapter}. Format responses in readable Markdown, with fenced SQL code blocks for SQL examples. When a lifecycle, relationship, database structure or process would be clearer as a diagram, you may include a concise fenced Mermaid diagram using a mermaid code fence. Prefer flowchart TD, sequenceDiagram or erDiagram. Use valid Mermaid with short labels, no clickable links, URLs, external resources or raw HTML. Do not force a diagram where prose or SQL is better. Selected concept: ${n.title}. Description: ${n.why}. The full text extracted from the provided Chapter ${chapter} PDF follows. Focus on the selected concept and its dependencies. Use the chapter as your primary source; you may supplement it with clearly labeled general explanation. Do not invent citations, scores or facts missing from the notes. Some diagrams may not be extractable from the PDF. Keep responses concise. If testing the learner, ask one question at a time without revealing the answer until they attempt it.\n\nCHAPTER SOURCE:\n${source}`;
       const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent`,{
         method:"POST",signal:controller.signal,
         headers:{"Content-Type":"application/json","x-goog-api-key":state.key},
