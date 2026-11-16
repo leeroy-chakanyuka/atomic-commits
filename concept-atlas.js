@@ -3,11 +3,11 @@
   let root=document.getElementById("itsConceptMap");
   const T=[
     {id:"advanced",title:"Advanced SQL",sub:"Chapter 08",group:"core",x:485,y:267,w:202,why:"The central idea: query across tables, transform results, and automate database work with Oracle SQL and PL/SQL.",qs:[],links:["joins","subqueries","views","plsql"]},
-    {id:"joins",title:"Joins",sub:"INNER · OUTER · CROSS",group:"query",x:32,y:38,w:196,why:"Bring rows from different tables together. Know which rows each join retains, where filters belong, and how to avoid accidental Cartesian products.",qs:[1,9,19,20,33,35,45,46,47,61,62,68,71],links:["grouping"]},
-    {id:"subqueries",title:"Subqueries",sub:"Nested SELECT statements",group:"query",x:265,y:42,w:199,why:"Use a SELECT inside another statement to filter, compare or calculate values. Distinguish a scalar result from a multirow result.",qs:[2,10,22,23,24,36,37,49,50,51,66,69,72],links:["comparisons","correlated"]},
-    {id:"grouping",title:"GROUP BY & HAVING",sub:"Aggregate before filtering",group:"query",x:37,y:219,w:205,why:"Group individual rows, compute COUNT/SUM/AVG and use HAVING to keep qualifying groups. WHERE filters individual rows before grouping.",qs:[3,16,21,34,48,67,71,78,80],links:[]},
-    {id:"comparisons",title:"IN, EXISTS, ANY, ALL",sub:"Multirow predicates",group:"query",x:264,y:216,w:201,why:"Understand membership, existence and comparisons against many returned values. These operators fix common scalar-versus-multirow mistakes.",qs:[10,15,22,23,24,36,66],links:[]},
-    {id:"functions",title:"Oracle functions",sub:"Dates · text · numeric",group:"query",x:40,y:396,w:201,why:"Manipulate query output with TO_DATE, SYSDATE, NVL, UPPER, LENGTH, ROUND and date arithmetic. Oracle date formats matter.",qs:[13,25,26,39,52,53,54,68,70],links:["grouping"]},
+    {id:"joins",title:"Joins",sub:"INNER · OUTER · CROSS",group:"query",x:265,y:42,w:196,why:"Bring rows from different tables together. Know which rows each join retains, where filters belong, and how to avoid accidental Cartesian products.",qs:[1,9,19,20,33,35,45,46,47,61,62,68,71],links:["grouping"]},
+    {id:"subqueries",title:"Subqueries",sub:"Nested SELECT statements",group:"query",x:265,y:218,w:199,why:"Use a SELECT inside another statement to filter, compare or calculate values. Distinguish a scalar result from a multirow result.",qs:[2,10,22,23,24,36,37,49,50,51,66,69,72],links:["comparisons","correlated"]},
+    {id:"grouping",title:"GROUP BY & HAVING",sub:"Aggregate before filtering",group:"query",x:34,y:43,w:205,why:"Group individual rows, compute COUNT/SUM/AVG and use HAVING to keep qualifying groups. WHERE filters individual rows before grouping.",qs:[3,16,21,34,48,67,71,78,80],links:[]},
+    {id:"comparisons",title:"IN, EXISTS, ANY, ALL",sub:"Multirow predicates",group:"query",x:34,y:396,w:201,why:"Understand membership, existence and comparisons against many returned values. These operators fix common scalar-versus-multirow mistakes.",qs:[10,15,22,23,24,36,66],links:[]},
+    {id:"functions",title:"Oracle functions",sub:"Dates · text · numeric",group:"query",x:34,y:218,w:201,why:"Manipulate query output with TO_DATE, SYSDATE, NVL, UPPER, LENGTH, ROUND and date arithmetic. Oracle date formats matter.",qs:[13,25,26,39,52,53,54,68,70],links:["grouping"]},
     {id:"correlated",title:"Correlated queries",sub:"Outer row → inner query",group:"query",x:262,y:395,w:199,why:"Evaluate a subquery relative to each outer row, often using EXISTS or a department-specific average. Identify when inner SQL references an outer alias.",qs:[2,37,49,50,51,69,72],links:[]},
     {id:"set-ops",title:"Set operators",sub:"UNION · INTERSECT · MINUS",group:"query",x:266,y:552,w:205,why:"Combine entire query result sets. Understand how UNION differs from UNION ALL, how INTERSECT finds overlap, and how Oracle MINUS computes difference.",qs:[4,11,27,28,38,55,56,63,64,65,73],links:[]},
     {id:"views",title:"Views",sub:"Reusable virtual tables",group:"database",x:717,y:45,w:188,why:"Package a SELECT as a reusable view. Know when aggregate or joined views are not directly updatable.",qs:[7,17,29,40,57,74,80],links:["grouping"]},
@@ -33,23 +33,30 @@
     {id:"logical",title:"Logical Design",sub:"Tables · keys · constraints",group:"database",x:956,y:39,w:193,chapter:9,why:"Map the conceptual model to tables, columns, domains, relationships and constraints supported by the selected DBMS.",links:["verification","physical"]},
     {id:"physical",title:"Physical Design",sub:"Storage · access · indexes",group:"database",x:724,y:211,w:193,chapter:9,why:"Choose storage layout, indexes, access methods and other DBMS-level structures according to usage patterns, performance and infrastructure.",links:["performance"]},
     {id:"verification",title:"Model Verification",sub:"Validate requirements",group:"database",x:956,y:211,w:193,chapter:9,why:"Confirm that the design supports expected reports, insert/update/delete operations, data integrity, security and user requirements.",links:["security"]},
-    {id:"security",title:"Integrity & Security",sub:"Roles · constraints",group:"database",x:724,y:383,w:193,chapter:9,why:"Define primary/foreign key constraints, database roles and appropriate access rights. Validate privacy and integrity requirements.",links:[]},
-    {id:"performance",title:"Performance",sub:"Indexes · monitoring",group:"database",x:956,y:383,w:193,chapter:9,why:"Establish measurements, consider data volume and access patterns, and tune the logical and physical design against real workloads.",links:[]},
+    {id:"security",title:"Integrity & Security",sub:"Roles · constraints",group:"database",x:956,y:383,w:193,chapter:9,why:"Define primary/foreign key constraints, database roles and appropriate access rights. Validate privacy and integrity requirements.",links:[]},
+    {id:"performance",title:"Performance",sub:"Indexes · monitoring",group:"database",x:724,y:383,w:193,chapter:9,why:"Establish measurements, consider data volume and access patterns, and tune the logical and physical design against real workloads.",links:[]},
     {id:"strategies",title:"Design Strategies",sub:"Top-down · bottom-up",group:"database",x:724,y:552,w:193,chapter:9,why:"Top-down design identifies entities and then attributes; bottom-up identifies individual data elements and groups them into entities.",links:["centralized"]},
     {id:"centralized",title:"Team Approaches",sub:"Centralised · decentralised",group:"database",x:956,y:552,w:193,chapter:9,why:"Centralised design suits smaller systems; decentralised design coordinates many modules and sites, then integrates overlapping definitions into one model.",links:[]}
   ];
+  // Chapter 9: one readable study pathway. Cross-cutting relationships live in the
+  // concept discussion instead of becoming an unreadable web of SVG connectors.
   const edges9=[
-    ["design","sdlc"],["design","dblc"],["design","conceptual"],["design","logical"],["design","physical"],
-    ["information-system","sdlc"],["sdlc","dblc"],["dblc","initial-study"],["initial-study","requirements"],
-    ["requirements","conceptual"],["conceptual","er"],["conceptual","logical"],["dbms","logical"],
-    ["logical","verification"],["logical","physical"],["verification","security"],["physical","performance"],
-    ["design","strategies"],["strategies","centralized"]
+    ["design","sdlc"],["design","conceptual"],["design","dbms"],["design","strategies"],
+    ["information-system","sdlc"],["sdlc","dblc"],["dblc","initial-study"],
+    ["initial-study","requirements"],["requirements","conceptual"],["conceptual","er"],
+    ["dbms","logical"],["logical","physical"],["logical","verification"],
+    ["physical","performance"],["verification","security"],["strategies","centralized"]
   ];
   const byId=Object.fromEntries([...T,...N9].map(n=>[n.id,n]));
+  // Keep links hierarchical: querying concepts on the left; database programming
+  // on the right. This eliminates the long, crossing "all-to-all" study lines.
   const edges=[
-    ["advanced","joins"],["advanced","subqueries"],["advanced","views"],["advanced","plsql"],["advanced","functions"],["advanced","set-ops"],["advanced","dml"],
-    ["joins","grouping"],["subqueries","comparisons"],["subqueries","correlated"],["grouping","views"],
-    ["plsql","triggers"],["plsql","cursors"],["plsql","procedures"],["plsql","dynamic"],["dml","sequences"]
+    ["advanced","joins"],["advanced","subqueries"],["advanced","set-ops"],
+    ["advanced","views"],["advanced","plsql"],["advanced","dml"],
+    ["joins","grouping"],["grouping","functions"],
+    ["subqueries","comparisons"],["subqueries","correlated"],
+    ["plsql","triggers"],["plsql","cursors"],["plsql","procedures"],["plsql","dynamic"],
+    ["dml","sequences"]
   ];
   const paper=window.PAPERROOM_LIBRARY?.["its-8-1"];
   const state={active:"joins",view:"master",workspace:false,mountedView:null,mountedRoot:null,key:"",model:"gemini-3.5-flash",busy:false,messages:new Map(),drawer:null,offline:false,asked:false,viewSize:null,scale:1,x:0,y:0,cleanup:null,chapterText:new Map()};
@@ -126,9 +133,39 @@
     {id:"master-8",title:"Chapter 8",sub:"Advanced SQL",group:"query",x:250,y:364,w:237},
     {id:"master-9",title:"Chapter 9",sub:"Database Design",group:"database",x:678,y:364,w:237}
   ],links:[["master-its","master-8"],["master-its","master-9"],["master-8","master-9"]],title:"Master concept map",name:"See how your chapters connect"};
+  // Connect at the near-facing node edges, never through node centres.
+  // Orthogonal-looking cubic routes make branches easier to trace.
   function coordsLink(from,to){
-    const a={x:from.x+from.w/2,y:from.y+37},b={x:to.x+to.w/2,y:to.y+37};
-    return `M ${a.x} ${a.y} Q ${(a.x+b.x)/2} ${(a.y+b.y)/2} ${b.x} ${b.y}`;
+    const fy=from.y+(from.group==="core"?47:40),ty=to.y+(to.group==="core"?47:40);
+    const fx=from.x+from.w/2,tx=to.x+to.w/2;
+    const dx=tx-fx,dy=ty-fy;
+    if(Math.abs(dx)>Math.abs(dy)*.74){
+      const forward=dx>0?1:-1;
+      const a={x:fx+forward*from.w/2,y:fy},b={x:tx-forward*to.w/2,y:ty};
+      const bend=Math.max(28,Math.abs(b.x-a.x)*.5);
+      return `M ${a.x} ${a.y} C ${a.x+forward*bend} ${a.y}, ${b.x-forward*bend} ${b.y}, ${b.x} ${b.y}`;
+    }
+    const down=dy>0?1:-1;
+    const a={x:fx,y:fy+down*(from.group==="core"?47:40)};
+    const b={x:tx,y:ty-down*(to.group==="core"?47:40)};
+    const bend=Math.max(28,Math.abs(b.y-a.y)*.5);
+    return `M ${a.x} ${a.y} C ${a.x} ${a.y+down*bend}, ${b.x} ${b.y-down*bend}, ${b.x} ${b.y}`;
+  }
+  function focusConnections(id){
+    const host=root?.querySelector("#atlasViewport");
+    if(!host)return;
+    const connections=current().links;
+    const related=new Set(id?[id]:[]);
+    for(const [a,b] of connections)if(a===id)related.add(b);else if(b===id)related.add(a);
+    host.querySelectorAll("[data-edge-from]").forEach(path=>{
+      const active=id&&(path.dataset.edgeFrom===id||path.dataset.edgeTo===id);
+      path.classList.toggle("atlas-edge-focus",Boolean(active));
+      path.classList.toggle("atlas-edge-muted",Boolean(id&&!active));
+    });
+    host.querySelectorAll(".atlas-node[data-node]").forEach(node=>{
+      node.classList.toggle("atlas-node-connected",Boolean(id&&related.has(node.dataset.node)));
+      node.classList.toggle("atlas-node-unrelated",Boolean(id&&!related.has(node.dataset.node)));
+    });
   }
   function mount(){
     root=document.getElementById(state.workspace?"itsStudyMap":"itsConceptMap");
@@ -152,7 +189,7 @@
         <div id="atlasViewport" class="atlas-viewport" role="region" aria-label="${escape(view.title)}: zoomable and draggable knowledge graph" tabindex="0">
           <div class="atlas-stage" id="atlasStage" style="width:${W}px;height:${H}px">
             <svg class="atlas-lines" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true">
-              ${view.links.map(([a,b])=>`<path d="${coordsLink(lookup[a],lookup[b])}"/>`).join("")}
+              ${view.links.map(([a,b])=>`<path data-edge-from="${a}" data-edge-to="${b}" d="${coordsLink(lookup[a],lookup[b])}"/>`).join("")}
             </svg>
             ${view.nodes.map(n=>`<button type="button" class="atlas-node atlas-node-${n.group} ${n.id==="master-its"?"atlas-central":""} ${state.workspace&&n.id===state.active?"is-selected":""} ${(n.chapter||8)===8&&state.view==="8"&&status(n,scores)==="needs-work"?"atlas-weak":""}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px" aria-label="${escape(n.title)}"><strong>${escape(n.title)}</strong><small>${escape(n.sub)}</small></button>`).join("")}
           </div>
@@ -166,6 +203,16 @@
       </section>`;
     root.innerHTML=html;
     root.addEventListener("click",onClick);
+    const onHover=event=>{
+      const node=event.target.closest?.(".atlas-node[data-node]");
+      if(node)focusConnections(node.dataset.node);
+    };
+    const onUnhover=event=>{
+      const node=event.target.closest?.(".atlas-node[data-node]");
+      if(node&&!node.contains(event.relatedTarget))focusConnections(state.workspace?state.active:null);
+    };
+    root.addEventListener("pointerover",onHover);
+    root.addEventListener("pointerout",onUnhover);
     state.mountedView=state.view;
     state.mountedRoot=root;
 
@@ -200,9 +247,10 @@
     vp.addEventListener("pointerdown",down);vp.addEventListener("pointermove",move);vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
     vp.addEventListener("wheel",wheel,{passive:false});vp.addEventListener("keydown",key);
     resize?.observe(vp);
-    state.cleanup=()=>{resize?.disconnect();vp.removeEventListener("pointerdown",down);vp.removeEventListener("pointermove",move);vp.removeEventListener("pointerup",up);vp.removeEventListener("pointercancel",up);vp.removeEventListener("wheel",wheel);vp.removeEventListener("keydown",key);root.removeEventListener("click",onClick)};
+    state.cleanup=()=>{resize?.disconnect();vp.removeEventListener("pointerdown",down);vp.removeEventListener("pointermove",move);vp.removeEventListener("pointerup",up);vp.removeEventListener("pointercancel",up);vp.removeEventListener("wheel",wheel);vp.removeEventListener("keydown",key);root.removeEventListener("click",onClick);root.removeEventListener("pointerover",onHover);root.removeEventListener("pointerout",onUnhover)};
     state.viewSize={fit,zoom};fit();
     if(state.view==="8")updateSignals();
+    focusConnections(state.workspace?state.active:null);
   }
   function updateSignals(){
     const p=root?.querySelector("#atlasProgressSummary");if(!p)return;
@@ -347,6 +395,7 @@
       button.setAttribute("aria-pressed",String(chosen));
     });
     renderMessages();
+    focusConnections(id);
   }
   function close(){ /* The study sidebar stays visible with the study page. */ }
   function renderMessages(){
