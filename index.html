@@ -39,8 +39,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" defer></script>
   <script src="rich-content.js" defer></script>
   <script src="pdf-export.js" defer></script>
-  <script src="app.js" defer></script>
   <script src="concept-atlas.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -138,6 +138,25 @@
       <section class="shell page-section">
         <div id="moduleContent"></div>
       </section>
+    </div>
+
+    <div id="studyScreen" class="screen" hidden>
+      <div class="study-workspace">
+        <header class="study-header">
+          <a class="study-return" href="#/module/its" aria-label="Back to ITS library">← <span>ITS library</span></a>
+          <div class="study-heading"><strong>paperroom<span class="brand-dot">.</span></strong><span>Concept study</span></div>
+          <a class="study-return" href="#/module/its">Exit study ↗</a>
+        </header>
+        <div class="study-columns">
+          <section class="study-map-pane" aria-label="Chapter knowledge graph">
+            <div id="itsStudyMap"></div>
+          </section>
+          <aside id="conceptStudySidebar" class="concept-drawer study-chat-panel" aria-label="Selected concept and AI discussion">
+            <div class="concept-drawer-top"><span class="section-kicker" id="conceptDrawerChapter">ITS · CHAPTER</span><a href="#/module/its" class="study-panel-exit">Back to library</a></div>
+            <div class="concept-drawer-content" id="conceptDrawerContent"></div>
+          </aside>
+        </div>
+      </div>
     </div>
 
     <div id="introScreen" class="screen" hidden>
