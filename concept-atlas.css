@@ -294,3 +294,51 @@
   .study-chat-panel .atlas-chat-bottom{padding:10px 13px 14px}
   .study-chat-panel .atlas-message-body pre{padding:12px}
 }
+
+/* More legible relationships on both ITS chapter graphs. */
+.atlas-lines path{
+  stroke:#769875;
+  stroke-width:2.7;
+  opacity:.78;
+  vector-effect:non-scaling-stroke;
+  transition:stroke .15s ease,opacity .15s ease,stroke-width .15s ease;
+}
+.atlas-lines path.atlas-edge-focus{stroke:#315e3e;stroke-width:4;opacity:1}
+.atlas-lines path.atlas-edge-muted{opacity:.11}
+.atlas-node{transition:opacity .15s ease,box-shadow .15s ease,transform .15s ease}
+.atlas-node.atlas-node-unrelated{opacity:.52}
+.atlas-node.atlas-node-connected{opacity:1}
+.atlas-node.atlas-node-connected:not(.is-selected){
+  box-shadow:0 6px 18px #4165482a,0 0 0 5px #cfe3c2b3
+}
+/* Mermaid is only generated from sanitized fenced code; diagrams stay in the chat. */
+.study-chat-panel .atlas-message-body .mermaid{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-height:80px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:14px 10px;
+  margin:13px 0 15px;
+  border-radius:12px;
+  border:1px solid #d9e6d6;
+  background:#f5f8f2;
+  text-align:center;
+  white-space:pre;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:11px;
+}
+.study-chat-panel .atlas-message-body .mermaid svg{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+}
+.study-chat-panel .atlas-message-body .mermaid-fallback{
+  white-space:pre;
+  overflow-wrap:normal;
+}
+@media(prefers-reduced-motion:reduce){
+  .atlas-lines path,.atlas-node{transition:none}
+}
