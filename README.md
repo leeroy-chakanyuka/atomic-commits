@@ -73,6 +73,8 @@ The ITS module now has a **master concept map** connecting two separate, clickab
 - **Chapter 8 — Advanced SQL:** 16 concept bubbles mapped to the existing 80-question practice paper; covers joins, grouping, subqueries, functions, views, set operators, PL/SQL and related database programming tools.
 - **Chapter 9 — Database Design:** 16 concept bubbles covering information systems, SDLC, DBLC, requirements, conceptual/ER design, DBMS selection, logical and physical design, verification, security, performance and design strategies. Chapter 9 has notes but no published quiz yet.
 
+**Dedicated study workspace:** selecting a concept from either chapter graph navigates to a shareable URL like `#/study/its/ch9/sdlc`. The entire workspace is a separate screen from the ITS library: the zoomable chapter map fills the left, and the selected concept plus Gemini/no-AI discussion stays open in a persistent panel on the right. Clicking another concept updates the URL and panel without resetting map zoom or pan. The back-to-library link returns to the main ITS page. On narrow/mobile screens the map and discussion stack, and concept selection scrolls the discussion into view.
+
 The graph **fits the viewport automatically** and can be explored using Fit/zoom buttons, mouse drag or touch drag. The graph's SVG lines are solid, with no dot markers. On smaller screens, the initial fit overview can be zoomed for readability. The concept sidebar focuses on a description, connected topics, and immediate discussion; extra resources are in an expandable section.
 
 ### Gemini and no-AI path
