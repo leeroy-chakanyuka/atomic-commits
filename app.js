@@ -236,7 +236,7 @@
       const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
       return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
         <span class="history-icon">✓</span>
-        <span class="history-name"><strong>Chapter ${paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+        <span class="history-name"><strong>${paper.chapter===812?"Chapters 8–12":"Chapter "+paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
         <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${wrong} to revisit${stats.pending?" · "+stats.pending+" marks pending":""}</small></span>
         <span class="history-link">Review</span>
       </a>`;
