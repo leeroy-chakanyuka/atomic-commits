@@ -262,6 +262,11 @@
     if(!panel.dataset.atlasBound){
       panel.addEventListener("click",onDrawerClick);
       panel.addEventListener("submit",onDrawerSubmit);
+      panel.addEventListener("keydown",event=>{
+        if(event.target?.id==="atlasMessage"&&event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
+          event.preventDefault();event.target.form?.requestSubmit();
+        }
+      });
       panel.dataset.atlasBound="yes";
     }
     state.drawer=panel;
