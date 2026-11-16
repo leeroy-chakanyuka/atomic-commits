@@ -155,7 +155,7 @@
     const [from,to,scenario,solution]=integration[session].find(row=>row[0]===ch);
     return {
       kind:"Integrated case study",topic:"Chapters "+from+" and "+to,chapterSource:from,marks:7,
-      prompt:"**Integrated revision · Chapters "+from+" + "+to+"**\\n\\n"+scenario+"\\n\\nPresent a reasoned solution with technical detail and a way to validate it.",
+      prompt:"**Integrated revision · Chapters "+from+" + "+to+"**\n\n"+scenario+"\n\nPresent a reasoned solution with technical detail and a way to validate it.",
       memo:solution+" Rubric (7): 2 correct mechanisms, 2 correct implementation reasoning, 1 meaningful tradeoff, 1 failure case, 1 test/verification.",
       referenceNote:"This case explicitly integrates Chapters "+from+" and "+to+"."
     };
