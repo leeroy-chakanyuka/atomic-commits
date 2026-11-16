@@ -89,3 +89,42 @@
 @media(max-width:900px){.atlas-head{align-items:start}.atlas-small-note{display:none}}
 @media(max-width:650px){.atlas{margin:18px 0 24px}.atlas-toolbar{padding:9px;gap:6px;flex-wrap:wrap}.atlas-views{gap:4px}.atlas-views button{font-size:10px;padding:7px 8px}.atlas-zoom{margin-left:auto}.atlas-zoom button{font-size:12px;padding:7px 8px;min-width:30px}.atlas-viewport{height:min(65vh,550px);min-height:420px}.atlas-footer{display:block;font-size:10px;line-height:1.6}.atlas-footer>button,.atlas-footer>span{display:block;text-align:left;margin-top:6px}.atlas-help{font-size:9px}.concept-drawer-content{padding:18px 17px 35px}.atlas-drawer-heading h2{font-size:32px}.atlas-chat-head h3{font-size:21px}.atlas-node{transition:none}}
 @media(prefers-reduced-motion:reduce){.atlas-node{transition:none}}
+
+/* Dedicated concept study page. Separate from the ITS library and exam pages. */
+.study-mode{overflow:hidden}
+.study-workspace{height:100dvh;min-height:0;display:flex;flex-direction:column;background:#f7f8f2}
+.study-header{height:61px;min-height:61px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 clamp(16px,2vw,34px);background:#fffefa;border-bottom:1px solid #e0e7dc}
+.study-return,.study-panel-exit{font-size:12px;color:#526e4d;font-weight:700;text-decoration:none}
+.study-return:hover,.study-panel-exit:hover{text-decoration:underline}
+.study-heading{display:flex;align-items:baseline;gap:12px;color:#455f43}
+.study-heading strong{font:600 23px/1 var(--serif,Georgia,serif);letter-spacing:-.035em}
+.study-heading>span{font-size:11px;color:#8b9b86;letter-spacing:.05em}
+.study-columns{flex:1;min-height:0;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(370px,34vw,510px)}
+.study-map-pane{min-width:0;min-height:0;overflow:auto;background:#f4f7f0;padding:14px clamp(12px,1.7vw,28px) 16px}
+.study-map-pane .atlas{margin:0}
+.study-map-pane .atlas-head{margin-bottom:10px}
+.study-map-pane .atlas-head h2{font-size:clamp(26px,2.5vw,36px)}
+.study-map-pane .atlas-toolbar{padding:8px 10px}
+.study-map-pane .atlas-viewport{height:max(330px,calc(100dvh - 271px));max-height:calc(100dvh - 271px)}
+.study-map-pane .atlas-footer{padding:10px 2px}
+.study-chat-panel{position:relative;display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;border-left:1px solid #dce4d7;box-shadow:none;overflow:hidden;background:#fffefa}
+.study-chat-panel .concept-drawer-top{flex:none;padding:15px 20px}
+.study-chat-panel .concept-drawer-content{flex:1;min-height:0;overflow-y:auto;padding:20px 22px 38px}
+.study-map-pane .atlas-node.is-selected{border:3px solid #578358;box-shadow:0 0 0 7px #98be898a,0 9px 23px #315c3b2c;z-index:5}
+.study-map-pane .atlas-node.is-selected:hover{transform:translateY(-4px)}
+.study-map-pane .atlas-progress{margin-bottom:20px}
+@media(max-width:900px){
+  .study-mode{overflow:auto}
+  .study-workspace{height:auto;min-height:100dvh}
+  .study-columns{display:flex;flex-direction:column;min-height:0}
+  .study-map-pane{flex:none;overflow:visible;padding:13px 13px 18px}
+  .study-map-pane .atlas-viewport{height:clamp(300px,46vh,480px);max-height:none;min-height:300px}
+  .study-chat-panel{width:100%;height:auto;min-height:480px;border-left:0;border-top:1px solid #dce4d7;overflow:visible}
+  .study-chat-panel .concept-drawer-content{overflow:visible;min-height:300px;padding-bottom:55px}
+  .study-header{padding:0 14px}
+}
+@media(max-width:480px){
+  .study-heading>span{display:none}
+  .study-return{font-size:11px}
+  .study-map-pane .atlas-toolbar{flex-wrap:wrap}
+}
