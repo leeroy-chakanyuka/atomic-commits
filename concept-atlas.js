@@ -404,6 +404,7 @@
   window.PAPERROOM_CONCEPT_MAP={
     mount:()=>{
       state.workspace=false;
+      state.view="master";
       root=document.getElementById("itsConceptMap");
       if(root)mount();
     },
