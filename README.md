@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | **3 pilot papers live on review branch**: two design patterns + one intermediate Spring Security |
+| ADP | 18 November 2026 | **3 pilot papers live**: two design patterns + one intermediate Spring Security |
 | ITS | 19 November 2026 | **Chapter 8 pilot live** |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -60,13 +60,28 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
 - `papers/adp/*.js`: two design patterns papers and one Spring Security pilot
 - `rich-content.js`: sanitized Markdown and diagrams
+- `concept-map.js` / `concept-map.css`: ITS Chapter 8 concept graph, topic drawer and local learning signals
 - `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference
 - `notes/`: user-uploaded study content folders
 
 This site is plain HTML/CSS/JS, deployable directly from the repo root with GitHub Pages.
 
-## Later
-Gemini-assisted rubric-driven marking of free text is tracked in [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1). Any API keys must remain on a server; do not embed them in this public website.
+## ITS Chapter 8 concept graph
+
+The ITS module includes a scrollable cloud-like **concept graph** mapping 16 connected Chapter 8 topics. Selecting a node opens an accessible right-side drawer with an explanation, related concepts, a link to the source chapter notes, question references and a concept-focused Gemini chat. On small screens the graph scrolls horizontally while the discussion opens full width. This is a learning tool, not a strict dependency graph.
+
+The topic tracker reads only existing `paperroom:history:its:ch8:s1:v2` and submitted current attempts on the same device. Its percentages count objective graded questions and *self-reviewed* written questions; unreviewed written answers are excluded. With limited completed attempts, percentages are preliminary. **Gemini does not score or inspect a student's submitted answers.** The weakness-paper action creates a **question-only PDF from the existing Chapter 8 bank** using the least successful topic groups. It does not invent AI questions or change saved practice results.
+
+### Gemini BYOK prototype and privacy
+
+- The concept drawer accepts an optional **user-supplied** Gemini API key in the browser for direct requests to Google's `generateContent` API using Gemini 3.8 Flash. The repo contains **no hardcoded key**.
+- The key and chat history are kept only in JavaScript memory for that tab. They are not written to browser localStorage or sent to Paperroom servers. Chat messages are transmitted **directly to Google**, which will handle them under its applicable terms. Paperroom still has no backend.
+- **Client-side API keys are not fully secure.** Browser extensions, a compromised device or injected code may access an entered key, and Google advises against exposing keys client-side in production. Use only a separately restricted, low-quota test key. The long-term production alternative requires a protected backend or another credential architecture.
+- Chat is concept-context only. It does not automatically send question responses, marking data, history or performance signals. That Gemini-based analysis, along with generating *new* weakness-specific questions, remains future work.
+
+### Next
+
+Gemini-assisted rubric-driven marking of written answers is tracked in [issue #1](https://github.com/leeroy-chakanyuka/atomic-commits/issues/1). Before enabling it, design an explicit consent and data-sharing screen, a versioned topic-tagging schema, a human-reviewable rubric output, and an export/import path for local-only histories.
 
 ## Reading resources for ADP
 
