@@ -131,7 +131,7 @@
     return `M ${a.x} ${a.y} Q ${(a.x+b.x)/2} ${(a.y+b.y)/2} ${b.x} ${b.y}`;
   }
   function mount(){
-    root=document.getElementById("itsConceptMap");
+    root=document.getElementById(state.workspace?"itsStudyMap":"itsConceptMap");
     if(!root)return;
     if(state.cleanup){state.cleanup();state.cleanup=null;}
     const view=current(),scores=stats(),lookup=Object.fromEntries(view.nodes.map(n=>[n.id,n]));
