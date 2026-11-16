@@ -133,7 +133,7 @@
   function mount(){
     root=document.getElementById("itsConceptMap");
     if(!root)return;
-    if(state.cleanup)state.cleanup();
+    if(state.cleanup){state.cleanup();state.cleanup=null;}
     const view=current(),scores=stats(),lookup=Object.fromEntries(view.nodes.map(n=>[n.id,n]));
     const html=`
       <section class="atlas" aria-label="ITS study concept maps">
@@ -154,7 +154,7 @@
             <svg class="atlas-lines" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true">
               ${view.links.map(([a,b])=>`<path d="${coordsLink(lookup[a],lookup[b])}"/>`).join("")}
             </svg>
-            ${view.nodes.map(n=>`<button type="button" class="atlas-node atlas-node-${n.group} ${n.id==="master-its"?"atlas-central":""} ${n.chapter===8&&status(n,scores)==="needs-work"?"atlas-weak":""}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px" aria-label="${escape(n.title)}"><strong>${escape(n.title)}</strong><small>${escape(n.sub)}</small></button>`).join("")}
+            ${view.nodes.map(n=>`<button type="button" class="atlas-node atlas-node-${n.group} ${n.id==="master-its"?"atlas-central":""} ${(n.chapter||8)===8&&state.view==="8"&&status(n,scores)==="needs-work"?"atlas-weak":""}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px" aria-label="${escape(n.title)}"><strong>${escape(n.title)}</strong><small>${escape(n.sub)}</small></button>`).join("")}
           </div>
           <div class="atlas-help">Drag to pan · Use + / − to zoom · Fit to reset</div>
         </div>
@@ -166,6 +166,7 @@
       </section>`;
     root.innerHTML=html;
     root.addEventListener("click",onClick);
+
     const vp=root.querySelector("#atlasViewport"),stage=root.querySelector("#atlasStage");
     const apply=()=>stage.style.transform=`translate(${state.x}px,${state.y}px) scale(${state.scale})`;
     const fit=()=>{
@@ -279,14 +280,14 @@
     const ms=state.messages.get(state.active)||[];
     list.replaceChildren();
     if(!ms.length){const note=document.createElement("p");note.className="atlas-empty-message";note.textContent="Ask a question grounded in this chapter, or use a suggestion below.";list.appendChild(note);}
-    for(const m of ms){const box=document.createElement("div");box.className="atlas-bubble "+(m.role==="model"?"gemini":"student");box.textContent=m.text;list.appendChild(box);}
+    for(const m of ms){const box=document.createElement("div");box.className="atlas-bubble "+(m.role==="model"?"gemini":m.role==="error"?"error":"student");box.textContent=m.text;list.appendChild(box);}
     list.scrollTop=list.scrollHeight;
   }
   function onDrawerClick(e){
     if(e.target.closest("[data-close]")){close();return;}
     const rel=e.target.closest("[data-related]");if(rel){open(rel.dataset.related);return;}
     if(e.target.closest("[data-offline]")){state.asked=true;state.offline=true;open(state.active);return;}
-    if(e.target.closest("[data-settings]")){const box=state.drawer.querySelector("#atlasSettings");box.hidden=!box.hidden;return;}
+    if(e.target.closest("[data-settings]")){if(!state.key){state.asked=false;state.offline=false;open(state.active);}else{const box=state.drawer.querySelector("#atlasSettings");box.hidden=!box.hidden;}return;}
     if(e.target.closest("[data-clear-key]")){state.key="";state.offline=true;open(state.active);return;}
     if(e.target.closest("[data-replace-key]")){const k=state.drawer.querySelector("#atlasChangeKey").value.trim();if(k)state.key=k;state.model=state.drawer.querySelector("#atlasModel").value;open(state.active);return;}
     const p=e.target.closest("[data-prompt]");if(p){
@@ -342,7 +343,7 @@
       const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent`,{
         method:"POST",signal:controller.signal,
         headers:{"Content-Type":"application/json","x-goog-api-key":state.key},
-        body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:messages,generationConfig:{maxOutputTokens:1300,temperature:0.4}})
+        body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:messages,generationConfig:{maxOutputTokens:3000,thinkingConfig:{thinkingLevel:state.model==="gemini-3.8-flash"?"low":"minimal"}}})
       });
       const data=await resp.json().catch(()=>({}));
       if(!resp.ok)throw new Error(data.error?.message||"Gemini API returned "+resp.status);
