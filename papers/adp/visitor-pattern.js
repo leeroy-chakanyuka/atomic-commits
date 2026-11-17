@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A compiler has `NumberNode`, `AddNode` and `VariableNode` classes. Developers keep adding operations: print the tree, calculate statistics and check variable usage. The node classes should not gain a new method for every operation. Which pattern best fits?",
       "options": [
+        "Simple Factory",
         "Flyweight",
         "Visitor",
-        "Iterator only",
-        "Simple Factory"
+        "Iterator only"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Visitor moves operations into visitor classes while each element accepts a visitor, making new operations easier across a stable element hierarchy.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `Element.accept(Visitor v)` is implemented in a concrete `Circle` as `v.visit(this)`. Why is the `accept` call important?",
       "options": [
-        "It forces every element to store a List of visitors",
         "It allows the concrete element class to select the matching overloaded visit(Circle) method",
         "It automatically visits every element in a collection",
-        "It removes the need for a Visitor interface"
+        "It removes the need for a Visitor interface",
+        "It forces every element to store a List of visitors"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Inside Circle.accept, `this` has static type Circle, so the overload visit(Circle) is chosen; visitor implementation then dispatches dynamically.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A document AST has Paragraph and Image elements. A visitor interface has `visit(Paragraph)` and `visit(Image)`. Which new requirement is usually easiest to add?",
       "options": [
-        "A new Table element type with no visitor changes",
-        "A new ExportToMarkdownVisitor implementing both visit methods",
         "Removing the accept method from all nodes",
-        "A completely different element contract for each operation"
+        "A completely different element contract for each operation",
+        "A new Table element type with no visitor changes",
+        "A new ExportToMarkdownVisitor implementing both visit methods"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Adding an operation means implementing a new concrete visitor for the existing stable element types.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** An `ImageElement` accepts an ImageVisitor, but its accept method does nothing. What behavior is lost?",
       "options": [
+        "An Iterator must be constructed inside ImageElement",
         "The ImageElement automatically becomes abstract",
         "The visitor's image-specific operation never executes",
-        "The compiler always inserts visitor.visit(this)",
-        "An Iterator must be constructed inside ImageElement"
+        "The compiler always inserts visitor.visit(this)"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Concrete elements should call visitor.visit(this) inside accept() to enable the visitor operation.",
       "snippet": "class ImageElement implements Element {\n public void accept(Visitor visitor) {\n   // mistakenly empty\n }\n}",
       "marks": 1
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** A syntax-tree processing application has a DFS iterator and a node-type-specific EvaluationVisitor. What does each chiefly control?",
       "options": [
-        "Iterator chooses visit(Circle) overload; Visitor controls cursor position",
-        "Iterator controls traversal order; Visitor defines type-specific actions on nodes",
         "Both only create nodes",
-        "Visitor is the database repository"
+        "Visitor is the database repository",
+        "Iterator chooses visit(Circle) overload; Visitor controls cursor position",
+        "Iterator controls traversal order; Visitor defines type-specific actions on nodes"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Iterator traverses a collection/tree. Visitor defines operations performed on different element types, often invoked during traversal.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A visitor records the sum of values from two NumberNode objects. What is printed?",
       "options": [
-        "3",
         "7",
         "10",
-        "0"
+        "0",
+        "3"
       ],
-      "correct": "C",
+      "correct": "B",
       "memo": "The same visitor accumulates 3 then 7 in sum; visiting both yields 10.",
       "snippet": "interface Visitor { void visit(NumberNode n); }\nclass NumberNode {\n final int value;\n NumberNode(int v){value=v;}\n void accept(Visitor v){v.visit(this);}\n}\nclass SumVisitor implements Visitor {\n int sum=0;\n public void visit(NumberNode n){sum+=n.value;}\n}\nSumVisitor visitor=new SumVisitor();\nnew NumberNode(3).accept(visitor);\nnew NumberNode(7).accept(visitor);\nSystem.out.println(visitor.sum);",
       "marks": 1
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A Visitor has overloads `visit(Book)` and `visit(Movie)`. A generic `Media` variable references a Book. Which call most reliably selects `visit(Book)` **without casting**?",
       "options": [
-        "Calling visitor.visit(media) where Media has no matching visit overload",
-        "Calling media.accept(visitor) where Book.accept passes its own `this`",
         "Using visitor.toString()",
-        "Calling new Visitor() on the Media interface"
+        "Calling new Visitor() on the Media interface",
+        "Calling visitor.visit(media) where Media has no matching visit overload",
+        "Calling media.accept(visitor) where Book.accept passes its own `this`"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Concrete accept implementations supply `this` with concrete compile-time type, enabling the matching overloaded visit method.",
       "marks": 1
     },
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the Java behavior:** The compiler chooses overloaded `visit(Book)` or `visit(Movie)` based on the **static parameter type** at the call site. Why can calling `visitor.visit(media)` be insufficient when media has the base type Media?",
       "options": [
-        "Java overloading selects methods by runtime type only",
         "An overload visit(Media) would be chosen at compile time; concrete accept() enables the specific overload",
         "The JVM cannot dispatch interface calls",
-        "Visitor never uses overloading"
+        "Visitor never uses overloading",
+        "Java overloading selects methods by runtime type only"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Java overloading resolution uses static types; Visitor's double dispatch combines a virtual accept call with a visit overload chosen within a concrete accept method.",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A company adds an `XmlExportVisitor` for Paragraph, Heading and Image document nodes. What should its methods typically do?",
       "options": [
-        "Build XML representations for each concrete node type",
-        "Create a fresh document subclass for every node",
         "Control the Iterator's hasNext() state",
-        "Change every existing node's superclass"
+        "Change every existing node's superclass",
+        "Build XML representations for each concrete node type",
+        "Create a fresh document subclass for every node"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Each visit(NodeType) implements the new operation's behavior for that element kind.",
       "marks": 1
     },
@@ -187,12 +187,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A visitor traverses a tree with child nodes. Does the Visitor pattern automatically determine whether traversal is depth-first or breadth-first?",
       "options": [
+        "The JVM sorts nodes alphabetically",
         "Yes, visitors always use DFS",
         "No, traversal order is controlled by the tree traversal/accept implementation or Iterator",
-        "Yes, visitors always use BFS",
-        "The JVM sorts nodes alphabetically"
+        "Yes, visitors always use BFS"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Visitor concerns operations per element type; traversal order must be defined separately and may be controlled by composite accept methods or iterators.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-15-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** A developer wants to attach optional logging around one Renderer; another wants to add several algorithms across stable Paragraph/Image/Heading classes. Which mapping is most accurate?",
       "options": [
-        "Decorator for logging; Visitor for operations across element types",
         "Visitor for logging only; Flyweight for algorithms",
         "Bridge for both without interfaces",
-        "Iterator for logging; Observer for every element operation"
+        "Iterator for logging; Observer for every element operation",
+        "Decorator for logging; Visitor for operations across element types"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Decorator wraps an object to add behavior; Visitor defines extensible operations across an existing class hierarchy.",
       "marks": 1
     },
