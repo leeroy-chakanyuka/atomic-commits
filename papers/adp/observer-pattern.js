@@ -70,7 +70,7 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
     {
       "id": 6,
       "kind": "True or false",
-      "prompt": "**Scenario:** A billing service wants to notify a web UI, a webhook and an audit recorder. The developer thinks `Invoice` must store three lists typed as `WebUI`, `Webhook` and `AuditRecorder`.\n\n**Statement:** The subject must know every concrete observer class. Correct the statement if false.",
+      "prompt": "**Scenario:** A billing service wants to notify a web UI, a webhook and an audit recorder. The developer thinks `Invoice` must store three lists typed as `WebUI`, `Webhook` and `AuditRecorder`.\n\n**Statement:** The subject must know every concrete observer class. Correct the statement if false.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "False. Subject keeps Observer interface references; any concrete class implementing that contract may register, avoiding direct coupling.",
       "correct": "false"
@@ -78,7 +78,7 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
     {
       "id": 7,
       "kind": "True or false",
-      "prompt": "**Scenario:** A Git repository watcher detects every file save, but the product manager only wants notifications when a commit is pushed to the remote branch.\n\n**Statement:** Observer requires notifications on **every** internal state change, even if the application regards the change as irrelevant. Correct or justify.",
+      "prompt": "**Scenario:** A Git repository watcher detects every file save, but the product manager only wants notifications when a commit is pushed to the remote branch.\n\n**Statement:** Observer requires notifications on **every** internal state change, even if the application regards the change as irrelevant. Correct or justify.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "False. The application defines which state transitions are observable and when notifyObservers() is called. Only relevant commit-push events need broadcast.",
       "correct": "false"
@@ -86,7 +86,7 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
     {
       "id": 8,
       "kind": "Code tracing",
-      "prompt": "**Scenario:** A warehouse inventory tracker notifies two registered listeners in insertion order. The subject uses an `ArrayList<StockObserver>`. Alice is registered before Bob, then Alice is removed before the second stock update.\n\n**Task:** Give the exact four? output lines (if fewer than four, say how many). Explain why the second event reaches fewer listeners.",
+      "prompt": "**Scenario:** A warehouse inventory tracker notifies two registered listeners in insertion order. The subject uses an `ArrayList<StockObserver>`. Alice is registered before Bob, then Alice is removed before the second stock update.\n\n**Task:** State the exact output (including the number and order of lines). Explain why the second event reaches fewer listeners.",
       "marks": 7,
       "memo": "Exactly three lines: Alice 12, Bob 12, Bob 7 (3). ArrayList preserves registration order (1); removal detaches Alice (2), so later notification goes only to Bob (1).",
       "snippet": "interface StockObserver { void update(int quantity); }\nclass Listener implements StockObserver {\n  private final String name;\n  Listener(String name){ this.name=name; }\n  public void update(int q){ System.out.println(name+\" \"+q); }\n}\nclass Inventory {\n  private final java.util.List<StockObserver> observers = new java.util.ArrayList<>();\n  void add(StockObserver o){ observers.add(o); }\n  void remove(StockObserver o){ observers.remove(o); }\n  void setStock(int qty){ for(StockObserver o: observers) o.update(qty); }\n}\nInventory inventory = new Inventory();\nListener alice = new Listener(\"Alice\");\nListener bob = new Listener(\"Bob\");\ninventory.add(alice); inventory.add(bob);\ninventory.setStock(12);\ninventory.remove(alice);\ninventory.setStock(7);"
