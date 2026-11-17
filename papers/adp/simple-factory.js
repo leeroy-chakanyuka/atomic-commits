@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A document importer has separate `CsvImporter` and `JsonImporter` classes. Controllers repeat type checks and `new` calls. Which change best represents a Simple Factory?",
       "options": [
+        "Replace both importer classes with one database table",
         "Add a method inside every controller that repeats the switch",
         "Introduce `ImporterFactory.create(type)` returning an Importer implementation",
-        "Make CsvImporter extend JsonImporter",
-        "Replace both importer classes with one database table"
+        "Make CsvImporter extend JsonImporter"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A Simple Factory centralizes product selection and construction, removing repeated concrete constructor decisions from callers.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `ExporterFactory.create(\"PDF\")` returns an `Exporter` interface implementation. The application adds XLSX. Which component normally needs to change?",
       "options": [
-        "Only the Exporter interface's variable name",
         "The factory's selection/creation logic",
         "Every call to exporter.export()",
-        "The Java compiler"
+        "The Java compiler",
+        "Only the Exporter interface's variable name"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "The central factory generally gains a new case/mapping and XLSX concrete product.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A teammate wants a static factory method in Java. Which declaration is valid **at the top level**?",
       "options": [
-        "`static class VMFactory { ... }`",
-        "`class VMFactory { static VM create(){ ... } }`",
         "`static interface VMFactory { ... }`",
-        "`abstract static class VMFactory { ... }`"
+        "`abstract static class VMFactory { ... }`",
+        "`static class VMFactory { ... }`",
+        "`class VMFactory { static VM create(){ ... } }`"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "A top-level class is not static; a normal top-level class can contain static factory methods.",
       "snippet": "class VMFactory {\n  static VM create() { return new EC2(); }\n}",
       "marks": 1
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** What does the program print when a Simple Factory selects a product?",
       "options": [
+        "Compilation fails because interface types cannot reference implementations",
         "EC2",
         "Azure",
-        "VM",
-        "Compilation fails because interface types cannot reference implementations"
+        "VM"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "The branch for true creates EC2, and Java dispatches name() on the runtime EC2 object.",
       "snippet": "interface VM { String name(); }\nclass EC2 implements VM { public String name(){return \"EC2\";} }\nclass AzureVM implements VM { public String name(){return \"Azure\";} }\nclass VMFactory {\n static VM create(boolean aws) { return aws ? new EC2() : new AzureVM(); }\n}\nSystem.out.println(VMFactory.create(true).name());",
       "marks": 1
@@ -74,12 +74,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A factory is asked for provider `\"ORACLE\"` but supports only AWS and Azure. Which behavior is safest for a production deployment tool?",
       "options": [
-        "Silently use AWS",
-        "Return null and let a future method fail",
         "Reject with a clear error explaining unsupported provider",
-        "Randomly choose AWS or Azure"
+        "Randomly choose AWS or Azure",
+        "Silently use AWS",
+        "Return null and let a future method fail"
       ],
-      "correct": "C",
+      "correct": "A",
       "memo": "Rejecting invalid input makes the failure explicit and avoids accidental deployment to an unintended cloud.",
       "marks": 1
     },
@@ -88,12 +88,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A VM factory promises an independent mutable config per request. What is wrong with this code?",
       "options": [
+        "The field must be named `config`",
         "It creates a new object each call",
         "It returns the same shared Config, so callers affect one another",
-        "The method should be `void`",
-        "The field must be named `config`"
+        "The method should be `void`"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Reusing a static mutable object produces aliasing; create/copy fresh configurations when independent requests are required.",
       "snippet": "class VMFactory {\n static Config shared = new Config();\n static Config create() { return shared; }\n}",
       "marks": 1
@@ -117,12 +117,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A VM factory generates inbound rules: SSH port 22 from `0.0.0.0/0`, HTTPS port 443 from the internet. Which rule is the primary least-privilege concern?",
       "options": [
-        "HTTPS port 443 open publicly, always",
-        "SSH port 22 open to all IPv4 addresses",
         "The class name VMFactory",
-        "Returning a VM interface"
+        "Returning a VM interface",
+        "HTTPS port 443 open publicly, always",
+        "SSH port 22 open to all IPv4 addresses"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Broad public SSH ingress significantly increases exposure; use restricted sources or managed access instead.",
       "marks": 1
     },
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** The factory's `default` branch returns `null`. A client immediately calls `vm.provision()`. What can happen for an unknown provider?",
       "options": [
-        "The VM is automatically AWS",
-        "A NullPointerException",
         "The compiler replaces null with a default object",
-        "The factory method becomes abstract"
+        "The factory method becomes abstract",
+        "The VM is automatically AWS",
+        "A NullPointerException"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "For unsupported input `create` returns null and the subsequent invocation dereferences it.",
       "snippet": "static VM create(String provider) {\n switch(provider) {\n   case \"AWS\": return new EC2();\n   case \"AZURE\": return new AzureVM();\n   default: return null;\n }\n}\nVM vm = create(\"OTHER\");\nvm.provision();",
       "marks": 1
@@ -160,12 +160,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A testing application requests three independently configured VMs. What should a Simple Factory ideally return when those objects are mutable?",
       "options": [
-        "The identical singleton each time",
         "Fresh VM/config instances or suitably isolated copies",
         "A List containing the same VM three times",
-        "A concrete constructor name as a string"
+        "A concrete constructor name as a string",
+        "The identical singleton each time"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Avoid shared mutable state between independent deployments; new instances or immutable configurations are appropriate.",
       "marks": 1
     },
@@ -174,12 +174,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A cloud factory currently creates only VMs. Deployments also require provider-matched storage and load balancers. Which extension best models *families* of related products?",
       "options": [
-        "Abstract Factory with createVM, createStorage, createLoadBalancer",
-        "Keep one static factory method for the VM and hardcode other provider types in clients",
         "Observer",
-        "Decorator that prints resource names"
+        "Decorator that prints resource names",
+        "Abstract Factory with createVM, createStorage, createLoadBalancer",
+        "Keep one static factory method for the VM and hardcode other provider types in clients"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Abstract Factory exposes several related product-creation operations per provider.",
       "marks": 1
     },
@@ -188,12 +188,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A report generator has one trivial immutable product and no planned variants. Which design choice is reasonable?",
       "options": [
+        "Use Abstract Factory regardless",
         "Always create five layers of factories",
         "Direct construction can be simpler than a factory",
-        "Every constructor must be private",
-        "Use Abstract Factory regardless"
+        "Every constructor must be private"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Factory abstraction should solve an actual construction, configuration or variability problem.",
       "marks": 1
     },
@@ -216,12 +216,12 @@ window.PAPERROOM_LIBRARY["adp-4-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A test asserts `VMFactory.create(AWS)` returns an EC2 object. Which additional test most directly detects accidental reuse of a mutable configuration?",
       "options": [
-        "Call create twice and assert modifications to one do not affect the other",
         "Check the class name contains Factory",
         "Assert the method is static",
-        "Check only that both calls return non-null"
+        "Check only that both calls return non-null",
+        "Call create twice and assert modifications to one do not affect the other"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Independent calls must produce isolated mutable state when the contract promises independent configurations.",
       "marks": 1
     },
