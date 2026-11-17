@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A delivery app supports flat-rate, distance-based and express pricing algorithms. The Checkout class holds a `DeliveryStrategy`. Which design best matches Strategy?",
       "options": [
+        "Every Strategy must store a Checkout object",
         "Checkout has a DeliveryStrategy reference and calls calculate() on it",
         "Every pricing strategy extends Checkout",
-        "Checkout reimplements every algorithm in a massive switch",
-        "Every Strategy must store a Checkout object"
+        "Checkout reimplements every algorithm in a massive switch"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Strategy moves interchangeable algorithms behind a common contract and makes the context delegate to one selected strategy.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A video editor can switch between high-quality and fast rendering at runtime. Which change is needed if it already uses a `RenderStrategy` field?",
       "options": [
-        "Change the Editor's superclass",
-        "Replace the strategy object via a setter or new context configuration",
         "Create a class for every editor/user combination",
-        "Rewrite the entire Editor method"
+        "Rewrite the entire Editor method",
+        "Change the Editor's superclass",
+        "Replace the strategy object via a setter or new context configuration"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The context can change algorithms by replacing its strategy reference without changing its own class.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** Two cloud resource implementations use provider-specific construction; an uploader uses interchangeable compression algorithms. Which pattern best models the compressor choice?",
       "options": [
+        "Command",
         "Abstract Factory",
         "Strategy",
-        "Observer",
-        "Command"
+        "Observer"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "An uploader delegates compression to one selected algorithm; that is Strategy, whereas factories focus on creating products.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** What is wrong with this context's `calculate()` implementation?",
       "options": [
-        "There is no interface type",
-        "It recursively invokes itself rather than calling the strategy",
         "A final strategy field prevents use",
-        "Strategy methods must be static"
+        "Strategy methods must be static",
+        "There is no interface type",
+        "It recursively invokes itself rather than calling the strategy"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The method causes unbounded recursion/StackOverflowError; it should delegate to `strategy.calculate(amount)`.",
       "snippet": "class Checkout {\n private final DiscountStrategy strategy;\n Checkout(DiscountStrategy s){strategy=s;}\n int calculate(int amount){return calculate(amount);}\n}",
       "marks": 1
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** The same mutable `CounterStrategy` instance is injected into two separate reporting jobs. Each job calls it once. What is a possible risk?",
       "options": [
-        "Each context automatically copies its strategy",
         "The two contexts share strategy state, which can affect outcomes",
         "Java makes the strategy static",
-        "Interfaces cannot store fields"
+        "Interfaces cannot store fields",
+        "Each context automatically copies its strategy"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Two context objects may reference the same mutable strategy instance; use separate instances or immutable/thread-safe strategies if needed.",
       "marks": 1
     },
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A shopping cart could use one of two tax calculators, chosen at configuration time. What should the cart's field type ideally be?",
       "options": [
+        "String with the calculator source code",
         "ConcreteTaxCalculatorA",
         "TaxStrategy interface",
-        "Any random Object requiring casts",
-        "String with the calculator source code"
+        "Any random Object requiring casts"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A strategy interface provides interchangeable algorithms without concrete coupling.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the design issue:** A developer creates `FastZipUploader`, `SlowZipUploader`, `FastGzipUploader`, and `SlowGzipUploader`. Speed policy and compression are independent. Which refactor reduces subclass combinations?",
       "options": [
-        "Make each subclass abstract",
         "Use separate compression and speed strategies composed into one Uploader",
         "Duplicate the same code across all combinations",
-        "Replace the Uploader with a singleton"
+        "Replace the Uploader with a singleton",
+        "Make each subclass abstract"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Independent variation axes can be modeled as separate composed strategies rather than multiplying subclasses.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A route planner always chooses one algorithm from shortest-distance, least-tolls and fastest-time. Which class is the **context**?",
       "options": [
+        "Every route segment",
         "Only ShortestDistanceStrategy",
         "RoutePlanner, which stores and delegates to RouteStrategy",
-        "The road database",
-        "Every route segment"
+        "The road database"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "The route planner is the context; concrete strategy implementations supply the alternative route-selection algorithms.",
       "marks": 1
     },
@@ -158,12 +158,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** Two contexts share one mutable policy with a counter. What does this code print?",
       "options": [
-        "1 then 1",
-        "1 then 2",
         "2 then 2",
-        "It cannot compile because a strategy can't be shared"
+        "It cannot compile because a strategy can't be shared",
+        "1 then 1",
+        "1 then 2"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Both contexts refer to the same CounterPolicy, so its calls field increases across contexts.",
       "snippet": "interface Policy { int next(); }\nclass CounterPolicy implements Policy {\n int calls=0; public int next(){return ++calls;}\n}\nclass Job {\n private Policy policy;\n Job(Policy p){policy=p;}\n int run(){return policy.next();}\n}\nPolicy shared=new CounterPolicy();\nSystem.out.println(new Job(shared).run());\nSystem.out.println(new Job(shared).run());",
       "marks": 1
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A SearchResults screen sorts hotels by price or rating. The user toggles sorting using a dropdown. Where should user selection generally be translated into a concrete strategy?",
       "options": [
+        "Only inside the SQL table definition",
         "In selection/controller or configuration logic, then set on Sorter",
         "Inside every Hotel class",
-        "In a subclass of String",
-        "Only inside the SQL table definition"
+        "In a subclass of String"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Input/configuration chooses a strategy; the sorter delegates without needing repeated sorting branch logic.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An internal app has two fixed, tiny algorithms and no runtime selection or reuse. Which assessment is most sensible?",
       "options": [
+        "One strategy must extend the other",
         "Strategy is mandatory for every if-statement",
         "A small conditional may be simpler until variation warrants Strategy",
-        "Java cannot compile two alternatives in one class",
-        "One strategy must extend the other"
+        "Java cannot compile two alternatives in one class"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Use Strategy when algorithm interchangeability, growth, testability or reuse justifies extra abstractions.",
       "marks": 1
     },
