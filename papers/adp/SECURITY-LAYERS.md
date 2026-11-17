@@ -1,8 +1,8 @@
 # ADP Spring Security: learning layers
 
-This is a curriculum plan, not an instruction to publish all the planned papers now. **Only Layer 1 is included in the current review branch.**
+This is a planning document for possible future ADP Spring Security material. **No Spring Security practice paper is currently published in the active library.** The prior pilot was withdrawn while the six standalone design-pattern papers were rebuilt.
 
-## Layer 1: Intermediate Spring Security (live pilot, 30 questions)
+## Layer 1: Intermediate Spring Security (proposed; not live)
 
 Learn the architecture and make the usual application decisions correctly:
 
@@ -33,9 +33,9 @@ Focus on a realistic Spring Boot app with a registration endpoint, login form, a
 - Proxy method-security limitations and self-invocation.
 - Secure-by-default API configuration without introducing an OAuth deep dive.
 
-## Out of scope for this exam pilot
+## Out of scope for the proposed intermediate scope
 
-OAuth2 authorization-server setup, social login, OpenID Connect, SAML, complex token brokerage, and large identity-platform architecture are intentionally excluded. Introducing JWT is also **not** required by the current intermediate paper.
+OAuth2 authorization-server setup, social login, OpenID Connect, SAML, complex token brokerage, and large identity-platform architecture are intentionally excluded. Introducing JWT is also **not** part of the proposed intermediate scope.
 
 ## Quality gate before full rollout
 
