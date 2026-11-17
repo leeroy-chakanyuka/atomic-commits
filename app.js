@@ -25,7 +25,7 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
-  const ADP_PAPER_KEYS=["adp-1-1","adp-2-1","adp-3-1","adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1"];
+  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"9 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"6 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -147,21 +147,18 @@
             <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download ${esc(title)} questions as PDF">PDF</button></div></div>`;
       };
       const topics=[
-        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"8 papers ready",
-          description:"Eight playable Java-focused pattern papers covering our six studied patterns, plus Chain of Responsibility and Proxy.",
-          detail:`<p class="adp-topic-guidance">Study scope: Prototype, Façade, Proxy, Mediator, State, Memento, Chain of Responsibility, Template Method.</p>
-          <div class="adp-subsection"><strong>Chain of Responsibility</strong><p>Routing, handler ordering, delegation, failure paths and Java debugging.</p>${adpPaper("adp-1-1","Practice Paper 01")}</div>
-          <div class="adp-subsection"><strong>Proxy</strong><p>Protection, virtual and remote proxies, delegation, caching, security and code reviews.</p>${adpPaper("adp-2-1","Practice Paper 02")}</div>
-          <div class="adp-subsection"><strong>Simple Factory</strong><p>Centralising VM creation, Java static methods, shared configuration, validation, and tests.</p>${adpPaper("adp-4-1","Practice Paper 03")}</div>
-          <div class="adp-subsection"><strong>Factory Method</strong><p>Creator hierarchies, payment providers, dynamic binding, polymorphic assignment, and Java tracing.</p>${adpPaper("adp-5-1","Practice Paper 04")}</div>
-          <div class="adp-subsection"><strong>Abstract Factory</strong><p>AWS and Azure product families: VM, object storage, compatible resources, and UML design.</p>${adpPaper("adp-6-1","Practice Paper 05")}</div>
-          <div class="adp-subsection"><strong>Strategy</strong><p>Composition, interchangeable algorithms, AI response policies, and runtime behavior switching.</p>${adpPaper("adp-7-1","Practice Paper 06")}</div>
-          <div class="adp-subsection"><strong>Observer</strong><p>Subreddit subscriptions, notifyObservers, update(Post), event delivery, and lifecycle bugs.</p>${adpPaper("adp-8-1","Practice Paper 07")}</div>
-          <div class="adp-subsection"><strong>Decorator</strong><p>IS-A and HAS-A, stackable model wrappers, composition, delegation, and call order.</p>${adpPaper("adp-9-1","Practice Paper 08")}</div>`},
-        {number:"02",slug:"spring-security",title:"Spring Security",status:"1 paper ready",
-          description:"Intermediate request rules, authentication, roles, password encoding, method security, sessions and CSRF.",
-          detail:`<p class="adp-topic-guidance">No OAuth deep dive. Java SecurityFilterChain configuration, access decisions and troubleshooting.</p>
-            ${adpPaper("adp-3-1","Intermediate Security · Paper 01")}
+        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"6 papers ready",
+          description:"Six fully self-contained Java practice papers covering creational, behavioral and structural design patterns.",
+          detail:`<p class="adp-topic-guidance">Each question contains enough scenario context to stand alone. Java code, UML, error analysis and detailed post-submission memoranda.</p>
+          <div class="adp-subsection"><strong>Simple Factory</strong><p>Centralising VM creation, Java static methods, shared configuration, validation, and tests.</p>${adpPaper("adp-4-1","Practice Paper 01")}</div>
+          <div class="adp-subsection"><strong>Factory Method</strong><p>Creator hierarchies, payment providers, dynamic binding, polymorphic assignment, and Java tracing.</p>${adpPaper("adp-5-1","Practice Paper 02")}</div>
+          <div class="adp-subsection"><strong>Abstract Factory</strong><p>AWS and Azure product families: VM, object storage, compatible resources, and UML design.</p>${adpPaper("adp-6-1","Practice Paper 03")}</div>
+          <div class="adp-subsection"><strong>Strategy</strong><p>Composition, interchangeable algorithms, AI response policies, and runtime behavior switching.</p>${adpPaper("adp-7-1","Practice Paper 04")}</div>
+          <div class="adp-subsection"><strong>Observer</strong><p>Subreddit subscriptions, notifyObservers, update(Post), event delivery, and lifecycle bugs.</p>${adpPaper("adp-8-1","Practice Paper 05")}</div>
+          <div class="adp-subsection"><strong>Decorator</strong><p>IS-A and HAS-A, stackable model wrappers, composition, delegation, and call order.</p>${adpPaper("adp-9-1","Practice Paper 06")}</div>`},
+        {number:"02",slug:"spring-security",title:"Spring Security",status:"Papers pending",
+          description:"Reserved for Spring request security, authentication, authorization and CSRF practice.",
+          detail:`<p class="adp-topic-guidance">The earlier pilot question paper has been withdrawn. This topic has no active practice papers yet.</p>
             <div class="adp-resource-links"><a href="https://docs.spring.io/spring-security/reference/servlet/configuration/java.html" target="_blank" rel="noopener noreferrer">Java configuration</a><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noopener noreferrer">Filter chain architecture</a></div>`},
         {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"Papers pending",
           description:"Reserved for JPA entities, repositories, relationships and persistence practice.",
@@ -177,9 +174,9 @@
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
         <p>Design Patterns, Spring Security and Spring Data JPA, with a fourth topic kept unassigned.</p></div>
-        <div class="module-summary-chip"><strong>09</strong><small>papers</small></div></div></div>
+        <div class="module-summary-chip"><strong>06</strong><small>papers</small></div></div></div>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>9 live papers · 4 topics</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>6 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
               <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
