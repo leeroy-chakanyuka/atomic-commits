@@ -70,7 +70,7 @@ window.PAPERROOM_LIBRARY["adp-9-1"]={
     {
       "id": 6,
       "kind": "True or false",
-      "prompt": "**Scenario:** A store sells a base pastry with optional toppings. Someone argues `WhippedCreamDecorator` must extend `ChocolateDecorator` so toppings are guaranteed to be applied in order.\n\n**Statement:** Concrete decorators must inherit directly from one another to be stackable. Correct this if false.",
+      "prompt": "**Scenario:** A store sells a base pastry with optional toppings. Someone argues `WhippedCreamDecorator` must extend `ChocolateDecorator` so toppings are guaranteed to be applied in order.\n\n**Statement:** Concrete decorators must inherit directly from one another to be stackable. Correct this if false.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "False. Decorators typically extend a shared decorator base (or directly implement Component) and compose through a wrapped Component. The chain order is defined by object nesting, not by the class hierarchy.",
       "correct": "false"
@@ -78,7 +78,7 @@ window.PAPERROOM_LIBRARY["adp-9-1"]={
     {
       "id": 7,
       "kind": "True or false",
-      "prompt": "**Scenario:** A response can be compressed, encrypted and cached through separate wrappers. A developer rearranges their order without testing the result.\n\n**Statement:** Decorator order can affect behavior, so a reordered chain may change results or security. Explain briefly.",
+      "prompt": "**Scenario:** A response can be compressed, encrypted and cached through separate wrappers. A developer rearranges their order without testing the result.\n\n**Statement:** Decorator order can affect behavior, so a reordered chain may change results or security. Explain briefly.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "True. For example encrypt-then-compress differs from compress-then-encrypt, and a cache outside an authorization wrapper might bypass checks on cache hits.",
       "correct": "true"
