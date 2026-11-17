@@ -1,36 +1,184 @@
-"use strict";
-window.PAPERROOM_LIBRARY = window.PAPERROOM_LIBRARY || {};
-(() => {
-  const q=(kind,prompt,marks,memo,extra={})=>({kind,prompt,marks,memo,...extra});
-  const mc=(prompt,options,correct,memo)=>q("Multiple choice",prompt,1,memo,{options,correct});
-  const tf=(prompt,correct,memo)=>q("True or false",prompt,2,memo,{correct});
-  const questions=[
-    q("Definitions","Explain why a decorator both **IS-A** component and **HAS-A** component. Use `AIModel` and `SafetyDecorator`.",6,"Decorator implements AIModel interface: IS-A (3); stores/wraps another AIModel field: HAS-A (3)."),
-    q("Short answer","Why would `class Luna extends GPTPretrain; class Terra extends Luna; class Sol extends Terra` fail to give optional independent combinations of safety, reasoning and computer-use behavior?",6,"Linear inheritance fixes feature stacking order (2); variants/combinations force subclass proliferation (2); decorators compose independent wrappers through AIModel reference (2)."),
-    mc("Which structure makes decorators stackable?",["Decorator exposes same Component contract and stores a Component","Decorator has no connection to Component","Each decorator extends a different concrete model","All behavior is implemented in static methods"],"A","A. Same contract outward plus component reference inward."),
-    mc("Given `AIModel m = new SafetyDecorator(new GPTPretrain());`, which statement is true?",["m cannot be passed where AIModel is required","SafetyDecorator is an AIModel and holds an AIModel","GPTPretrain is necessarily a subclass of SafetyDecorator","SafetyDecorator never delegates"],"B","B. Decorator combines IS-A and HAS-A relationships."),
-    mc("Which concern typically belongs in a **Decorator** rather than Factory Method?",["Selecting which concrete creator exists","Adding optional logging around each model response","Creating a family of cloud resources","Finding a subscriber who changed state"],"B","B. Decorators add composable responsibilities to an existing component."),
-    tf("Every decorator must extend the previously named concrete decorator class, such as `Terra extends Luna`.","false","False. Concrete decorators usually extend a common decorator base and *wrap* arbitrary Component instances."),
-    tf("Decorator ordering can change behavior: safety-before-cache may differ from cache-before-safety.","true","True. Layers execute in wrapping order and can have order-dependent semantics."),
-    q("Code tracing","Calculate exact console output order when the outer decorator prints before and after delegation.",8,"Output: `outer before`, `inner before`, `base`, `inner after`, `outer after` (5); nested call/return follows wrapper order (3).",{snippet:"interface AIModel { String generate(); }\nclass Base implements AIModel {\n public String generate(){System.out.println(\"base\");return \"ok\";}\n}\nclass Trace implements AIModel {\n private final AIModel wrapped; private final String name;\n Trace(AIModel m,String n){wrapped=m;name=n;}\n public String generate(){\n   System.out.println(name+\" before\");\n   String r=wrapped.generate();\n   System.out.println(name+\" after\");\n   return r;\n }\n}\nnew Trace(new Trace(new Base(),\"inner\"),\"outer\").generate();"}),
-    q("Code tracing","Two decorators both append their own suffix after delegation. What string is produced? Show evaluation order.",6,"Base returns `X`, inner appends `-A`, outer appends `-B`: `X-A-B` (4). Both layers delegate via common Model interface (2).",{snippet:"interface Model { String run(); }\nclass Base implements Model { public String run(){return \"X\";} }\nclass Append implements Model {\n Model inner; String text;\n Append(Model inner,String text){this.inner=inner;this.text=text;}\n public String run(){return inner.run()+text;}\n}\nModel x = new Append(new Append(new Base(),\"-A\"),\"-B\");\nSystem.out.println(x.run());"}),
-    q("Error identification","The decorator ignores its wrapped model, returning a constant result. Why is this a suspicious implementation? When might short-circuiting actually be intentional?",7,"No delegation means original functionality is skipped (3); typical decorator adds to/before/after delegated result (2); intentional denial/cache hit can short-circuit if documented and tested (2).",{snippet:"class SafetyDecorator implements AIModel {\n private final AIModel inner;\n SafetyDecorator(AIModel inner){this.inner=inner;}\n public String generate(String p){return \"safe\";}\n}"}),
-    q("Java debugging","The class stores `GPTPretrain`, not `AIModel`, making nested wrapping impossible. Identify the structural fix.",6,"Change field and constructor parameter to AIModel (3); concrete pretrain and decorators all implement same interface (2); this enables arbitrary chaining (1).",{snippet:"class LoggingDecorator implements AIModel {\n private final GPTPretrain inner; // too narrow\n LoggingDecorator(GPTPretrain m){inner=m;}\n public String generate(String p){return inner.generate(p);}\n}"}),
-    q("Diagram reasoning","Which arrows encode **IS-A** and **HAS-A**, and where would you add another decorator without changing `GPTPretrain`?",7,"AIModel<|.. ModelDecorator is IS-A (2); ModelDecorator o-- AIModel is HAS-A (2); another subclass of ModelDecorator with wrapper behavior (3).",{diagram:"classDiagram\nclass AIModel {\n <<interface>>\n +generate(prompt) String\n}\nclass GPTPretrain\nclass ModelDecorator {\n <<abstract>>\n #AIModel inner\n +generate(prompt) String\n}\nclass SafetyDecorator\nclass LoggingDecorator\nAIModel <|.. GPTPretrain\nAIModel <|.. ModelDecorator\nModelDecorator o-- AIModel : wraps\nModelDecorator <|-- SafetyDecorator\nModelDecorator <|-- LoggingDecorator"}),
-    q("Scenario application","Design three independently optional runtime wrappers for an AI inference API: logging, output formatting, and safety checking. Show a valid nested composition.",7,"Common AIModel contract (2); three decorators with AIModel references (3); e.g. Logging(Format(Safety(Base))) creates optional chain (2)."),
-    q("Scenario analysis","A `CacheDecorator` wraps `SafetyDecorator`. How could caching responses before or after safety checking change policy enforcement?",8,"If cache returns prechecked results without revalidating context, may bypass policy/permission changes (3); choose wrapper order and scope cached data by inputs/security context (3); test cache hit and miss paths (2)."),
-    q("Java implementation","Write `AIModel`, `GPTPretrain`, an abstract `ModelDecorator` and concrete `LoggingDecorator` that prints before/after and delegates.",10,"Common interface (2); base product (2); decorator stores AIModel and implements interface (3); LoggingDecorator delegates and logs around call (3)."),
-    q("Java implementation","Create a `PrefixDecorator` and `SuffixDecorator` for `TextRenderer`, and show how to get `[hello]` without defining a `BracketedRenderer` subclass.",9,"TextRenderer interface (2); both wrapper classes implement it/store TextRenderer (4); composition Prefix(Suffix(Base)) or equivalent produces [hello] (3)."),
-    q("Testing","Write a test strategy verifying a decorator calls its inner model **exactly once**, transforms response as intended, and propagates an exception.",8,"Use spy/mock interface and verify once (3); assert transformed output (3); ensure error propagation or documented conversion (2)."),
-    q("Comparison","**Proxy** and **Decorator** can both wrap a common interface. Distinguish their main intents and one situation where the boundary blurs.",7,"Decorator composes extra behavior (3); Proxy controls access/lifecycle/location/caching (3); a wrapper can serve both goals and intent matters (1)."),
-    q("Conceptual correction","Explain why Java decorator wrappers for an AI API do **not** literally perform neural-network post-training. Give a realistic feature that fits Decorator.",6,"Training modifies model parameters/training artifacts, not Java object wrappers (3); logging, output filtering, formatting, caching or access checks are realistic decorators (3)."),
-    q("Integrated reasoning","A platform wants `BaseModel`, optional safety, optional audit logging and optional caching. Design component/decorator roles, show two different valid combinations, and explain how you avoid a class per combination.",10,"AIModel + BaseModel contracts/classes (2); three independent decorators (3); two nested compositions (3); IS-A + HAS-A enables reuse and avoids combinatorial subclasses (2).")
-  ].map((question,i)=>({id:i+1,...question}));
-  window.PAPERROOM_LIBRARY["adp-9-1"]={
-    module:"ADP",moduleName:"Application Development",chapter:9,title:"Decorator Pattern",session:1,
-    limitSeconds:4500,version:1,group:"design-patterns",
-    intro:"20 original Java Decorator questions: IS-A/HAS-A, composition, nested call order, AI feature wrappers, caching risks, UML and tests.",
-    source:"Original Java practice; AI training analogies illustrate runtime wrappers, not actual changes to model weights.",
-    questions,totalMarks:questions.reduce((sum,x)=>sum+x.marks,0)
-  };
-})();
+window.PAPERROOM_LIBRARY=window.PAPERROOM_LIBRARY||{};
+window.PAPERROOM_LIBRARY["adp-9-1"]={
+  "module": "ADP",
+  "moduleName": "Application Development",
+  "chapter": 9,
+  "title": "Decorator Pattern",
+  "session": 1,
+  "limitSeconds": 4500,
+  "version": 1,
+  "group": "design-patterns",
+  "intro": "20 self-contained Java questions about decorator composition across coffee orders, reports, notifications, documents, logging, caching and security. No prior chat examples needed.",
+  "source": "Original Java practice grounded in realistic but fictional systems.",
+  "questions": [
+    {
+      "id": 1,
+      "kind": "Definitions",
+      "prompt": "**Scenario:** A web API client already implements `HttpClient.send(Request)`. The team wants optional audit logging without modifying the existing client. A `LoggingClient` wraps the original client and implements the same `HttpClient` interface.\n\n**Task:** Explain how the decorator simultaneously **IS-A** `HttpClient` and **HAS-A** `HttpClient`. Explain why both relationships are necessary.",
+      "marks": 6,
+      "memo": "IS-A: LoggingClient implements the same HttpClient contract and is substitutable wherever a client is expected (3). HAS-A: it stores a wrapped HttpClient reference and delegates send() to it (3); this enables nesting and extra behavior."
+    },
+    {
+      "id": 2,
+      "kind": "Short answer",
+      "prompt": "**Scenario:** A café sells one base coffee with three optional extras: milk, caramel, and whipped cream. Customers can choose any combination, including multiple servings. A junior developer proposes `MilkCoffee`, `MilkCaramelCoffee`, `MilkCaramelWhipCoffee` and many more subclasses.\n\n**Task:** Explain the class-explosion problem. Sketch how independently stackable decorators remove the need for a subclass for every topping combination.",
+      "marks": 6,
+      "memo": "Class count grows with combinations and topping orders (2). Coffee common interface; BaseCoffee base component; Milk, Caramel and Whip decorators each implement Coffee and contain another Coffee (2). Nest decorators at runtime to compose any valid combination (2)."
+    },
+    {
+      "id": 3,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** A PDF document renderer supports optional watermarking and page-number annotations. Both features must work on an unmodified renderer, independently or together.\n\nWhich structure makes both extensions stackable?",
+      "marks": 1,
+      "memo": "A. Each wrapper exposes the same Renderer interface and stores a Renderer to which it delegates.",
+      "options": [
+        "Each decorator implements Renderer and stores a Renderer reference",
+        "Each decorator subclasses the exact previous concrete decorator",
+        "Each wrapper must modify the original renderer source",
+        "Every combination has its own subclass"
+      ],
+      "correct": "A"
+    },
+    {
+      "id": 4,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** The following statement is legal Java:\n```java\nRenderer r = new WatermarkDecorator(new PdfRenderer());\n```\nBoth classes implement the Renderer interface, and WatermarkDecorator's constructor accepts a Renderer.\n\nWhat can be concluded?",
+      "marks": 1,
+      "memo": "B. The wrapper is a Renderer and it contains another Renderer, enabling delegation.",
+      "options": [
+        "The wrapper cannot be assigned to Renderer",
+        "WatermarkDecorator both IS-A and HAS-A Renderer",
+        "PdfRenderer must extend WatermarkDecorator",
+        "The wrapper is guaranteed to be faster"
+      ],
+      "correct": "B"
+    },
+    {
+      "id": 5,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** A messaging API needs to optionally add audit records before and after invoking `send()`, while preserving the existing Sender interface and concrete senders.\n\nWhich design-pattern role is audit logging most naturally implemented as?",
+      "marks": 1,
+      "memo": "B. A decorator wrapping Sender and delegating send().",
+      "options": [
+        "An Abstract Factory selecting providers only",
+        "A Sender decorator that adds behavior around the delegate",
+        "An Observer that never handles messages",
+        "A subclass of every individual concrete sender"
+      ],
+      "correct": "B"
+    },
+    {
+      "id": 6,
+      "kind": "True or false",
+      "prompt": "**Scenario:** A store sells a base pastry with optional toppings. Someone argues `WhippedCreamDecorator` must extend `ChocolateDecorator` so toppings are guaranteed to be applied in order.\n\n**Statement:** Concrete decorators must inherit directly from one another to be stackable. Correct this if false.",
+      "marks": 2,
+      "memo": "False. Decorators typically extend a shared decorator base (or directly implement Component) and compose through a wrapped Component. The chain order is defined by object nesting, not by the class hierarchy.",
+      "correct": "false"
+    },
+    {
+      "id": 7,
+      "kind": "True or false",
+      "prompt": "**Scenario:** A response can be compressed, encrypted and cached through separate wrappers. A developer rearranges their order without testing the result.\n\n**Statement:** Decorator order can affect behavior, so a reordered chain may change results or security. Explain briefly.",
+      "marks": 2,
+      "memo": "True. For example encrypt-then-compress differs from compress-then-encrypt, and a cache outside an authorization wrapper might bypass checks on cache hits.",
+      "correct": "true"
+    },
+    {
+      "id": 8,
+      "kind": "Code tracing",
+      "prompt": "**Scenario:** A report renderer is wrapped with two tracing decorators. Each decorator prints a before/after message; the base renderer prints once when called. `outer` wraps `inner`.\n\n**Task:** Write the exact five output lines and explain the nested call/return order.",
+      "marks": 8,
+      "memo": "Output: outer before; inner before; base; inner after; outer after (5). Calls proceed outside→inside and return inside→outside (3).",
+      "snippet": "interface Renderer { void render(); }\nclass Base implements Renderer {\n    public void render() { System.out.println(\"base\"); }\n}\nclass Trace implements Renderer {\n    private final Renderer inner; private final String name;\n    Trace(Renderer inner, String name) { this.inner=inner; this.name=name; }\n    public void render() {\n        System.out.println(name+\" before\");\n        inner.render();\n        System.out.println(name+\" after\");\n    }\n}\nnew Trace(new Trace(new Base(), \"inner\"), \"outer\").render();"
+    },
+    {
+      "id": 9,
+      "kind": "Code tracing",
+      "prompt": "**Scenario:** An invoice formatter adds optional prefixes and suffixes. The inner formatter first returns the word `invoice`. Each wrapper modifies the result **after** calling the wrapped formatter.\n\n**Task:** Predict the exact printed text and trace which wrapper modifies the string first.",
+      "marks": 6,
+      "memo": "Prints **[invoice]** (3); Suffix wraps Base and returns invoice] first (1); Prefix is the outer decorator and prepends [ to that result (2).",
+      "snippet": "interface Text { String render(); }\nclass BaseText implements Text {\n    public String render() { return \"invoice\"; }\n}\nclass Prefix implements Text {\n    private final Text inner;\n    Prefix(Text inner) { this.inner=inner; }\n    public String render() { return \"[\" + inner.render(); }\n}\nclass Suffix implements Text {\n    private final Text inner;\n    Suffix(Text inner) { this.inner=inner; }\n    public String render() { return inner.render() + \"]\"; }\n}\nText t = new Prefix(new Suffix(new BaseText()));\nSystem.out.println(t.render());"
+    },
+    {
+      "id": 10,
+      "kind": "Error identification",
+      "prompt": "**Scenario:** A security wrapper is supposed to reject blocked requests but delegate allowed ones to a real HTTP client. The current version returns a constant success response regardless of what the underlying service does.\n\n**Task:** Identify the design/logic error. Give a correct control flow and an example of when deliberately skipping delegation **would** be valid.",
+      "marks": 7,
+      "memo": "Ignoring inner client makes successful requests never reach actual service (3). Check policy then call inner.send(request) for allowed requests and return its result (2). Explicit rejection/cache-hit short circuit may skip delegation by design, with tests (2).",
+      "snippet": "class GuardClient implements HttpClient {\n    private final HttpClient inner;\n    GuardClient(HttpClient inner) { this.inner = inner; }\n    public Response send(Request r) {\n        return Response.ok(\"sent\");  // BUG: never delegates\n    }\n}"
+    },
+    {
+      "id": 11,
+      "kind": "Java debugging",
+      "prompt": "**Scenario:** A developer is creating a `MetricsDecorator` for a document service. The wrapper constructor accepts only `RawDocumentService`, so it cannot wrap another decorator such as `CachingDecorator`.\n\n**Task:** Identify the problematic concrete dependency. Write the type-level correction that enables nesting.",
+      "marks": 6,
+      "memo": "Field and constructor are too narrow (3); replace RawDocumentService with DocumentService shared interface in both places (2); both concrete target and decorators implement DocumentService (1).",
+      "snippet": "class MetricsDecorator implements DocumentService {\n    private final RawDocumentService inner;\n    MetricsDecorator(RawDocumentService inner) { this.inner=inner; }\n    public String fetch(String id) { return inner.fetch(id); }\n}"
+    },
+    {
+      "id": 12,
+      "kind": "Diagram reasoning",
+      "prompt": "**Scenario:** An image renderer can be wrapped with a frame and a watermark. Both can be applied in any order. The diagram shows the minimal Decorator structure.\n\n**Task:** Identify the component interface, base product, abstract decorator and two concrete decorators. Point out the **IS-A** and **HAS-A** arrows.",
+      "marks": 7,
+      "memo": "Image interface common (1); ImageFile is base component (1); ImageDecorator stores Image (1); FrameDecorator and WatermarkDecorator concrete (2); inheritance/implements is IS-A and o-- Image is HAS-A (2).",
+      "diagram": "classDiagram\nclass Image {\n <<interface>>\n +draw() void\n}\nclass ImageFile {\n +draw() void\n}\nclass ImageDecorator {\n <<abstract>>\n #Image wrapped\n +draw() void\n}\nclass FrameDecorator\nclass WatermarkDecorator\nImage <|.. ImageFile\nImage <|.. ImageDecorator\nImageDecorator o-- Image : wraps\nImageDecorator <|-- FrameDecorator\nImageDecorator <|-- WatermarkDecorator"
+    },
+    {
+      "id": 13,
+      "kind": "Scenario application",
+      "prompt": "**Scenario:** A café's base coffee costs R25. Milk adds R6 and caramel adds R9. A customer can order plain coffee, coffee with milk, or coffee with both milk and caramel. Each item must expose `description()` and `price()`.\n\n**Task:** Define the common Coffee interface and decorator roles. Show the object composition for a R40 coffee and explain how its price is calculated.",
+      "marks": 7,
+      "memo": "Coffee interface exposes price/description (2); BaseCoffee R25; MilkDecorator +R6; CaramelDecorator +R9 (3); `new CaramelDecorator(new MilkDecorator(new BaseCoffee()))` totals R40 (2)."
+    },
+    {
+      "id": 14,
+      "kind": "Scenario analysis",
+      "prompt": "**Scenario:** A REST service wraps authorization checking and caching in separate decorators. Some responses are private to a user. The engineer proposes `AuthorizationDecorator(CacheDecorator(real))` or `CacheDecorator(AuthorizationDecorator(real))`.\n\n**Task:** Analyze whether the second ordering could bypass access checks on cache hits. Propose a safe design and suitable cache keys.",
+      "marks": 8,
+      "memo": "Outer CacheDecorator may return a hit without entering inner AuthorizationDecorator (3). Ensure authorization applies on every request before cache reads, e.g. outer AuthDecorator, or explicit checks at cache boundary (3). Scope cache by user/tenant/permission where necessary and test hits/misses (2)."
+    },
+    {
+      "id": 15,
+      "kind": "Java implementation",
+      "prompt": "**Scenario:** An email notification gateway already implements `Sender.send(String)`. A reporting team wants optional timing logs before and after each send without changing the core EmailSender.\n\n**Task:** Write Java interface `Sender`, `EmailSender`, abstract `SenderDecorator` holding a Sender, and a `TimingDecorator` that delegates exactly once.",
+      "marks": 10,
+      "memo": "Sender interface (2), EmailSender concrete product (2), decorator implements Sender and stores/delegates Sender (3), TimingDecorator logs/measures around exactly one inner.send call (3)."
+    },
+    {
+      "id": 16,
+      "kind": "Java implementation",
+      "prompt": "**Scenario:** A text-rendering system can optionally wrap text in parentheses, and optionally uppercase it. All operations return a String from `render()`. The base returns `hello`.\n\n**Task:** Write the Java interface, `PlainText`, `ParenthesesDecorator` and `UppercaseDecorator`. Show an object graph that renders `(HELLO)` without creating a special combined subclass.",
+      "marks": 9,
+      "memo": "TextRenderer common contract and base (2); both decorators implement contract and hold inner TextRenderer (4); new ParenthesesDecorator(new UppercaseDecorator(new PlainText())) yields (HELLO) (3)."
+    },
+    {
+      "id": 17,
+      "kind": "Testing",
+      "prompt": "**Scenario:** `AuditDecorator` wraps `PaymentGateway.charge(amount)` and must call the real gateway exactly once. The decorator may log but must not change a successful result or hide failures.\n\n**Task:** Design JUnit 5 / Mockito tests for successful delegation, failure propagation, and call count.",
+      "marks": 8,
+      "memo": "Verify mock called once with same amount (3); assert returned result preserved (3); configure exception and assert it propagates while verifying call once (2)."
+    },
+    {
+      "id": 18,
+      "kind": "Comparison",
+      "prompt": "**Scenario:** A documents API uses one wrapper to delay the expensive file download until needed, and another wrapper to add optional watermarking to the returned document. Both implement the same Document interface.\n\n**Task:** Identify whether each wrapper is chiefly a Proxy or Decorator, and explain why their UML structures might look almost identical.",
+      "marks": 7,
+      "memo": "Lazy download is a virtual Proxy controlling when work occurs (3); optional watermark is Decorator adding behavior/content (3); both share interface and hold a delegate; intent distinguishes (1)."
+    },
+    {
+      "id": 19,
+      "kind": "Conceptual correction",
+      "prompt": "**Scenario:** A team builds a Java `ModerationDecorator` around a text-generation API. It screens outputs before displaying them. A product manager says this wrapper has 'retrained the model' to be safer.\n\n**Task:** Explain why that statement is technically incorrect and name two runtime concerns that genuinely fit Decorator.",
+      "marks": 6,
+      "memo": "Decorator wraps API behavior without modifying neural model weights/training artifacts (3); output filtering, logging, caching, rate limiting and formatting are runtime responsibilities suitable for decorators (3)."
+    },
+    {
+      "id": 20,
+      "kind": "Integrated reasoning",
+      "prompt": "**Scenario:** A document API needs optional audit logging, optional watermarks and optional caching. It is used by internal staff and external customers with different combinations of features. The existing `DocumentService.fetch(id)` must not be modified.\n\n**Task:** Design the component interface, base service and three decorator classes. Show two compositions, explain why one subclass per combination is unnecessary, and identify one cache-related safety pitfall.",
+      "marks": 10,
+      "memo": "DocumentService/RealDocumentService contract (2); Logging, Watermark, Cache decorators each implement interface and store it (3); two valid nested object constructions (2); composition avoids feature-combination subclasses (1); caching privacy/ordering/invalidations considered (2)."
+    }
+  ],
+  "totalMarks": 118
+};
