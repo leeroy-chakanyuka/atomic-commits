@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A map draws 100,000 trees, but only four species have distinct textures and colors. Each tree has its own x/y coordinates. Which design most directly matches **Flyweight**?",
       "options": [
-        "Create 100,000 separate immutable copies of every texture",
-        "Share four immutable TreeType objects and store per-tree positions separately",
         "Use a Visitor solely to change tree coordinates",
-        "Make all trees occupy the same x/y location"
+        "Make all trees occupy the same x/y location",
+        "Create 100,000 separate immutable copies of every texture",
+        "Share four immutable TreeType objects and store per-tree positions separately"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Flyweight shares reusable intrinsic data (TreeType, texture/color) while keeping per-instance extrinsic x/y coordinates separate.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A game uses a shared `BulletStyle` containing sprite and color, while each bullet has position and velocity. Which values belong in **extrinsic state**?",
       "options": [
-        "Sprite only",
         "Color and texture",
         "Position and velocity",
-        "The shared BulletStyle cache key alone"
+        "The shared BulletStyle cache key alone",
+        "Sprite only"
       ],
-      "correct": "C",
+      "correct": "B",
       "memo": "Each bullet's position and velocity vary per occurrence; only stable reusable state should be intrinsic/shared.",
       "marks": 1
     },
@@ -58,12 +58,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A Flyweight factory caches TreeType by species. What does `a == b` print for identical keys?",
       "options": [
+        "Compilation fails because maps cannot contain objects",
         "false, because new is called twice by the caller",
         "true, because the factory returns the same cached instance",
-        "false, because equals() always compares references",
-        "Compilation fails because maps cannot contain objects"
+        "false, because equals() always compares references"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "computeIfAbsent creates and caches one TreeType per key, so both references point to the same instance.",
       "snippet": "class TreeType {\n final String species;\n TreeType(String species) { this.species = species; }\n}\nclass TreeTypeFactory {\n private final Map<String, TreeType> cache = new HashMap<>();\n TreeType get(String species) {\n  return cache.computeIfAbsent(species, TreeType::new);\n }\n}\nTreeTypeFactory f = new TreeTypeFactory();\nTreeType a = f.get(\"oak\");\nTreeType b = f.get(\"oak\");\nSystem.out.println(a == b);",
       "marks": 1
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A Flyweight factory uses `Map<String, IconStyle>` to cache icons by category. The icon's color also varies independently and is stored in the shared style. What must the cache key account for?",
       "options": [
-        "Only the number of icon instances",
-        "All intrinsic values that determine the shared style, such as category and color",
         "Only a random UUID per icon",
-        "Nothing, one object must be used for all icons"
+        "Nothing, one object must be used for all icons",
+        "Only the number of icon instances",
+        "All intrinsic values that determine the shared style, such as category and color"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Distinct intrinsic configurations must have distinct keys, otherwise the cache may incorrectly share an incompatible style.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A million particle instances share a `ParticleType` object but each stores its own position. What is the main memory benefit?",
       "options": [
+        "The GPU memory requirement becomes zero",
         "There are no particle objects anymore",
         "Large repeated immutable type data is stored once per type, rather than once per particle",
-        "Every position can be deduplicated regardless of value",
-        "The GPU memory requirement becomes zero"
+        "Every position can be deduplicated regardless of value"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Flyweight reduces duplication of heavyweight state; per-particle extrinsic state still consumes memory.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A renderer needs to draw 100 icons, but it only has two icon styles. Should the same Flyweight object necessarily also store each icon's screen position?",
       "options": [
+        "No, because position can never be represented in Java",
         "Yes, all positions must become one shared field",
         "No, position belongs to each occurrence or to the draw() call",
-        "Yes, because Flyweight copies state automatically",
-        "No, because position can never be represented in Java"
+        "Yes, because Flyweight copies state automatically"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "The per-icon x/y position is extrinsic; storing it in a shared flyweight would cause cross-instance interference.",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `HashMap.computeIfAbsent()` is used to cache reusable font styles. Multiple threads can call the factory simultaneously. What should the implementation consider?",
       "options": [
-        "HashMap is automatically safe for concurrent writes",
-        "Use suitable synchronization or ConcurrentHashMap to protect shared cache access",
         "Make each glyph's x position static",
-        "Prevent styles from being immutable"
+        "Prevent styles from being immutable",
+        "HashMap is automatically safe for concurrent writes",
+        "Use suitable synchronization or ConcurrentHashMap to protect shared cache access"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Shared mutable caches require thread-safe access. A ConcurrentHashMap can coordinate map operations, but side effects in mapping functions still need care.",
       "marks": 1
     },
@@ -187,12 +187,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A shared TreeType instance is referenced by all trees of its species. The last tree is removed. Which statement is correct about memory lifetime?",
       "options": [
-        "Flyweight must disappear immediately",
-        "It may remain alive while the factory cache still holds a strong reference",
         "Removing one tree always empties the cache",
-        "Java cannot reclaim Tree objects"
+        "Java cannot reclaim Tree objects",
+        "Flyweight must disappear immediately",
+        "It may remain alive while the factory cache still holds a strong reference"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The cache owns its references until eviction/clear or factory collection. Cache lifetime/eviction can matter.",
       "marks": 1
     },
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-12-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** A `TextureFactory` caches shared immutable textures, while a `ModelDecorator` adds logging around a model. Which distinction is accurate?",
       "options": [
-        "Flyweight shares intrinsic state; Decorator adds optional behavior through wrappers",
-        "Flyweight always implements Decorator",
         "Decorator is required for memory-sharing",
-        "Both necessarily create a subclass per tree"
+        "Both necessarily create a subclass per tree",
+        "Flyweight shares intrinsic state; Decorator adds optional behavior through wrappers",
+        "Flyweight always implements Decorator"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Flyweight addresses memory usage through shared state; Decorator adds layered responsibilities around a component.",
       "marks": 1
     },
