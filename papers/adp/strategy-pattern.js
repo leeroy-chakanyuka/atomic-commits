@@ -70,7 +70,7 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
     {
       "id": 6,
       "kind": "True or false",
-      "prompt": "**Scenario:** The team is debating whether `TaxStrategy` must be an abstract class because runtime polymorphism is required. They already have Java interfaces in the codebase.\n\n**Statement:** Strategy requires an abstract class rather than a Java interface. Correct the statement if false.",
+      "prompt": "**Scenario:** The team is debating whether `TaxStrategy` must be an abstract class because runtime polymorphism is required. They already have Java interfaces in the codebase.\n\n**Statement:** Strategy requires an abstract class rather than a Java interface. Correct the statement if false.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "False. A Java interface is a common strategy contract; classes implement it. An abstract class is optional if concrete strategies share code or state.",
       "correct": "false"
@@ -78,7 +78,7 @@ window.PAPERROOM_LIBRARY["adp-7-1"]={
     {
       "id": 7,
       "kind": "True or false",
-      "prompt": "**Scenario:** Two independent checkout sessions use the same immutable `VatStrategy` instance. The strategy stores only a final percentage and has no per-customer mutable state.\n\n**Statement:** Sharing this same strategy object can be safe. Explain one condition that would make sharing unsafe.",
+      "prompt": "**Scenario:** Two independent checkout sessions use the same immutable `VatStrategy` instance. The strategy stores only a final percentage and has no per-customer mutable state.\n\n**Statement:** Sharing this same strategy object can be safe. Explain one condition that would make sharing unsafe.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
       "marks": 2,
       "memo": "True when the object is immutable/thread-safe. Sharing becomes risky if the strategy stores mutable per-customer data or changes state without synchronization.",
       "correct": "true"
