@@ -26,8 +26,8 @@
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
   const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1"];
-  const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
-  const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v1`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
+  const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v2`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
+  const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v2`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
   let STORAGE=storageFor(paperKey);
   let HISTORY_STORAGE=historyFor(paperKey);
@@ -150,12 +150,12 @@
         {number:"01",slug:"design-patterns",title:"Design Patterns",status:"6 papers ready",
           description:"Six fully self-contained Java practice papers covering creational, behavioral and structural design patterns.",
           detail:`<p class="adp-topic-guidance">Each question contains enough scenario context to stand alone. Java code, UML, error analysis and detailed post-submission memoranda.</p>
-          <div class="adp-subsection"><strong>Simple Factory</strong><p>Centralising VM creation, Java static methods, shared configuration, validation, and tests.</p>${adpPaper("adp-4-1","Practice Paper 01")}</div>
-          <div class="adp-subsection"><strong>Factory Method</strong><p>Creator hierarchies, payment providers, dynamic binding, polymorphic assignment, and Java tracing.</p>${adpPaper("adp-5-1","Practice Paper 02")}</div>
-          <div class="adp-subsection"><strong>Abstract Factory</strong><p>AWS and Azure product families: VM, object storage, compatible resources, and UML design.</p>${adpPaper("adp-6-1","Practice Paper 03")}</div>
-          <div class="adp-subsection"><strong>Strategy</strong><p>Composition, interchangeable algorithms, AI response policies, and runtime behavior switching.</p>${adpPaper("adp-7-1","Practice Paper 04")}</div>
-          <div class="adp-subsection"><strong>Observer</strong><p>Subreddit subscriptions, notifyObservers, update(Post), event delivery, and lifecycle bugs.</p>${adpPaper("adp-8-1","Practice Paper 05")}</div>
-          <div class="adp-subsection"><strong>Decorator</strong><p>IS-A and HAS-A, stackable model wrappers, composition, delegation, and call order.</p>${adpPaper("adp-9-1","Practice Paper 06")}</div>`},
+          <div class="adp-subsection"><strong>Simple Factory</strong><p>Importers, exporters, safe VM configuration, Java static methods and tests.</p>${adpPaper("adp-4-1","Practice Paper 01")}</div>
+          <div class="adp-subsection"><strong>Factory Method</strong><p>Provider-independent checkout, report creators, overriding, polymorphism and Java tracing.</p>${adpPaper("adp-5-1","Practice Paper 02")}</div>
+          <div class="adp-subsection"><strong>Abstract Factory</strong><p>Cloud product families, provider compatibility, VM/storage/LB design and UML.</p>${adpPaper("adp-6-1","Practice Paper 03")}</div>
+          <div class="adp-subsection"><strong>Strategy</strong><p>Shipping, compression, image resizing, retry policies and runtime algorithm switching.</p>${adpPaper("adp-7-1","Practice Paper 04")}</div>
+          <div class="adp-subsection"><strong>Observer</strong><p>Orders, stock updates, news, weather, CI events and subscriber notification logic.</p>${adpPaper("adp-8-1","Practice Paper 05")}</div>
+          <div class="adp-subsection"><strong>Decorator</strong><p>Coffee toppings, text formatting, logging, caching, security and wrapper order.</p>${adpPaper("adp-9-1","Practice Paper 06")}</div>`},
         {number:"02",slug:"spring-security",title:"Spring Security",status:"Papers pending",
           description:"Reserved for Spring request security, authentication, authorization and CSRF practice.",
           detail:`<p class="adp-topic-guidance">The earlier pilot question paper has been withdrawn. This topic has no active practice papers yet.</p>
