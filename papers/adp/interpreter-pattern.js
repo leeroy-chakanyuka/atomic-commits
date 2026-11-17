@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A calculator accepts expressions like `2 + 3` or `4 * 5`. An expression tree contains NumberExpression, AddExpression and MultiplyExpression classes implementing `Expression.interpret()`. Which pattern is this?",
       "options": [
-        "Observer",
         "Interpreter",
         "Bridge",
-        "Flyweight"
+        "Flyweight",
+        "Observer"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Interpreter represents a simple language's grammar as expression objects with interpretation behavior.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A permission rule language supports `ADMIN`, `MEMBER` and boolean `AND` expressions. Which is a **terminal expression**?",
       "options": [
+        "A list of visitor operations",
         "AndExpression combining two rules",
         "RoleExpression(\"ADMIN\") that evaluates one role token",
-        "The entire rule tree",
-        "A list of visitor operations"
+        "The entire rule tree"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A terminal expression handles a basic symbol/literal; a nonterminal expression composes child expressions based on a grammar rule.",
       "marks": 1
     },
@@ -58,12 +58,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** What does the expression tree evaluate to?",
       "options": [
-        "15",
         "21",
         "7",
-        "3"
+        "3",
+        "15"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "AddExpression interprets its two child NumberExpressions and sums 7 + 8 = 15.",
       "snippet": "interface Expr { int interpret(); }\nclass NumberExpr implements Expr {\n private final int n;\n NumberExpr(int n){this.n=n;}\n public int interpret(){return n;}\n}\nclass AddExpr implements Expr {\n private final Expr left,right;\n AddExpr(Expr a,Expr b){left=a;right=b;}\n public int interpret(){return left.interpret()+right.interpret();}\n}\nExpr tree = new AddExpr(new NumberExpr(7),new NumberExpr(8));\nSystem.out.println(tree.interpret());",
       "marks": 1
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An interpreter evaluates `x + 2`, but x varies for each user. What should a variable-expression node receive or access when interpreting?",
       "options": [
-        "A context/environment mapping variable names to values",
-        "A new subclass for every possible value of x",
         "Only a static global integer x for all users",
-        "A Visitor which must create a new grammar"
+        "A Visitor which must create a new grammar",
+        "A context/environment mapping variable names to values",
+        "A new subclass for every possible value of x"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "An interpretation context supplies external values, such as Map<String,Integer> for variables, without encoding each user's state into expression classes.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** An `AndExpression` has a left and right child and should require both true. What is wrong with the implementation?",
       "options": [
-        "Using interfaces",
         "The `||` operator implements OR instead of AND",
         "The children must be Strings",
-        "Expression cannot return boolean"
+        "Expression cannot return boolean",
+        "Using interfaces"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "AND should use `&&` for conjunction; `||` wrongly accepts either child being true.",
       "snippet": "interface Rule { boolean interpret(); }\nclass AndExpr implements Rule {\n private final Rule left, right;\n AndExpr(Rule l,Rule r){left=l;right=r;}\n public boolean interpret(){return left.interpret() || right.interpret();}\n}",
       "marks": 1
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A simple arithmetic DSL already has NumberExpression and AddExpression. You need to interpret multiplication with correct nesting. What is a suitable extension?",
       "options": [
-        "MultiplyExpression holding two Expression children",
         "Modify every NumberExpression to parse entire program source",
         "Replace Interpreter with an Observer list",
-        "Make AddExpression subclass NumberExpression"
+        "Make AddExpression subclass NumberExpression",
+        "MultiplyExpression holding two Expression children"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "MultiplyExpression is a nonterminal that composes child Expression nodes and multiplies their interpreted values.",
       "marks": 1
     },
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** The text `\"2+3\"` arrives from a user. Your program already has expression classes and `interpret()` methods. What additional component may be needed to convert the raw text into expression objects?",
       "options": [
+        "No component; Java automatically turns strings into your expression classes",
         "A tokenizer/parser producing an expression tree",
         "A command queue to execute SQL",
-        "A decorator to add colors to the String",
-        "No component; Java automatically turns strings into your expression classes"
+        "A decorator to add colors to the String"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "The Interpreter object model evaluates an AST; parsing/tokenization is a separate concern that may construct the tree.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A nonterminal expression chooses subtraction between two interpreted child nodes. What prints?",
       "options": [
-        "4",
         "10",
         "-4",
-        "6"
+        "6",
+        "4"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "The left child gives 7 and the right gives 3, so the expression returns 7-3=4.",
       "snippet": "interface Expr { int eval(); }\nrecord Literal(int value) implements Expr { public int eval(){return value;} }\nrecord Sub(Expr a,Expr b) implements Expr {\n public int eval(){return a.eval()-b.eval();}\n}\nSystem.out.println(new Sub(new Literal(7),new Literal(3)).eval());",
       "marks": 1
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A team designs a tiny query filter language: `Status(\"ACTIVE\")`, `And(a,b)`, and `Or(a,b)`. Which design choice reflects recursive grammar composition?",
       "options": [
+        "Expressions may not be nested",
         "Each nonterminal holds other Expression objects and delegates interpretation to them",
         "Every rule is hard-coded in one thousand-line switch",
-        "Every terminal creates a database connection",
-        "Expressions may not be nested"
+        "Every terminal creates a database connection"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Composite nonterminal expression nodes can contain terminals or other nonterminals, mirroring a grammar.",
       "marks": 1
     },
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A complex programming language requires precedence, hundreds of grammar rules, optimized compilation and detailed syntax errors. What is a likely limit of using a class for every Interpreter grammar production?",
       "options": [
+        "Every grammar symbol must be a singleton",
         "It eliminates all complexity",
         "Class proliferation and parsing complexity can make parser generators/interpreters preferable",
-        "Java interfaces prevent recursion",
-        "Every grammar symbol must be a singleton"
+        "Java interfaces prevent recursion"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Interpreter is well suited to small grammars; large languages often need dedicated parser/compiler infrastructure.",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An expression tree represents an untrusted formula provided by users. Which security rule is most important?",
       "options": [
-        "Treat all user text as trusted Java code",
         "Parse and evaluate only permitted grammar/operations with limits, rather than executing arbitrary Java",
         "Store passwords in terminal nodes",
-        "Disable all expression validation"
+        "Disable all expression validation",
+        "Treat all user text as trusted Java code"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "A controlled DSL should validate operators/tokens and resource limits; arbitrary code execution is dangerous.",
       "marks": 1
     },
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-13-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** An expression tree uses Composite structure (`Add` has two `Expression` children). Does that automatically make it only Composite rather than Interpreter?",
       "options": [
-        "Yes, all trees are only Composite",
-        "No; Composite-like structure can implement an Interpreter grammar and interpretation semantics",
         "Yes, Interpreter forbids child references",
-        "No, every recursive tree must be Iterator"
+        "No, every recursive tree must be Iterator",
+        "Yes, all trees are only Composite",
+        "No; Composite-like structure can implement an Interpreter grammar and interpretation semantics"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Interpreter often uses composite trees, but its purpose is representing and evaluating language grammar rules.",
       "marks": 1
     },
