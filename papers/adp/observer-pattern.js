@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A weather station notifies a phone display and a dashboard when temperature changes. Which object is the **Subject**?",
       "options": [
+        "The update() method",
         "Every phone display",
         "The WeatherStation that stores observers and broadcasts updates",
-        "A temperature integer",
-        "The update() method"
+        "A temperature integer"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "The Subject owns relevant changing state and keeps track of registered Observer listeners.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A news feed calls `notifyObservers(article)` when a story is published. What does `notifyObservers()` typically do?",
       "options": [
-        "Instantiates a new Observer class for every reader",
         "Loops through subscribers and calls each observer's `update(article)`",
         "Replaces the article's superclass",
-        "Automatically writes the story to a database"
+        "Automatically writes the story to a database",
+        "Instantiates a new Observer class for every reader"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "The subject iterates registered observers and invokes their update method with an event or current data.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `Observer.update(Post post)` receives the newly published post. Why might `Post` be passed as an argument?",
       "options": [
-        "The interface must always accept a Post object",
-        "The event payload identifies what changed so the observer needn't fetch it again",
         "Java requires every update() to return a Post",
-        "The subject can no longer have state"
+        "The subject can no longer have state",
+        "The interface must always accept a Post object",
+        "The event payload identifies what changed so the observer needn't fetch it again"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Push-style Observer conveys useful event data; no-argument update() with a subject lookup is also possible.",
       "marks": 1
     },
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** An observer calls `removeObserver(this)` while the subject iterates an ArrayList via for-each. What is a likely problem?",
       "options": [
-        "ConcurrentModificationException or inconsistent iteration",
         "The code becomes a Factory Method",
         "All observers automatically remain subscribed",
-        "StringIndexOutOfBoundsException always"
+        "StringIndexOutOfBoundsException always",
+        "ConcurrentModificationException or inconsistent iteration"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Mutating a fail-fast collection during iteration can throw; use a snapshot or CopyOnWriteArrayList with defined semantics.",
       "snippet": "for (Observer observer: observers) {\n  observer.update(event); // may remove itself\n}",
       "marks": 1
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A stock ticker publishes price changes to observers. Which relationship best describes the Observer pattern?",
       "options": [
-        "One chosen algorithm",
-        "One Subject notifying many registered observers",
         "One factory creating many products",
-        "One wrapper storing a component"
+        "One wrapper storing a component",
+        "One chosen algorithm",
+        "One Subject notifying many registered observers"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Observer is a one-to-many notification relationship for state-change events.",
       "marks": 1
     },
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A service sends only `update()` without data. Listeners ask the service for the current price. What notification variant is this?",
       "options": [
-        "Push",
         "Pull",
         "Decorator",
-        "Factory"
+        "Factory",
+        "Push"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "In a pull model, observers retrieve current state rather than having it pushed in update(event).",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A large event platform has one million subscribers. What is the main scalability concern with synchronously iterating all observers on one request?",
       "options": [
+        "The subject turns into a subclass",
         "Factory interfaces cannot return lists",
         "Slow fan-out, failures and process-local state",
-        "Java cannot create one million objects",
-        "The subject turns into a subclass"
+        "Java cannot create one million objects"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Large fan-out is better handled by event queues, async workers, retries and backpressure when required.",
       "marks": 1
     },
@@ -187,12 +187,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A user is banned from posting in a discussion forum. Does Observer automatically remove their notification subscription?",
       "options": [
+        "No, Observer prohibits unsubscription",
         "Yes, Observer knows Reddit business policies",
         "No, banning/unsubscribing are separate business rules; removal must be implemented",
-        "Yes, update() deletes accounts",
-        "No, Observer prohibits unsubscription"
+        "Yes, update() deletes accounts"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Registration and removal are explicit operations; a ban only triggers removal if application policy says so.",
       "marks": 1
     },
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** A weather app broadcasts new temperature readings, then uses a chosen algorithm to compute tomorrow's forecast. Which two patterns apply?",
       "options": [
+        "Command for both",
         "Observer for broadcasting; Strategy for algorithm selection",
         "Strategy for broadcasting; Factory for predictions",
-        "Decorator for both",
-        "Command for both"
+        "Decorator for both"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Observer notifies listeners of change; Strategy selects one interchangeable computation algorithm.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-8-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A medical appointment service sends private details to every subscribed listener, including public lobby displays. Which improvement is most important?",
       "options": [
-        "Send all data to all listeners and rely on their discretion",
-        "Filter by authorization/preferences and share minimal event payloads",
         "Make update() static",
-        "Store observers as Strings"
+        "Store observers as Strings",
+        "Send all data to all listeners and rely on their discretion",
+        "Filter by authorization/preferences and share minimal event payloads"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Push only information recipients may see; filtering/minimal payloads protect privacy.",
       "marks": 1
     },
