@@ -44,9 +44,9 @@ The source scope follows the textbook *Database Systems: Design, Implementation,
 
 ## ADP topic tiles and exam pilots
 
-The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA** and **TBD**. Only the Design Patterns tile currently has playable papers. The **six active papers** cover Simple Factory, Factory Method, Abstract Factory, Strategy, Observer and Decorator, each with 20 fully contextualised original Java questions and a 75-minute timer. Older Chain of Responsibility, Proxy and Spring Security pilot papers have been removed from the active library. Each paper has detailed marking memoranda revealed after submission. These papers are self-contained; no prior chat context or AI-model naming conventions are required.
+The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA** and **TBD**. Only the Design Patterns tile currently has playable papers. The **six active papers** cover Simple Factory, Factory Method, Abstract Factory, Strategy, Observer and Decorator, each with 20 fully contextualised original Java questions and a 75-minute timer. Older Chain of Responsibility, Proxy and Spring Security pilot papers have been removed from the active library and source tree. Older browser-local attempts are not overwritten; the revised six papers now use new v2 storage keys so previous scores cannot be mistakenly associated with changed questions. Each paper has detailed marking memoranda revealed after submission. These papers are self-contained; no prior chat context or AI-model naming conventions are required.
 
-Examples include Java classes, Spring Security configuration, code tracing, debugging, test design and Mermaid diagrams. A staged curriculum for later Spring Security content is documented in `papers/adp/SECURITY-LAYERS.md`; **OAuth is intentionally outside the pilot**.
+The six active Design Patterns papers include Java class hierarchies, code tracing, debugging, realistic scenario analysis, JUnit test design and Mermaid diagrams. A separate staged outline for possible future Spring Security papers remains in `papers/adp/SECURITY-LAYERS.md`; there is currently no live Spring Security pilot.
 
 ## Rich questions and ITS sample database
 
