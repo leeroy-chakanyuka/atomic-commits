@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A user-profile page normally calls `userRepo.getUser(42)` immediately. You introduce a `GetUserCommand` object holding the repository and ID. What benefit is most directly introduced by the Command pattern?",
       "options": [
-        "The repository no longer needs SQL",
         "The request can be passed or queued as an object before execution",
         "The User class no longer needs fields",
-        "Every database call is now one batched SQL query"
+        "Every database call is now one batched SQL query",
+        "The repository no longer needs SQL"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "The command encapsulates the receiver, operation and arguments. An invoker can store and execute it later; SQL execution is not automatically batched.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A photo editor supports `CropCommand`, `RotateCommand` and `ResizeCommand`. Each implements `Command.execute()`. What should the toolbar's button depend on?",
       "options": [
+        "A switch inside the Image object",
         "The concrete CropCommand class only",
         "The common Command interface",
-        "The concrete Image class's constructor",
-        "A switch inside the Image object"
+        "The concrete Image class's constructor"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "The button (invoker) should invoke a Command through the common interface; separate concrete commands know the operations.",
       "marks": 1
     },
@@ -58,12 +58,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A scheduling system holds `List<Command>` and calls `execute()` on each at midnight. What is the queue's design-pattern role?",
       "options": [
+        "Product factory",
         "ConcreteCommand",
         "Receiver",
-        "Invoker",
-        "Product factory"
+        "Invoker"
       ],
-      "correct": "C",
+      "correct": "D",
       "memo": "The invoker triggers commands without needing to know their operation-specific details.",
       "marks": 1
     },
@@ -72,12 +72,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A command queue stores three independent `GetUserCommand` objects for IDs 1, 2 and 3. Each `execute()` calls `repository.findById(id)` once. Which statement is correct?",
       "options": [
+        "The three commands automatically share one DB transaction",
         "One SQL statement is guaranteed",
         "Three repository calls will be made if all commands execute",
-        "The repository is no longer used",
-        "The three commands automatically share one DB transaction"
+        "The repository is no longer used"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Command batching is a batch of command invocations, not automatic query or transaction batching.",
       "marks": 1
     },
@@ -86,12 +86,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code check:** The invoker is intended to accept any command. Which signature best supports replacing `EmailCommand` with `SmsCommand`?",
       "options": [
-        "`void run(EmailCommand command)`",
         "`void run(Command command)`",
         "`void run(String commandClassName)`",
-        "`void run(Object command)` with casts"
+        "`void run(Object command)` with casts",
+        "`void run(EmailCommand command)`"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Using the Command interface gives the invoker polymorphism without provider-specific checks.",
       "snippet": "interface Command { void execute(); }\nclass EmailCommand implements Command { public void execute() {} }\nclass SmsCommand implements Command { public void execute() {} }",
       "marks": 1
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** What does the following code print? Assume no exceptions.",
       "options": [
-        "A then B",
         "B then A",
         "Nothing, because commands cannot be stored",
-        "A only"
+        "A only",
+        "A then B"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Commands are added in order and each execute() prints its own marker when the invoker iterates.",
       "snippet": "interface Command { void execute(); }\nclass PrintCommand implements Command {\n  private final String label;\n  PrintCommand(String label) { this.label = label; }\n  public void execute() { System.out.println(label); }\n}\nList<Command> queue = new ArrayList<>();\nqueue.add(new PrintCommand(\"A\"));\nqueue.add(new PrintCommand(\"B\"));\nfor (Command c : queue) c.execute();",
       "marks": 1
@@ -131,12 +131,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A text editor supports Undo for `InsertTextCommand`. Which data is typically necessary for undo?",
       "options": [
-        "Only the name of the command class",
-        "Enough prior state or an inverse operation to restore the document",
         "Only the toolbar button label",
-        "A random undo token with no state"
+        "A random undo token with no state",
+        "Only the name of the command class",
+        "Enough prior state or an inverse operation to restore the document"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Undo is optional and requires reversible operations or stored prior state; having execute() alone is not sufficient.",
       "marks": 1
     },
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A payments system enqueues `ChargeCardCommand`. A worker crashes after successfully charging but before acknowledging the message. The job is retried. What must the design consider?",
       "options": [
+        "Using a static factory only",
         "Method overloading",
         "Idempotency and duplicate execution",
-        "Replacing the repository with a decorator",
-        "Using a static factory only"
+        "Replacing the repository with a decorator"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A retried command may execute more than once; charge processing should use an idempotency key and deduplication/reconciliation.",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** This implementation uses a local variable `repo` declared in the constructor but never saves it. What happens when execute() is called?",
       "options": [
-        "The repository always comes from the invoker",
         "The field `repository` stays null, causing a NullPointerException",
         "The compiler requires every field final",
-        "It runs correctly because local variables become fields"
+        "It runs correctly because local variables become fields",
+        "The repository always comes from the invoker"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Constructor arguments must be assigned to the command's fields to preserve the receiver for later execution.",
       "snippet": "class GetUserCommand implements Command {\n  private UserRepository repository;\n  private int userId;\n  GetUserCommand(UserRepository repo, int id) {\n    userId = id; // forgot: repository = repo;\n  }\n  public void execute() { repository.getUser(userId); }\n}",
       "marks": 1
@@ -188,12 +188,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A reporting service needs the `User` returned by a command, but the example interface only exposes `void execute()`. Which design is most appropriate?",
       "options": [
-        "A command can never return a result",
         "Use a typed command interface such as `Command<R>` with `R execute()`",
         "Force the invoker to inspect private fields",
-        "Replace Command with Observer"
+        "Replace Command with Observer",
+        "A command can never return a result"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "A generic Command<R> can return the result for synchronous execution, or a queue can collect completion results asynchronously.",
       "marks": 1
     },
@@ -202,12 +202,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** You have both `ExportPdfCommand` and `ExportCsvCommand`, but they call the same `ExportService`. Which participant should contain the export implementation?",
       "options": [
-        "Button invoker",
-        "ExportService receiver, with commands selecting/configuring calls",
         "The list that stores commands",
-        "Only the Command interface's default method"
+        "Only the Command interface's default method",
+        "Button invoker",
+        "ExportService receiver, with commands selecting/configuring calls"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The receiver generally owns domain operations; concrete commands bind parameters and delegate.",
       "marks": 1
     },
@@ -216,12 +216,12 @@ window.PAPERROOM_LIBRARY["adp-10-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare patterns:** Which distinction between **Command** and **Strategy** is most accurate?",
       "options": [
+        "There is no meaningful distinction",
         "Command packages a request for execution, Strategy supplies an interchangeable algorithm",
         "Command requires one algorithm, Strategy queues requests",
-        "Strategy always supports undo, Command never does",
-        "There is no meaningful distinction"
+        "Strategy always supports undo, Command never does"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Command represents an operation/request with receiver and parameters; Strategy selects a behavior/algorithm the context delegates to.",
       "marks": 1
     },
