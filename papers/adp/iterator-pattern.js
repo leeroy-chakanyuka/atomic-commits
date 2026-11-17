@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A Java `Iterator<Student>` is returned from an enrolled-students collection. Which pair of operations advances the traversal?",
       "options": [
-        "`size()` and `clear()`",
-        "`hasNext()` and `next()`",
         "`observe()` and `notify()`",
-        "`create()` and `clone()`"
+        "`create()` and `clone()`",
+        "`size()` and `clear()`",
+        "`hasNext()` and `next()`"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "hasNext() checks availability; next() returns the next item and advances the cursor.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** Given the following List and Iterator, what prints?",
       "options": [
-        "A then B",
-        "B then A",
         "A then A",
-        "No output because an Iterator is a class"
+        "No output because an Iterator is a class",
+        "A then B",
+        "B then A"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Calling next() advances from the first item to the second; the code prints A and then B.",
       "snippet": "List<String> names = List.of(\"A\", \"B\", \"C\");\nIterator<String> it = names.iterator();\nSystem.out.println(it.next());\nSystem.out.println(it.next());",
       "marks": 1
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A student collection wants to support Java enhanced for-loops (`for (Student s : students)`). Which interface should its collection class usually implement?",
       "options": [
-        "Iterator<Student> only",
         "Iterable<Student> with iterator() returning an Iterator<Student>",
         "Observer",
-        "Runnable"
+        "Runnable",
+        "Iterator<Student> only"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "The enhanced-for statement expects an array or an Iterable; Iterable.iterator() returns an Iterator.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A developer repeatedly calls `it.next()` but never checks `it.hasNext()`. What happens after all list items are consumed?",
       "options": [
-        "next() always returns null",
-        "next() typically throws NoSuchElementException",
         "The iterator automatically restarts",
-        "Java compiles a new List"
+        "Java compiles a new List",
+        "next() always returns null",
+        "next() typically throws NoSuchElementException"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Iterator.next() throws NoSuchElementException when there are no more elements, per its contract.",
       "snippet": "Iterator<Integer> it = List.of(10).iterator();\nSystem.out.println(it.next());\nSystem.out.println(it.next());",
       "marks": 1
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** What does this simple traversal print?",
       "options": [
-        "2",
-        "3",
         "4",
-        "5"
+        "5",
+        "2",
+        "3"
       ],
-      "correct": "C",
+      "correct": "A",
       "memo": "The while loop consumes 1, 2, 3 and 4, incrementing count four times.",
       "snippet": "Iterator<Integer> it = List.of(1,2,3,4).iterator();\nint count = 0;\nwhile (it.hasNext()) { it.next(); count++; }\nSystem.out.println(count);",
       "marks": 1
@@ -117,12 +117,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A custom `TreeCollection` offers both depth-first and breadth-first exploration without exposing Node links publicly. Which implementation approach best matches Iterator?",
       "options": [
+        "Require Visitor for every iteration",
         "Expose the entire Node hierarchy to callers",
         "Provide separate DFSIterator and BFSIterator implementations behind Iterator<Node>",
-        "Copy the tree to SQL for every traversal",
-        "Require Visitor for every iteration"
+        "Copy the tree to SQL for every traversal"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Different traversal algorithms can be encapsulated as iterators sharing a common interface.",
       "marks": 1
     },
@@ -131,12 +131,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** An Iterator over an array has index 0 and length 3. What is wrong with `hasNext()`?",
       "options": [
-        "The last valid index is 3",
         "It uses <= instead of < and can attempt to access beyond the end",
         "A boolean cannot be returned",
-        "index should always start at 3"
+        "index should always start at 3",
+        "The last valid index is 3"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Valid indices are 0..2, so hasNext() should return index < data.length.",
       "snippet": "class ArrayIterator<T> implements Iterator<T> {\n private final T[] data;\n private int index = 0;\n ArrayIterator(T[] data){this.data=data;}\n public boolean hasNext(){ return index <= data.length; } // bug\n public T next(){ return data[index++]; }\n}",
       "marks": 1
@@ -146,12 +146,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A Java ArrayList is structurally modified through `list.add()` while its existing iterator is active. What is often the outcome on subsequent iteration in single-threaded code?",
       "options": [
+        "Java silently creates an iterator over a snapshot",
         "Every Iterator automatically updates safely",
         "Its fail-fast iterator may throw ConcurrentModificationException",
-        "The list becomes immutable",
-        "Java silently creates an iterator over a snapshot"
+        "The list becomes immutable"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "ArrayList iterators are generally fail-fast on detected structural modification outside iterator operations, though fail-fast isn't a correctness guarantee.",
       "marks": 1
     },
@@ -160,12 +160,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A collection's Iterator has a `remove()` method but its implementation does not support removal. What is a valid Java behavior?",
       "options": [
-        "`remove()` must always succeed",
-        "Throw UnsupportedOperationException",
         "Silently remove all remaining items",
-        "Return a boolean always"
+        "Return a boolean always",
+        "`remove()` must always succeed",
+        "Throw UnsupportedOperationException"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Iterator.remove() is optional; unsupported implementations may throw UnsupportedOperationException.",
       "marks": 1
     },
@@ -189,12 +189,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Compare:** What is the difference between Iterator and Visitor when working with a tree of expression nodes?",
       "options": [
+        "They are identical patterns",
         "Iterator primarily controls how nodes are traversed; Visitor defines operations across differing node types",
         "Visitor is required to move an iterator's cursor",
-        "Iterator adds a new operation to every node type through double dispatch",
-        "They are identical patterns"
+        "Iterator adds a new operation to every node type through double dispatch"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Iterator encapsulates traversal; Visitor dispatches node-specific operations using visitor methods, often after traversal selects nodes.",
       "marks": 1
     },
@@ -217,12 +217,12 @@ window.PAPERROOM_LIBRARY["adp-14-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A mutable collection supports live iterators and an alternative snapshot iterator. Which trade-off is accurate?",
       "options": [
+        "Snapshot iterators must expose private data structures",
         "Snapshot iterators see every future mutation instantly",
         "A snapshot gives a stable view but may require memory/copying and not reflect later changes",
-        "Live iterators always ignore concurrent modifications safely",
-        "Snapshot iterators must expose private data structures"
+        "Live iterators always ignore concurrent modifications safely"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Snapshot traversal stabilizes the sequence at a chosen time, at possible memory/time cost; live iterators have different change semantics.",
       "marks": 1
     },
