@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A framework has an abstract `ReportCreator` with protected `createDocument()`, overridden by PdfCreator and HtmlCreator. Which description best matches Factory Method?",
       "options": [
-        "The creator decides product type through a polymorphic creation method",
         "The product class decides which creator will exist",
         "Every client must construct PdfDocument directly",
-        "The factory method only calls static functions"
+        "The factory method only calls static functions",
+        "The creator decides product type through a polymorphic creation method"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Concrete creators override the creation hook, and the common workflow can use the abstract Product contract.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** `Factory f = new CardFactory();` but `cardOnly()` exists only in CardFactory, not Factory. Does `f.cardOnly()` compile?",
       "options": [
+        "No, because CardFactory cannot implement interfaces",
         "Yes, because the runtime object is CardFactory",
         "No, because the declared Factory type lacks that method",
-        "Yes, if Factory is an interface",
-        "No, because CardFactory cannot implement interfaces"
+        "Yes, if Factory is an interface"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Only methods visible through the declared reference type are callable without casting; prefer exposing needed capabilities through appropriate contracts.",
       "snippet": "interface Factory { Payment create(); }\nclass CardFactory implements Factory {\n public Payment create() { return new Card(); }\n public void cardOnly() { }\n}\nFactory f = new CardFactory();\nf.cardOnly();",
       "marks": 1
@@ -88,12 +88,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A class has `create(int userId)` and `create(String email)` on the same class. Compared with overriding in Factory Method, which Java mechanism is demonstrated?",
       "options": [
-        "Overriding",
-        "Overloading",
         "Composition",
-        "Observer notification"
+        "Observer notification",
+        "Overriding",
+        "Overloading"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Different parameter lists with the same name are overloads; overridden methods share an inherited signature.",
       "marks": 1
     },
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** A concrete factory implements an interface whose create method returns `Payment`, but returns `String` instead. Why won't it compile?",
       "options": [
+        "The method has too many parameters",
         "Java forbids Strings in all factory methods",
         "String is not compatible with the Payment return type",
-        "Every factory must be abstract",
-        "The method has too many parameters"
+        "Every factory must be abstract"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "An override must have a compatible return type (including covariant subtypes), and String does not implement Payment.",
       "snippet": "interface Payment {}\ninterface PaymentFactory { Payment create(); }\nclass CardFactory implements PaymentFactory {\n  public String create() { return \"card\"; }\n}",
       "marks": 1
@@ -117,12 +117,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A payment UI chooses PayPal before calling `checkout(factory)`. Does a Factory Method design eliminate the need for every concrete selection decision anywhere in the application?",
       "options": [
-        "Yes, no provider choice is ever needed",
         "No, a composition/selection boundary still chooses a concrete creator",
         "Yes, every creator must be a singleton",
-        "No, checkout must know every concrete provider"
+        "No, checkout must know every concrete provider",
+        "Yes, no provider choice is ever needed"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Selection often happens at app setup or a provider registry; the reusable checkout workflow stays provider-neutral.",
       "marks": 1
     },
@@ -131,12 +131,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `ReportCreator` class owns a common `publishReport()` workflow that calls `createDocument()`. Which class should override `createDocument()` to make HTML documents?",
       "options": [
+        "The database entity for HTML",
         "Document interface",
         "HtmlCreator subclass of ReportCreator",
-        "Every caller of publishReport()",
-        "The database entity for HTML"
+        "Every caller of publishReport()"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "The concrete Creator overrides the factory hook and returns an HtmlDocument implementing the Document abstraction.",
       "marks": 1
     },
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A method receives an interface reference and executes it. Which line prints when called with `new EmailCreator()`?",
       "options": [
-        "SMS",
         "EMAIL",
         "Nothing",
-        "Both outputs"
+        "Both outputs",
+        "SMS"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "The runtime object is EmailCreator, so its overridden create() method returns Email.",
       "snippet": "interface Message { String label(); }\nclass Email implements Message { public String label(){return \"EMAIL\";} }\ninterface Creator { Message create(); }\nclass EmailCreator implements Creator { public Message create(){return new Email();} }\nstatic void send(Creator c) { System.out.println(c.create().label()); }\nsend(new EmailCreator());",
       "marks": 1
@@ -174,12 +174,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A new `MobileMoneyFactory` implements the existing `PaymentFactory` interface. What should remain unchanged if checkout was correctly decoupled?",
       "options": [
-        "The generic checkout(PaymentFactory) method",
         "The provider-selection registry necessarily",
         "The MobileMoney payment product",
-        "The new creator's implementation"
+        "The new creator's implementation",
+        "The generic checkout(PaymentFactory) method"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "A correctly abstracted checkout only invokes the factory and product contracts.",
       "marks": 1
     },
@@ -188,12 +188,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Diagram reasoning:** An abstract Creator declares create(); ConcreteCreator overrides it and creates ConcreteProduct. Which relationship is the Factory Method's key extension point?",
       "options": [
-        "Product inherits from Creator",
-        "ConcreteCreator inherits Creator and overrides creation",
         "Creator must own a List of Observers",
-        "ConcreteProduct contains the Creator"
+        "ConcreteProduct contains the Creator",
+        "Product inherits from Creator",
+        "ConcreteCreator inherits Creator and overrides creation"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The creator subclass controls the product construction choice via the overridable factory method.",
       "snippet": "abstract class Creator {\n  abstract Product create();\n  void process() { create().run(); }\n}\nclass EmailCreator extends Creator {\n  Product create() { return new EmailProduct(); }\n}",
       "marks": 1
@@ -203,12 +203,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A creator method promises `VirtualMachine createVM()`, and a subclass overrides it with `EC2 createVM()`, where EC2 implements VirtualMachine. What does Java permit?",
       "options": [
+        "The factory must return Object",
         "The override is invalid because types must match exactly",
         "A covariant return type, so EC2 is valid",
-        "Only void factory methods",
-        "The factory must return Object"
+        "Only void factory methods"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A concrete subtype can be returned covariantly from an overriding instance method.",
       "marks": 1
     },
@@ -217,12 +217,12 @@ window.PAPERROOM_LIBRARY["adp-5-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** One application always creates one immutable Product type and never changes it. Is Factory Method automatically better than directly calling `new Product()`?",
       "options": [
-        "Yes, every constructor needs a Creator subclass",
         "No, a direct constructor can be clearer if creation never varies",
         "Yes, because interfaces cannot be instantiated",
-        "No, Factory Method is illegal in Java"
+        "No, Factory Method is illegal in Java",
+        "Yes, every constructor needs a Creator subclass"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Use Factory Method when extensible or variable construction justifies its extra creator hierarchy.",
       "marks": 1
     },
