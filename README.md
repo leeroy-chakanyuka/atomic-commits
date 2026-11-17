@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | **9 playable papers**: eight Java design patterns (including six newly studied patterns) + one intermediate Spring Security |
+| ADP | 18 November 2026 | **6 playable papers**: Simple Factory, Factory Method, Abstract Factory, Strategy, Observer and Decorator |
 | ITS | 19 November 2026 | **18 playable papers**: 3 each for Chapters 8–12 plus 3 integrated mixed papers |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -44,9 +44,9 @@ The source scope follows the textbook *Database Systems: Design, Implementation,
 
 ## ADP topic tiles and exam pilots
 
-The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA**, and **TBD**. The fourth tile remains unnamed. Design Patterns now contains **eight playable papers**: the original 30-question, 90-minute Chain of Responsibility (138 marks) and Proxy (146 marks) papers, plus six **new 20-question, 75-minute** papers for **Simple Factory, Factory Method, Abstract Factory, Strategy, Observer, and Decorator** (120 additional original questions). Spring Security retains its 30-question, 90-minute intermediate paper (150 marks). Every paper has a detailed marking memorandum revealed only after submission; Java tracing, debugging, UML/Mermaid, applied design, testing, and implementation are emphasised. Spring Data JPA remains pending.
+The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA** and **TBD**. Only the Design Patterns tile currently has playable papers. The **six active papers** cover Simple Factory, Factory Method, Abstract Factory, Strategy, Observer and Decorator, each with 20 fully contextualised original Java questions and a 75-minute timer. Older Chain of Responsibility, Proxy and Spring Security pilot papers have been removed from the active library and source tree. Older browser-local attempts are not overwritten; the revised six papers now use new v2 storage keys so previous scores cannot be mistakenly associated with changed questions. Each paper has detailed marking memoranda revealed after submission. These papers are self-contained; no prior chat context or AI-model naming conventions are required.
 
-Examples include Java classes, Spring Security configuration, code tracing, debugging, test design and Mermaid diagrams. A staged curriculum for later Spring Security content is documented in `papers/adp/SECURITY-LAYERS.md`; **OAuth is intentionally outside the pilot**.
+The six active Design Patterns papers include Java class hierarchies, code tracing, debugging, realistic scenario analysis, JUnit test design and Mermaid diagrams. A separate staged outline for possible future Spring Security papers remains in `papers/adp/SECURITY-LAYERS.md`; there is currently no live Spring Security pilot.
 
 ## Rich questions and ITS sample database
 
@@ -75,7 +75,7 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `app.js`: exam engine, timer, local state, marking and review
 - `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
-- `papers/adp/*.js`: eight design-pattern papers (including the six new Java pattern banks) and one Spring Security paper
+- `papers/adp/*.js`: six standalone Java design-pattern practice papers; older pilots withdrawn
 - `rich-content.js`: sanitized Markdown and diagrams
 - `concept-atlas.js` / `concept-atlas.css`: ITS master/Chapter 8/Chapter 9 concept maps, zoomable viewport, streamlined concept chat and local learning signals
 - `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference

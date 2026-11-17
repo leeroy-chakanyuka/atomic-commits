@@ -1,36 +1,184 @@
-"use strict";
-window.PAPERROOM_LIBRARY = window.PAPERROOM_LIBRARY || {};
-(() => {
-  const q=(kind,prompt,marks,memo,extra={})=>({kind,prompt,marks,memo,...extra});
-  const mc=(prompt,options,correct,memo)=>q("Multiple choice",prompt,1,memo,{options,correct});
-  const tf=(prompt,correct,memo)=>q("True or false",prompt,2,memo,{correct});
-  const questions=[
-    q("Definitions","Define the **Observer** Pattern using a subreddit, its subscribers and a new-post event. Identify **Subject** and **Observer**.",6,"Subject/Subreddit maintains subscriptions and notifies on relevant change (3); Observer/UserAccount implements update() reaction (3)."),
-    q("Short answer","Why does an Observer interface commonly declare `update(Post post)`? Is passing a Post mandatory?",5,"Post carries event details to observers (2); no, update() can be argument-free and pull state, or take event object/subject (3)."),
-    mc("Which method normally loops over registered observers?",["Observer.update()","Subject.notifyObservers()","UserAccount.subscribe() alone","Post.getTitle()"],"B","B. notifyObservers() iterates subscribers and invokes their update method."),
-    mc("In a Reddit-like design, a user unsubscribes from a subreddit. Which relationship changes?",["The user account's class inheritance","The subject's registered-observer collection","The Post class's superclass","All other subreddits"],"B","B. Detach/removal affects that subject's observer list."),
-    mc("Which is a **push notification** Observer design?",["Observer.update(post) receives event data","Observer.update() asks the subject for latest post","Observer polls on a fixed timer without registration","Every user object inherits from Subreddit"],"A","A. The subject sends information in the update call."),
-    tf("The subject must know that every observer is a `UserAccount` concrete class.","false","False. Subject depends on common Observer abstraction, so different observer types can subscribe."),
-    tf("Calling `notifyObservers()` after every state change is a design decision; you may choose which changes trigger notifications.","true","True. Business requirements govern what constitutes a notifiable event."),
-    q("Code tracing","Determine the exact order of notification output after subscribe, unsubscribe and posting.",7,"First post: Alice then Bob (2); after Alice removed only Bob receives second post (2); output order follows ArrayList iteration (1); no notification for removed observer (2).",{snippet:"interface Observer { void update(String post); }\nclass User implements Observer {\n String name; User(String n){name=n;}\n public void update(String post){System.out.println(name+\" \"+post);}\n}\n// tech uses an ArrayList<Observer> and notifies in insertion order\ntech.addObserver(alice); tech.addObserver(bob);\ntech.addPost(\"Java\");\ntech.removeObserver(alice);\ntech.addPost(\"Spring\");"}),
-    q("Code tracing","Two subscriptions register the **same** Observer twice in a List. What usually happens when a new post triggers notification?",5,"With ArrayList allowing duplicates, update is invoked twice (3); use Set or guard against duplicates if one notification per observer is required (2).",{snippet:"List<Observer> observers = new ArrayList<>();\nobservers.add(alice);\nobservers.add(alice);\nfor (Observer o : observers) o.update(newPost);"}),
-    q("Java debugging","What failure could occur if an observer unregisters itself inside `update()` while a regular ArrayList is being iterated? Propose a safe approach.",7,"Structural list modification during fail-fast iteration may cause ConcurrentModificationException or skipped updates (3); iterate over snapshot, use CopyOnWriteArrayList or defer removals (3); define consistency semantics (1).",{snippet:"for (Observer observer : subscribers) {\n    observer.update(post); // observer calls removeObserver(this)\n}"}),
-    q("Error identification","The subreddit adds posts but never calls `notifyObservers`. Why do subscribers stay stale? Show the correct operation order.",6,"Observers do not automatically observe Java list mutations (2); add post then notify after successful change (2); pass new post or signal observers to pull state (2).",{snippet:"void addPost(Post p) {\n    posts.add(p);\n    // no notifyObservers call\n}"}),
-    q("Diagram reasoning","From the diagram, name the **one-to-many** relationship and the method that receives event data. Explain how a new EmailObserver can be added.",7,"One Subject holds many Observer references (2); update(Post) receives change (2); EmailObserver implements Observer, attaches without Subreddit depending on email concrete type (3).",{diagram:"classDiagram\nclass Subject {\n <<interface>>\n +addObserver(Observer)\n +removeObserver(Observer)\n +notifyObservers(Post)\n}\nclass Observer {\n <<interface>>\n +update(Post)\n}\nclass Subreddit {\n -List~Observer~ subscribers\n +addPost(Post)\n}\nclass UserAccount {\n +update(Post)\n}\nSubject <|.. Subreddit\nObserver <|.. UserAccount\nSubreddit o-- Observer : notifies 0..*"}),
-    q("Scenario application","A Reddit-like subreddit has rules about NSFW content. How would you ensure only eligible observers receive an update **without** hard-coding every UserAccount class?",7,"Registered observers via interface (2); filter based on subscription/notification preference or eligibility policy (2); user-specific rules evaluated at delivery without assuming concrete class (2); handle privacy (1)."),
-    q("Scenario analysis","The platform bans a member. Does the Observer Pattern **automatically** remove them from subscriber notifications?",5,"No (2); ban/unsubscribe are application business rules (2); explicitly call removeObserver if that is desired (1)."),
-    q("Java implementation","Implement interfaces `Observer.update(Post)` and `Subject.add/remove/notify`, plus `TechnologySubreddit.addPost` using a Java collection.",10,"Observer/Subject contracts (3); collection of Observer (2); safe add/remove (2); addPost triggers notify(post) (2); iteration delegates update correctly (1)."),
-    q("Java implementation","Add a `PushNotificationObserver` alongside `UserAccount` without changing the subject's subscription API. Show update() behavior.",8,"Observer implementation with update(Post) (3); send push via injected adapter/service (2); subject still holds Observer interface (2); handle delivery errors appropriately (1)."),
-    q("Testing","Design four tests for a subreddit: attached observer notified, detached observer silent, duplicate subscription policy, and update failure isolation.",8,"Register→update once (2); remove→none (2); duplicate handling as documented (2); failure handling policy verified so behavior is explicit (2)."),
-    q("Comparison","Observer and **Strategy** both rely on interfaces. Explain their different relationship cardinality and purpose.",7,"Observer is one-to-many notifications on state change (3); Strategy is one selected algorithm delegated to by context (3); both use polymorphism but address different problems (1)."),
-    q("Architecture trade-off","Your subreddit has one million subscribers. What practical weaknesses emerge in synchronous in-process `notifyObservers()`, and how might production messaging help?",8,"Slow O(N) fan-out/latency (2); failures and memory/process boundaries (2); queue/event-bus async delivery with retries/batching/backpressure (3); distinguish application architecture from basic Observer pattern (1)."),
-    q("Integrated reasoning","Design **new-post notifications** with subscribe/unsubscribe, `update(Post)`, content eligibility and user preferences. Explain whether the subject should send entire posts or minimal event IDs.",10,"Subject holds abstraction and lifecycle operations (3); add post triggers notify (2); eligibility/preferences apply before delivery (2); push payload vs pull-by-ID tradeoffs for privacy/size/staleness (2); tests (1).")
-  ].map((question,i)=>({id:i+1,...question}));
-  window.PAPERROOM_LIBRARY["adp-8-1"]={
-    module:"ADP",moduleName:"Application Development",chapter:8,title:"Observer Pattern",session:1,
-    limitSeconds:4500,version:1,group:"design-patterns",
-    intro:"20 original Java Observer questions using subreddits, user subscriptions, update(Post), notification fan-out, collection pitfalls, UML, and tests.",
-    source:"Original Java practice; social media behavior is an illustrative architecture, not a claim about Reddit's actual implementation.",
-    questions,totalMarks:questions.reduce((sum,x)=>sum+x.marks,0)
-  };
-})();
+window.PAPERROOM_LIBRARY=window.PAPERROOM_LIBRARY||{};
+window.PAPERROOM_LIBRARY["adp-8-1"]={
+  "module": "ADP",
+  "moduleName": "Application Development",
+  "chapter": 8,
+  "title": "Observer Pattern",
+  "session": 1,
+  "limitSeconds": 4500,
+  "version": 1,
+  "group": "design-patterns",
+  "intro": "20 fully independent Java questions on event subscriptions across deliveries, inventory, news, weather, CI pipelines and ticket alerts, with tracing, diagrams, test cases and memos.",
+  "source": "Original Observer pattern exam practice; all scenarios are simplified fictional Java systems.",
+  "questions": [
+    {
+      "id": 1,
+      "kind": "Definitions",
+      "prompt": "**Scenario:** A parcel-delivery application tracks orders. When an order changes from 'packed' to 'out for delivery', the mobile app, a customer email service and a warehouse dashboard may all need to react. The Order object must not depend on these three concrete notification implementations.\n\n**Task:** Define the Observer pattern. Identify the **Subject**, **Observer interface**, concrete observers and the **one-to-many** relationship in this order-tracking system.",
+      "marks": 6,
+      "memo": "Observer maintains dependents that are notified of a subject's relevant state changes (2). Order is Subject; OrderObserver.update(event) is Observer contract (2); MobileNotifier, EmailNotifier and DashboardUpdater are distinct concrete observers held in subject's registry (2)."
+    },
+    {
+      "id": 2,
+      "kind": "Short answer",
+      "prompt": "**Scenario:** A news feed maintains a list of articles. A new article triggers registered desktop and mobile subscribers. The Subject can call either `observer.update(article)` or `observer.update()`.\n\n**Task:** Explain the **push** versus **pull** alternatives. Why might a method accept an `Article` object, and what trade-off comes with sending large articles?",
+      "marks": 5,
+      "memo": "Push: update(Article) sends event details directly (2); pull: update() causes observer to ask subject for changed data (2); large payloads may waste bandwidth/couple observers to data representation, so ID/event can be preferable (1)."
+    },
+    {
+      "id": 3,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** A stock-price tracker stores a list of registered `PriceObserver` objects. The `StockTicker` updates its current price and needs to notify those observers.\n\nWhich method should iterate registered observers?",
+      "marks": 1,
+      "memo": "B. StockTicker.notifyObservers() is the subject's notification loop.",
+      "options": [
+        "PriceObserver.update() on one concrete observer",
+        "StockTicker.notifyObservers()",
+        "StockTicker.price() getter only",
+        "new PriceObserver() for every price change"
+      ],
+      "correct": "B"
+    },
+    {
+      "id": 4,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** A weather dashboard subscribes to temperature changes. A user closes the dashboard and unsubscribes while another dashboard remains active.\n\nWhat should `removeObserver(closedDashboard)` change?",
+      "marks": 1,
+      "memo": "B. Remove that dashboard's reference from the WeatherStation's registry, without deleting other subscribers.",
+      "options": [
+        "Delete WeatherStation's class",
+        "Remove only the closed dashboard from the subject's observer collection",
+        "Remove all other dashboards",
+        "Change the concrete Observer interface"
+      ],
+      "correct": "B"
+    },
+    {
+      "id": 5,
+      "kind": "Multiple choice",
+      "prompt": "**Scenario:** A build server publishes an event whenever a build fails. Its `notifyObservers(BuildEvent event)` passes the event to several listeners rather than requiring them to query the build server.\n\nThis illustrates which event-delivery style?",
+      "marks": 1,
+      "memo": "A. Push notification because information travels in update(event).",
+      "options": [
+        "Push: the event is sent to update(event)",
+        "Pull: the observer fetches current state",
+        "Polling without a subject",
+        "Inheritance-based event handling only"
+      ],
+      "correct": "A"
+    },
+    {
+      "id": 6,
+      "kind": "True or false",
+      "prompt": "**Scenario:** A billing service wants to notify a web UI, a webhook and an audit recorder. The developer thinks `Invoice` must store three lists typed as `WebUI`, `Webhook` and `AuditRecorder`.\n\n**Statement:** The subject must know every concrete observer class. Correct the statement if false.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
+      "marks": 2,
+      "memo": "False. Subject keeps Observer interface references; any concrete class implementing that contract may register, avoiding direct coupling.",
+      "correct": "false"
+    },
+    {
+      "id": 7,
+      "kind": "True or false",
+      "prompt": "**Scenario:** A Git repository watcher detects every file save, but the product manager only wants notifications when a commit is pushed to the remote branch.\n\n**Statement:** Observer requires notifications on **every** internal state change, even if the application regards the change as irrelevant. Correct or justify.\n\n**Task:** Decide whether the statement is true or false, and explain your reasoning.",
+      "marks": 2,
+      "memo": "False. The application defines which state transitions are observable and when notifyObservers() is called. Only relevant commit-push events need broadcast.",
+      "correct": "false"
+    },
+    {
+      "id": 8,
+      "kind": "Code tracing",
+      "prompt": "**Scenario:** A warehouse inventory tracker notifies two registered listeners in insertion order. The subject uses an `ArrayList<StockObserver>`. Alice is registered before Bob, then Alice is removed before the second stock update.\n\n**Task:** State the exact output (including the number and order of lines). Explain why the second event reaches fewer listeners.",
+      "marks": 7,
+      "memo": "Exactly three lines: Alice 12, Bob 12, Bob 7 (3). ArrayList preserves registration order (1); removal detaches Alice (2), so later notification goes only to Bob (1).",
+      "snippet": "interface StockObserver { void update(int quantity); }\nclass Listener implements StockObserver {\n  private final String name;\n  Listener(String name){ this.name=name; }\n  public void update(int q){ System.out.println(name+\" \"+q); }\n}\nclass Inventory {\n  private final java.util.List<StockObserver> observers = new java.util.ArrayList<>();\n  void add(StockObserver o){ observers.add(o); }\n  void remove(StockObserver o){ observers.remove(o); }\n  void setStock(int qty){ for(StockObserver o: observers) o.update(qty); }\n}\nInventory inventory = new Inventory();\nListener alice = new Listener(\"Alice\");\nListener bob = new Listener(\"Bob\");\ninventory.add(alice); inventory.add(bob);\ninventory.setStock(12);\ninventory.remove(alice);\ninventory.setStock(7);"
+    },
+    {
+      "id": 9,
+      "kind": "Code tracing",
+      "prompt": "**Scenario:** A price alert subject stores observers in an ordinary Java `ArrayList`, which permits duplicate entries. A user accidentally subscribes twice with the **same object reference**.\n\n**Task:** How many calls to `update()` occur per event? Explain whether the Observer pattern itself prevents this and suggest a remedy.",
+      "marks": 5,
+      "memo": "Two update calls per event (3); Observer pattern does not define duplicate prevention (1); a Set or duplicate check can enforce one registration (1).",
+      "snippet": "java.util.List<Observer> listeners = new java.util.ArrayList<>();\nlisteners.add(alice);\nlisteners.add(alice);\nfor (Observer observer : listeners) observer.update(event);"
+    },
+    {
+      "id": 10,
+      "kind": "Java debugging",
+      "prompt": "**Scenario:** An app lets users unsubscribe during a notification callback. Its subject iterates an `ArrayList` using a for-each loop. One observer's `update()` calls `removeObserver(this)` on the same list.\n\n**Task:** Explain the risk during iteration. Propose two safe approaches and state what consistency each implies.",
+      "marks": 7,
+      "memo": "Fail-fast iterator may throw ConcurrentModificationException when modified mid-iteration (3); iterate a snapshot to finish original set or use CopyOnWriteArrayList for stable iteration snapshot (3); define whether removed listeners get current event (1).",
+      "snippet": "for (Observer o : observers) {\n    o.update(event); // some observers call observers.remove(this)\n}"
+    },
+    {
+      "id": 11,
+      "kind": "Error identification",
+      "prompt": "**Scenario:** A news website stores every published article in `posts`. Users have registered observers, but the web team notices nobody receives new-article notifications even though the list visibly changes.\n\n**Task:** Identify the missing Observer step and write the correct ordering of state mutation and notification.",
+      "marks": 6,
+      "memo": "Changing ArrayList is not an automatic event (2); add article successfully, then call notifyObservers(article) (2); each attached observer receives update(article) (2).",
+      "snippet": "void publish(Article article) {\n    posts.add(article);\n    // notification code omitted\n}"
+    },
+    {
+      "id": 12,
+      "kind": "Diagram reasoning",
+      "prompt": "**Scenario:** A weather station sends temperature updates to a phone display and an archive logger. The subject should have no direct dependency on either concrete display class.\n\n**Task:** Read the UML and identify Subject, Observer, two concrete observer types, the registration operations and the one-to-many relationship.",
+      "marks": 7,
+      "memo": "WeatherStation is Subject implementation and manages attach/detach/notify (2); WeatherObserver is interface with update(Reading) (2); PhoneDisplay and ArchiveLogger implement it (2); registry supplies one-to-many (1).",
+      "diagram": "classDiagram\nclass WeatherSubject {\n <<interface>>\n +addObserver(WeatherObserver)\n +removeObserver(WeatherObserver)\n +notifyObservers(Reading)\n}\nclass WeatherObserver {\n <<interface>>\n +update(Reading)\n}\nclass WeatherStation {\n -List~WeatherObserver~ observers\n +record(Reading)\n}\nclass PhoneDisplay\nclass ArchiveLogger\nWeatherSubject <|.. WeatherStation\nWeatherObserver <|.. PhoneDisplay\nWeatherObserver <|.. ArchiveLogger\nWeatherStation o-- WeatherObserver : notifies 0..*"
+    },
+    {
+      "id": 13,
+      "kind": "Scenario application",
+      "prompt": "**Scenario:** A forum has optional thread subscriptions. A user subscribes to a programming discussion and wants alerts on new replies, but has disabled notifications for posts marked 'spoiler'. Other subscribed users may have different preferences.\n\n**Task:** Model the Subject and Observer roles and explain where per-user notification preferences should be evaluated without hard-coding every user type into Thread.",
+      "marks": 7,
+      "memo": "Thread as subject and ReplyObserver contract (2); subscription registry and update(ReplyEvent) (2); filter preferences at notification/delivery layer or observer-specific policy (2); avoid leaking spoiler payload before eligibility filtering (1)."
+    },
+    {
+      "id": 14,
+      "kind": "Scenario analysis",
+      "prompt": "**Scenario:** A customer unsubscribes from order notifications, but their order remains active and they may still view the order in the application.\n\n**Task:** Does detaching them as an Observer delete the customer account or cancel the order? Distinguish the subscription state from underlying business state.",
+      "marks": 5,
+      "memo": "No, detach changes only event registration/delivery (2); customer/order lifecycle remains separate (2); unsubscribing is an explicit business action determining call to removeObserver (1)."
+    },
+    {
+      "id": 15,
+      "kind": "Java implementation",
+      "prompt": "**Scenario:** A library sends updates when a reserved book becomes available. Registered readers receive the `BookAvailableEvent`. The subject must allow attaching and detaching observers.\n\n**Task:** Write Java `AvailabilityObserver.update(BookAvailableEvent)`, `AvailabilitySubject.add/remove/notify` and a `LibraryReservation` concrete subject that notifies after updating availability.",
+      "marks": 10,
+      "memo": "Correct observer/subject interfaces (3); subject holds collection of Observer references (2); attach and detach methods (2); state change triggers notify(event) (2); event delivered to every registered observer (1)."
+    },
+    {
+      "id": 16,
+      "kind": "Java implementation",
+      "prompt": "**Scenario:** A CI pipeline needs to notify both a Slack channel and an email service when a release build fails. The pipeline should only depend on `BuildObserver`, not the concrete delivery integrations.\n\n**Task:** Sketch two concrete Java observer classes, showing constructor-injected delivery clients and `update(BuildEvent)` methods. Explain how the subject registers them.",
+      "marks": 8,
+      "memo": "Both observer implementations implement BuildObserver.update(event) (3); each uses injected Slack/Email client to deliver (2); pipeline registers through Observer interface (2); errors/retries acknowledged (1)."
+    },
+    {
+      "id": 17,
+      "kind": "Testing",
+      "prompt": "**Scenario:** A traffic-monitoring subject broadcasts incident events. The spec requires one callback per registered observer and no callback after unsubscribe. A failing observer must not silently prevent all later observers from hearing about incidents.\n\n**Task:** Design four JUnit 5 tests: registered, detached, duplicate and failure behavior. State expected assertions for each.",
+      "marks": 8,
+      "memo": "Once after register (2); zero after remove (2); duplicate behavior matches documented Set/list semantics (2); exception handling or isolation policy is explicitly verified (2)."
+    },
+    {
+      "id": 18,
+      "kind": "Comparison",
+      "prompt": "**Scenario:** A weather app reacts to new readings by notifying all screens, while separately choosing one of three weather prediction algorithms for its forecasts.\n\n**Task:** Identify which requirement uses **Observer** and which uses **Strategy**. Compare whether each typically involves one-to-many event subscribers or one selected delegated algorithm.",
+      "marks": 7,
+      "memo": "Observer notifies one-to-many subscribed screens on readings (3); Strategy selects one prediction algorithm behind shared interface for forecast computation (3); both use interfaces but different interaction patterns (1)."
+    },
+    {
+      "id": 19,
+      "kind": "Architecture trade-off",
+      "prompt": "**Scenario:** A shopping platform has one million users subscribed to product restock notifications. An in-memory `for` loop calling every observer synchronously takes minutes and fails if the process dies.\n\n**Task:** Name at least three bottlenecks and propose an event-bus or queue-based solution. Explain how this relates to, but goes beyond, the textbook Observer pattern.",
+      "marks": 8,
+      "memo": "Large synchronous fan-out latency (2); memory/process locality and unreliable delivery/failure handling (2); publish restock event to queue/bus, async consumers with retries/batching/backpressure (3); messaging is scalable distribution of Observer-like events (1)."
+    },
+    {
+      "id": 20,
+      "kind": "Integrated reasoning",
+      "prompt": "**Scenario:** A ticket-booking site sends alerts when an event has new seats available. Users register and unregister alerts, choose channels (email or push), and may receive events for several venues. The site must avoid revealing private reservation information in notifications.\n\n**Task:** Design Subject and Observer interfaces with an event payload, registration lifecycle and delivery flow. Discuss push-vs-pull payload choices, privacy, and one testing concern.",
+      "marks": 10,
+      "memo": "EventAvailabilitySubject + AvailabilityObserver abstraction and subscription lifecycle (3); notify when seats change and invoke update(event) (2); channel/venue filtering (2); send minimal event ID publicly, fetch private data after auth where appropriate (2); test notification/detach or idempotence (1)."
+    }
+  ],
+  "totalMarks": 113
+};
