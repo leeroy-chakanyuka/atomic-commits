@@ -25,7 +25,7 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
-  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1"];
+  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1","adp-21-1","adp-22-1","adp-23-1","adp-24-1","adp-25-1","adp-26-1","adp-27-1","adp-28-1","adp-29-1","adp-30-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"17 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"27 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -163,13 +163,23 @@
           <div class="adp-subsection"><strong>Interpreter</strong><p>Expression trees, terminal and nonterminal grammar rules, evaluation and parsing.</p>${adpPaper("adp-13-1","Practice Paper 10")}</div>
           <div class="adp-subsection"><strong>Iterator</strong><p>Java Iterable and Iterator, cursor state, custom traversals and modification bugs.</p>${adpPaper("adp-14-1","Practice Paper 11")}</div>
           <div class="adp-subsection"><strong>Visitor</strong><p>accept/visit, double dispatch, expression trees, adding operations and element types.</p>${adpPaper("adp-15-1","Practice Paper 12")}</div>`},
-        {number:"02",slug:"spring-security",title:"Spring Security",status:"Papers pending",
-          description:"Reserved for Spring request security, authentication, authorization and CSRF practice.",
-          detail:`<p class="adp-topic-guidance">The earlier pilot question paper has been withdrawn. This topic has no active practice papers yet.</p>
-            <div class="adp-resource-links"><a href="https://docs.spring.io/spring-security/reference/servlet/configuration/java.html" target="_blank" rel="noopener noreferrer">Java configuration</a><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noopener noreferrer">Filter chain architecture</a></div>`},
-        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"Papers pending",
-          description:"Reserved for JPA entities, repositories, relationships and persistence practice.",
-          detail:`<p class="adp-topic-guidance">No JPA questions have been published yet.</p>`},
+
+        {number:"02",slug:"spring-security",title:"Spring Security",status:"5 papers ready",
+          description:"Four original 20-question Java papers plus an 80-question mixed mega exam.",
+          detail:`<p class="adp-topic-guidance">4 sets: 20 questions and 30 minutes each. Plus one 80-question mega: 120 minutes. Java code, scenario analysis, auto-marking and explanatory memos after submission.</p>
+          <div class="adp-subsection"><strong>MEGA · All Spring Security topics</strong><p>80 mixed questions on authorization, CSRF, authentication, OAuth2, JWT, and testing.</p>${adpPaper("adp-29-1","Spring Security Mega Paper")}</div>
+          <div class="adp-subsection"><strong>Set 01 · Filter Chain & Authorization</strong><p>Servlet filters, matchers, roles and HTTP status outcomes.</p>${adpPaper("adp-21-1","Spring Security Set 01")}</div>
+          <div class="adp-subsection"><strong>Set 02 · Authentication, Sessions & CSRF</strong><p>Password hashing, cookies, CSRF, CORS and stateless sessions.</p>${adpPaper("adp-22-1","Spring Security Set 02")}</div>
+          <div class="adp-subsection"><strong>Set 03 · JWT, OAuth2 & Roles</strong><p>Resource servers, JWT validation, scopes, role mappings and PKCE.</p>${adpPaper("adp-23-1","Spring Security Set 03")}</div>
+          <div class="adp-subsection"><strong>Set 04 · Tests, Threats & Debugging</strong><p>MockMvc, method security, IDOR, CORS preflight and debugging.</p>${adpPaper("adp-24-1","Spring Security Set 04")}</div>`},
+        {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"5 papers ready",
+          description:"Four original 20-question Java papers plus an 80-question mixed mega exam.",
+          detail:`<p class="adp-topic-guidance">4 sets: 20 questions and 30 minutes each. Plus one 80-question mega: 120 minutes. Java JPA mappings, queries, transactions and detailed auto-marked memos.</p>
+          <div class="adp-subsection"><strong>MEGA · All JPA topics</strong><p>80 mixed questions on entities, relationships, transactions, repositories and performance.</p>${adpPaper("adp-30-1","Spring Data JPA Mega Paper")}</div>
+          <div class="adp-subsection"><strong>Set 01 · Entities, IDs & Lifecycle</strong><p>Entity mappings, identifiers, lifecycle states, dirty checking and value objects.</p>${adpPaper("adp-25-1","Spring Data JPA Set 01")}</div>
+          <div class="adp-subsection"><strong>Set 02 · Relationships, Cascades & Fetching</strong><p>Owning sides, foreign keys, orphan removal, fetch modes and N+1.</p>${adpPaper("adp-26-1","Spring Data JPA Set 02")}</div>
+          <div class="adp-subsection"><strong>Set 03 · Transactions & Concurrency</strong><p>Transactional boundaries, rollback, flush, merge and optimistic locking.</p>${adpPaper("adp-27-1","Spring Data JPA Set 03")}</div>
+          <div class="adp-subsection"><strong>Set 04 · Repositories, JPQL & Pagination</strong><p>Derived queries, Page, Slice, bulk updates and projections.</p>${adpPaper("adp-28-1","Spring Data JPA Set 04")}</div>`},
         {number:"04",slug:"solid",title:"SOLID Principles",status:"4 papers ready",
           description:"Three topic papers plus a 60-question mixed mega exam across all five SOLID principles.",
           detail:`<p class="adp-topic-guidance">Individual papers: 20 questions and 30 minutes each. The mega paper mixes all 60 questions across SRP, OCP, LSP, ISP and DIP with a 90-minute timer. Both are automatically marked with memos after submission.</p>
@@ -188,9 +198,19 @@
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
         <p>Design Patterns, Spring Security, Spring Data JPA and SOLID Principles.</p></div>
-        <div class="module-summary-chip"><strong>17</strong><small>papers</small></div></div></div>
+        <div class="module-summary-chip"><strong>27</strong><small>papers</small></div></div></div>
+
+        <section class="adp-mega-section" aria-label="ADP mega exams">
+          <div class="library-heading"><div><span class="section-kicker">MIXED MOCK EXAMS</span><h2>Mega exams.</h2></div><small>4 directly accessible exams</small></div>
+          <div class="adp-mega-grid">
+            <a class="adp-mega-link" href="${sessionHash("adp-19-1")}"><span class="adp-mega-eyebrow">SOLID PRINCIPLES</span><strong>60-question mega</strong><small>90 minutes · 60 marks</small><span class="adp-mega-action">Start SOLID mega →</span></a>
+            <a class="adp-mega-link" href="${sessionHash("adp-20-1")}"><span class="adp-mega-eyebrow">DESIGN PATTERNS</span><strong>120-question mega</strong><small>180 minutes · 120 marks</small><span class="adp-mega-action">Start patterns mega →</span></a>
+            <a class="adp-mega-link" href="${sessionHash("adp-29-1")}"><span class="adp-mega-eyebrow">SPRING SECURITY</span><strong>80-question mega</strong><small>120 minutes · 80 marks</small><span class="adp-mega-action">Start Security mega →</span></a>
+            <a class="adp-mega-link" href="${sessionHash("adp-30-1")}"><span class="adp-mega-eyebrow">SPRING DATA JPA</span><strong>80-question mega</strong><small>120 minutes · 80 marks</small><span class="adp-mega-action">Start JPA mega →</span></a>
+          </div>
+        </section>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>17 live papers · 4 topics</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>27 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
               <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
