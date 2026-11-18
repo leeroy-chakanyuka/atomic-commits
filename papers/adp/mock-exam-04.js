@@ -15,7 +15,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q01.** Simple Factory is one of the original 23 Gang of Four patterns, alongside Abstract Factory and Factory Method.",
       "correct": "false",
-      "memo": "Simple Factory is a common creation idiom but is not a separate one of the original GoF 23 patterns.",
+      "memo": "**Correct answer: FALSE.** Simple Factory is a common creation idiom but is not a separate one of the original GoF 23 patterns.",
       "marks": 2,
       "truthOnly": true,
       "id": 1,
@@ -25,17 +25,18 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q02.** In modern Spring Security 6 configuration, an application can declare a `SecurityFilterChain` bean instead of extending the removed WebSecurityConfigurerAdapter.",
       "correct": "true",
-      "memo": "SecurityFilterChain bean configuration is the modern approach in Spring Security 6.",
+      "memo": "**Correct answer: TRUE.** SecurityFilterChain bean configuration is the modern approach in Spring Security 6.",
       "marks": 2,
       "truthOnly": true,
       "id": 2,
-      "section": "SECTION ONE · TRUE OR FALSE"
+      "section": "SECTION ONE · TRUE OR FALSE",
+      "snippet": "@Bean\nSecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n  http.authorizeHttpRequests(a -> a\n    .requestMatchers(\"/status\").permitAll()\n    .anyRequest().authenticated());\n  return http.build();\n}"
     },
     {
       "kind": "True or false",
       "prompt": "**Q03.** Strategy can vary an object's algorithm by injecting a different implementation of a common strategy interface.",
       "correct": "true",
-      "memo": "The context delegates to an interchangeable algorithm object.",
+      "memo": "**Correct answer: TRUE.** The context delegates to an interchangeable algorithm object.",
       "marks": 2,
       "truthOnly": true,
       "id": 3,
@@ -45,7 +46,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q04.** The JPA default fetch type for a `@ManyToOne` relationship is LAZY.",
       "correct": "false",
-      "memo": "@ManyToOne defaults to EAGER by the JPA specification, though explicit LAZY is common.",
+      "memo": "**Correct answer: FALSE.** @ManyToOne defaults to EAGER by the JPA specification, though explicit LAZY is common.",
       "marks": 2,
       "truthOnly": true,
       "id": 4,
@@ -55,7 +56,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q05.** The Open/Closed Principle says that adding a new class that implements an existing interface is always forbidden.",
       "correct": "false",
-      "memo": "OCP encourages extensibility through suitable interfaces, new subclasses and other extension points.",
+      "memo": "**Correct answer: FALSE.** OCP encourages extensibility through suitable interfaces, new subclasses and other extension points.",
       "marks": 2,
       "truthOnly": true,
       "id": 5,
@@ -65,7 +66,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q06.** Each Observer must hold references to all other observers before the subject can notify its subscribers.",
       "correct": "false",
-      "memo": "The subject maintains subscribers; observers need not know one another.",
+      "memo": "**Correct answer: FALSE.** The subject maintains subscribers; observers need not know one another.",
       "marks": 2,
       "truthOnly": true,
       "id": 6,
@@ -75,7 +76,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q07.** A Bridge abstraction typically holds a reference to an implementation interface rather than inheriting from each concrete implementation.",
       "correct": "true",
-      "memo": "Bridge uses composition to separate abstraction and implementation hierarchies.",
+      "memo": "**Correct answer: TRUE.** Bridge uses composition to separate abstraction and implementation hierarchies.",
       "marks": 2,
       "truthOnly": true,
       "id": 7,
@@ -85,7 +86,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q08.** Applying `@RequestBody` to a DTO parameter automatically enforces every Bean Validation constraint even when validation was never activated.",
       "correct": "false",
-      "memo": "Validation normally requires @Valid/@Validated or appropriate activation; @RequestBody alone maps the body.",
+      "memo": "**Correct answer: FALSE.** Validation normally requires @Valid/@Validated or appropriate activation; @RequestBody alone maps the body.",
       "marks": 2,
       "truthOnly": true,
       "id": 8,
@@ -95,11 +96,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "True or false",
       "prompt": "**Q09.** The Visitor pattern's `element.accept(visitor)` followed by `visitor.visit(this)` supports type-specific operation dispatch.",
       "correct": "true",
-      "memo": "This two-stage process is commonly called double dispatch.",
+      "memo": "**Correct answer: TRUE.** This two-stage process is commonly called double dispatch.",
       "marks": 2,
       "truthOnly": true,
       "id": 9,
-      "section": "SECTION ONE · TRUE OR FALSE"
+      "section": "SECTION ONE · TRUE OR FALSE",
+      "snippet": "class VideoFile implements FileElement {\n  @Override public void accept(FileVisitor visitor) {\n    visitor.visit(this);\n  }\n}"
     },
     {
       "kind": "Fill in the blanks",
@@ -111,7 +113,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Singleton pattern"
         ]
       ],
-      "memo": "Singleton manages access to a single shared instance.",
+      "memo": "**Correct answer: `Singleton`.** Singleton manages access to a single shared instance.",
       "marks": 2,
       "id": 10,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -126,7 +128,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "CrossOrigin"
         ]
       ],
-      "memo": "@CrossOrigin supplies CORS policy for a controller or method.",
+      "memo": "**Correct answer: `@CrossOrigin`.** @CrossOrigin supplies CORS policy for a controller or method.",
       "marks": 2,
       "id": 11,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -143,7 +145,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Open-Closed Principle"
         ]
       ],
-      "memo": "OCP is Open/Closed Principle.",
+      "memo": "**Correct answer: `OCP`.** OCP is Open/Closed Principle.",
       "marks": 2,
       "id": 12,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -158,7 +160,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "RequestParam"
         ]
       ],
-      "memo": "@RequestParam binds request parameters, including query-string values.",
+      "memo": "**Correct answer: `@RequestParam`.** @RequestParam binds request parameters, including query-string values.",
       "marks": 2,
       "id": 13,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -173,7 +175,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Id"
         ]
       ],
-      "memo": "@Id marks the primary key attribute.",
+      "memo": "**Correct answer: `@Id`.** @Id marks the primary key attribute.",
       "marks": 2,
       "id": 14,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -188,7 +190,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Visitor pattern"
         ]
       ],
-      "memo": "Visitor separates operations from an element hierarchy through accept/visit.",
+      "memo": "**Correct answer: `Visitor`.** Visitor separates operations from an element hierarchy through accept/visit.",
       "marks": 2,
       "id": 15,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -203,7 +205,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Flyweight pattern"
         ]
       ],
-      "memo": "Flyweight caches shared intrinsic state and keeps per-object state elsewhere.",
+      "memo": "**Correct answer: `Flyweight`.** Flyweight caches shared intrinsic state and keeps per-object state elsewhere.",
       "marks": 2,
       "id": 16,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -218,7 +220,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "SecurityFilterChain bean"
         ]
       ],
-      "memo": "http.build() returns the configured SecurityFilterChain.",
+      "memo": "**Correct answer: `SecurityFilterChain`.** http.build() returns the configured SecurityFilterChain.",
       "marks": 2,
       "id": 17,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -233,7 +235,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "HTTP DELETE"
         ]
       ],
-      "memo": "DELETE requests deletion of the identified resource.",
+      "memo": "**Correct answer: `DELETE`.** DELETE requests deletion of the identified resource.",
       "marks": 2,
       "id": 18,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -248,7 +250,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "ManyToOne"
         ]
       ],
-      "memo": "Each CartItem has one cart; the owning side is commonly @ManyToOne.",
+      "memo": "**Correct answer: `@ManyToOne`.** Each CartItem has one cart; the owning side is commonly @ManyToOne.",
       "marks": 2,
       "id": 19,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -263,7 +265,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
           "Builder pattern"
         ]
       ],
-      "memo": "Builder supports stepwise construction of complex objects.",
+      "memo": "**Correct answer: `Builder`.** Builder supports stepwise construction of complex objects.",
       "marks": 2,
       "id": 20,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -273,12 +275,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q21.** A newsfeed supports HTMLRenderer and PdfRenderer, while articles and newsletters are separate types. The API needs combinations without subclasses such as HtmlArticle and PdfNewsletter. Choose:",
       "options": [
         "Decorator",
-        "Bridge",
         "Observer",
+        "Bridge",
         "Flyweight"
       ],
-      "correct": "B",
-      "memo": "Bridge separates document abstractions from output renderer implementations.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** Bridge separates document abstractions from output renderer implementations.",
       "marks": 2,
       "id": 21,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -287,13 +289,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q22.** A developer defines a Product interface and a separate `createProduct()` method overridden by specialized creator subclasses. This is:",
       "options": [
-        "Singleton",
-        "Adapter",
         "Factory Method",
-        "Interpreter"
+        "Interpreter",
+        "Adapter",
+        "Singleton"
       ],
-      "correct": "C",
-      "memo": "Factory Method uses polymorphic product creation through creator implementations.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Factory Method uses polymorphic product creation through creator implementations.",
       "marks": 2,
       "id": 22,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -303,12 +305,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q23.** A deployment wizard constructs a complex ServerConfig in steps for region, disk size, VM type and firewall rules. Which pattern?",
       "options": [
         "Iterator",
+        "Builder",
         "Visitor",
-        "Observer",
-        "Builder"
+        "Observer"
       ],
-      "correct": "D",
-      "memo": "Builder helps create objects through an ordered or fluent sequence of configuration steps.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Builder helps create objects through an ordered or fluent sequence of configuration steps.",
       "marks": 2,
       "id": 23,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -317,13 +319,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q24.** What prints from this `Notification` decorator chain?",
       "options": [
+        "EMAIL",
         "LOG EMAIL",
-        "EMAIL LOG",
         "LOG",
-        "EMAIL"
+        "EMAIL LOG"
       ],
-      "correct": "A",
-      "memo": "Outer LogDecorator prints LOG before delegating to Email's send, printing EMAIL.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Outer LogDecorator prints LOG before delegating to Email's send, printing EMAIL.",
       "snippet": "interface Notification { void send(); }\nclass Email implements Notification { public void send(){System.out.print(\"EMAIL\");} }\nclass LogDecorator implements Notification {\n  Notification n;\n  LogDecorator(Notification n){this.n=n;}\n  public void send(){System.out.print(\"LOG \");n.send();}\n}\nnew LogDecorator(new Email()).send();",
       "marks": 2,
       "id": 24,
@@ -333,13 +335,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q25.** An editor stores operations as objects so the user can undo drawing, moving and deleting shapes. Which interface is central?",
       "options": [
-        "Visitor",
         "Command",
+        "Visitor",
         "Iterable",
         "Observer"
       ],
-      "correct": "B",
-      "memo": "Command objects encapsulate operations and may carry undo state.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Command objects encapsulate operations and may carry undo state.",
       "marks": 2,
       "id": 25,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -348,13 +350,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q26.** A user switches between alphabetical, chronological and relevance sorting without changing the containing list's client code. Which pattern best models the algorithms?",
       "options": [
-        "Bridge",
-        "Decorator",
         "Strategy",
-        "Singleton"
+        "Singleton",
+        "Decorator",
+        "Bridge"
       ],
-      "correct": "C",
-      "memo": "Strategy packages interchangeable algorithms behind a common interface.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Strategy packages interchangeable algorithms behind a common interface.",
       "marks": 2,
       "id": 26,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -365,11 +367,11 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "options": [
         "Builder",
         "Interpreter",
-        "Factory Method",
-        "Observer"
+        "Observer",
+        "Factory Method"
       ],
-      "correct": "D",
-      "memo": "Observer decouples a subject from a set of subscribed dependents.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** Observer decouples a subject from a set of subscribed dependents.",
       "marks": 2,
       "id": 27,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -378,13 +380,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q28.** A catalogue has 100,000 icons but only eight immutable icon styles. Reusing eight style objects is:",
       "options": [
+        "Simple Factory",
         "Flyweight",
-        "Adapter",
         "Visitor",
-        "Simple Factory"
+        "Adapter"
       ],
-      "correct": "A",
-      "memo": "Flyweight shares intrinsic appearance objects by configuration key.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Flyweight shares intrinsic appearance objects by configuration key.",
       "marks": 2,
       "id": 28,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -399,7 +401,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
         "Observers"
       ],
       "correct": "B",
-      "memo": "Composite expression nodes have child expressions and are nonterminal.",
+      "memo": "**Correct answer: B.** Composite expression nodes have child expressions and are nonterminal.",
       "marks": 2,
       "id": 29,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -408,13 +410,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q30.** A client loops with `while (it.hasNext()) it.next()`. What is the important abstraction?",
       "options": [
-        "Iterator always sorts collections",
+        "Every element must implement Iterator",
         "The client controls memory allocation",
         "The collection's internal storage need not be exposed",
-        "Every element must implement Iterator"
+        "Iterator always sorts collections"
       ],
       "correct": "C",
-      "memo": "Iterator exposes a traversal protocol that hides collection representation.",
+      "memo": "**Correct answer: C.** Iterator exposes a traversal protocol that hides collection representation.",
       "marks": 2,
       "id": 30,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -429,7 +431,7 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
         "Adapter"
       ],
       "correct": "D",
-      "memo": "Adapter implements the expected interface and delegates to the existing incompatible component.",
+      "memo": "**Correct answer: D.** Adapter implements the expected interface and delegates to the existing incompatible component.",
       "marks": 2,
       "id": 31,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -438,13 +440,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q32.** A cross-platform GUI factory makes families of MacButton/MacMenu or WindowsButton/WindowsMenu. Use:",
       "options": [
+        "Flyweight",
         "Abstract Factory",
-        "Observer",
         "Interpreter",
-        "Flyweight"
+        "Observer"
       ],
-      "correct": "A",
-      "memo": "Abstract Factory ensures related products come from the same family.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Abstract Factory ensures related products come from the same family.",
       "marks": 2,
       "id": 32,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -454,12 +456,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q33.** A `Configuration` class guarantees exactly one shared object. Which implementation detail commonly prevents callers from invoking its constructor?",
       "options": [
         "Protected static fields only",
-        "A private constructor",
         "Implementing Iterable",
+        "A private constructor",
         "Calling a Visitor"
       ],
-      "correct": "B",
-      "memo": "A private constructor blocks ordinary external construction for Singleton.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** A private constructor blocks ordinary external construction for Singleton.",
       "marks": 2,
       "id": 33,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -468,13 +470,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q34.** `PriceVisitor` and `TaxVisitor` both implement `visit(Food)` and `visit(Electronics)`. Which new feature is easiest?",
       "options": [
-        "A new Electronics subclass requiring visitor changes",
+        "Changing the abstract Element contract for all classes",
         "A new third element type",
-        "Another operation through a new visitor",
-        "Changing the abstract Element contract for all classes"
+        "A new Electronics subclass requiring visitor changes",
+        "Another operation through a new visitor"
       ],
-      "correct": "C",
-      "memo": "Visitor is most extensible along the operation dimension.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Visitor is most extensible along the operation dimension.",
       "marks": 2,
       "id": 34,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -484,12 +486,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q35.** A full `TaskService` validates tasks, persists records, renders PDFs and sends notifications. Which improvement is most aligned with SRP?",
       "options": [
         "Keep adding methods to TaskService",
+        "Delegate independent tasks to focused collaborators",
         "Make every method static",
-        "Use multiple inheritance",
-        "Delegate independent tasks to focused collaborators"
+        "Use multiple inheritance"
       ],
-      "correct": "D",
-      "memo": "SRP encourages extracting responsibilities with separate reasons to change.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** SRP encourages extracting responsibilities with separate reasons to change.",
       "marks": 2,
       "id": 35,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -498,13 +500,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q36.** A `ReportExporter` interface allows adding `MarkdownExporter` without editing a reporting client. Which principle is helped?",
       "options": [
+        "SRP means one method per class",
         "Open/Closed",
-        "Liskov prohibits any new implementation",
         "Dependency inversion is impossible",
-        "SRP means one method per class"
+        "Liskov prohibits any new implementation"
       ],
-      "correct": "A",
-      "memo": "OCP is supported when new implementations extend behavior without rewriting the consumer.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** OCP is supported when new implementations extend behavior without rewriting the consumer.",
       "marks": 2,
       "id": 36,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -514,12 +516,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q37.** A subclass implements every Java method, but its `save()` method silently ignores valid input that the base contract promises to persist. Which principle is violated?",
       "options": [
         "ISP",
-        "LSP",
         "SRP",
-        "OCP"
+        "OCP",
+        "LSP"
       ],
-      "correct": "B",
-      "memo": "Behavioural substitution requires honoring the base contract, not merely compiling.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Behavioural substitution requires honoring the base contract, not merely compiling.",
       "marks": 2,
       "id": 37,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -528,13 +530,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q38.** A payment client needs only `pay()` but must depend on a Provider interface exposing `refund`, `audit`, `settle` and `configure`. What redesign helps?",
       "options": [
-        "A bigger interface",
+        "Move payment code into UI",
         "A singleton provider",
-        "A focused Payment interface for the caller",
-        "Move payment code into UI"
+        "A bigger interface",
+        "A focused Payment interface for the caller"
       ],
-      "correct": "C",
-      "memo": "Interface Segregation reduces a client's dependencies on unused operations.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Interface Segregation reduces a client's dependencies on unused operations.",
       "marks": 2,
       "id": 38,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -544,12 +546,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q39.** A service accepts `MessageSender` but, inside `notify()`, directly creates a new concrete SmsSender ignoring its constructor dependency. What's wrong?",
       "options": [
         "The class has too few fields",
+        "The service bypasses the abstraction, undermining DIP",
         "It automatically satisfies DIP",
-        "It makes compilation impossible",
-        "The service bypasses the abstraction, undermining DIP"
+        "It makes compilation impossible"
       ],
-      "correct": "D",
-      "memo": "Depending on an interface helps only if business code actually uses that injected contract.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Depending on an interface helps only if business code actually uses that injected contract.",
       "marks": 2,
       "id": 39,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -558,13 +560,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q40.** Which relationship best models a high-level use case calling a storage port implemented by MySQL and an in-memory fake?",
       "options": [
-        "Both implementations and the use case depend on an abstraction",
-        "The use case must extend MySQL",
+        "Every storage port must be a Singleton",
         "The fake must implement SQL syntax inside the use case",
-        "Every storage port must be a Singleton"
+        "The use case must extend MySQL",
+        "Both implementations and the use case depend on an abstraction"
       ],
-      "correct": "A",
-      "memo": "DIP supports dependencies directed at contracts shared by high- and low-level modules.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** DIP supports dependencies directed at contracts shared by high- and low-level modules.",
       "marks": 2,
       "id": 40,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -574,12 +576,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q41.** A team gives its `Employee` entity one method for validating names, one for setting email and one for changing status. Is SRP necessarily violated?",
       "options": [
         "Yes, more than one method is prohibited",
-        "No, cohesive domain behaviours can belong to one responsibility",
         "Yes, because it is an entity",
+        "No, cohesive domain behaviours can belong to one responsibility",
         "No, because @Entity means all SOLID rules are ignored"
       ],
-      "correct": "B",
-      "memo": "SRP measures reasons to change rather than counting methods.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** SRP measures reasons to change rather than counting methods.",
       "marks": 2,
       "id": 41,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -588,28 +590,29 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q42.** Given `.requestMatchers(\"/api/public/**\").permitAll().anyRequest().authenticated()`, what is true for `/api/public/ping`?",
       "options": [
-        "It must have the ADMIN role",
-        "The request cannot pass any filter",
         "It is allowed without authentication by this authorization configuration",
-        "It must send a JWT"
+        "It must send a JWT",
+        "The request cannot pass any filter",
+        "It must have the ADMIN role"
       ],
-      "correct": "C",
-      "memo": "The specific permitted route precedes the authenticated catch-all.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** The specific permitted route precedes the authenticated catch-all.",
       "marks": 2,
       "id": 42,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "snippet": "http.authorizeHttpRequests(a -> a\n  .requestMatchers(\"/api/public/**\").permitAll()\n  .anyRequest().authenticated());"
     },
     {
       "kind": "Multiple choice",
       "prompt": "**Q43.** What is the usual role of a `SecurityFilterChain` bean in Spring Security 6?",
       "options": [
+        "Configure the servlet request-security chain",
         "Map entity identifiers",
         "Generate SQL repositories",
-        "Send Observer updates",
-        "Configure the servlet request-security chain"
+        "Send Observer updates"
       ],
-      "correct": "D",
-      "memo": "SecurityFilterChain configures servlet request filtering and security rules.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** SecurityFilterChain configures servlet request filtering and security rules.",
       "marks": 2,
       "id": 43,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -619,12 +622,12 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q44.** An API expects users with ROLE_MODERATOR. Under default role prefix conventions, which expression checks for it?",
       "options": [
         "hasRole(\"MODERATOR\")",
-        "hasAuthority(\"MODERATOR\") always",
+        "permitAll()",
         "hasRole(\"ROLE_MODERATOR\") always",
-        "permitAll()"
+        "hasAuthority(\"MODERATOR\") always"
       ],
       "correct": "A",
-      "memo": "hasRole(\"MODERATOR\") checks the ROLE_MODERATOR authority by convention.",
+      "memo": "**Correct answer: A.** hasRole(\"MODERATOR\") checks the ROLE_MODERATOR authority by convention.",
       "marks": 2,
       "id": 44,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -633,13 +636,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q45.** A signed JWT has been decoded but the client tries to alter its scope claim. Which verification detects tampering?",
       "options": [
-        "Header parsing alone",
         "Signature verification against trusted key material",
+        "Header parsing alone",
         "HTTP GET's method name",
         "A JPA entity annotation"
       ],
-      "correct": "B",
-      "memo": "Signature validation checks signed token integrity and authenticity.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Signature validation checks signed token integrity and authenticity.",
       "marks": 2,
       "id": 45,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -648,13 +651,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q46.** A browser from `http://localhost:4200` makes a request to a Spring Boot API at port 8080 and encounters CORS errors. What's the most relevant solution?",
       "options": [
-        "Disable all HTTP authentication permanently",
+        "Make requests from an entity constructor",
         "Use eager fetching for entities",
         "Allow the required origin/method/header through the API's CORS configuration",
-        "Make requests from an entity constructor"
+        "Disable all HTTP authentication permanently"
       ],
       "correct": "C",
-      "memo": "Server-side CORS configuration must grant access to the frontend's origin and request characteristics.",
+      "memo": "**Correct answer: C.** Server-side CORS configuration must grant access to the frontend's origin and request characteristics.",
       "marks": 2,
       "id": 46,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -663,13 +666,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q47.** A POST request from a browser is authenticated by a cookie but fails CSRF validation. Which claim is correct?",
       "options": [
+        "A valid session does not replace a required CSRF token",
         "The user's password must be wrong",
         "JWT is always disabled",
-        "CSRF applies only to public websites",
-        "A valid session does not replace a required CSRF token"
+        "CSRF applies only to public websites"
       ],
-      "correct": "D",
-      "memo": "State-changing cookie-authenticated requests may need CSRF protection independent of user identity.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** State-changing cookie-authenticated requests may need CSRF protection independent of user identity.",
       "marks": 2,
       "id": 47,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -678,13 +681,13 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q48.** A `StudentRepository extends JpaRepository<Student, Long>`. What does `Student` specify?",
       "options": [
-        "The managed entity type",
-        "The transaction isolation level",
+        "The SQL table name must be Student",
         "The ID generation strategy",
-        "The SQL table name must be Student"
+        "The transaction isolation level",
+        "The managed entity type"
       ],
-      "correct": "A",
-      "memo": "JpaRepository<T,ID> uses the entity type and primary-key type as generic parameters.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** JpaRepository<T,ID> uses the entity type and primary-key type as generic parameters.",
       "marks": 2,
       "id": 48,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -694,27 +697,28 @@ window.PAPERROOM_LIBRARY["adp-34-1"]={
       "prompt": "**Q49.** When an Order owns its `@ManyToOne` association to Customer, which annotation names the FK column?",
       "options": [
         "@RequestParam",
-        "@JoinColumn",
         "@PreAuthorize",
+        "@JoinColumn",
         "@Version"
       ],
-      "correct": "B",
-      "memo": "@JoinColumn maps the foreign-key join column on an owning association.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** @JoinColumn maps the foreign-key join column on an owning association.",
       "marks": 2,
       "id": 49,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "snippet": "class CartItem {\n  @ManyToOne(fetch = FetchType.LAZY)\n  @JoinColumn(name = \"cart_id\")\n  private Cart cart;\n}"
     },
     {
       "kind": "Multiple choice",
       "prompt": "**Q50.** Which HTTP status is most suitable when a REST API successfully creates a new resource, including the new resource URI if available?",
       "options": [
-        "404",
+        "409 by definition",
         "403",
-        "201 Created",
-        "409 by definition"
+        "404",
+        "201 Created"
       ],
-      "correct": "C",
-      "memo": "201 Created indicates a created resource and can include a Location header.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** 201 Created indicates a created resource and can include a Location header.",
       "marks": 2,
       "id": 50,
       "section": "SECTION THREE · MULTIPLE CHOICE"
