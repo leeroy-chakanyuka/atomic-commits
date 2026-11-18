@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | **12 playable Java design-pattern papers**: Simple Factory, Factory Method, Abstract Factory, Strategy, Observer, Decorator, Command, Bridge, Flyweight, Interpreter, Iterator and Visitor |
+| ADP | 18 November 2026 | **15 playable papers**: 12 Java design-pattern papers plus 3 SOLID papers (60 questions spanning SRP, OCP, LSP, ISP and DIP) |
 | ITS | 19 November 2026 | **18 playable papers**: 3 each for Chapters 8–12 plus 3 integrated mixed papers |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -44,7 +44,7 @@ The source scope follows the textbook *Database Systems: Design, Implementation,
 
 ## ADP topic tiles and exam pilots
 
-The ADP module has four topic tiles: **Design Patterns**, **Spring Security**, **Spring Data JPA** and **TBD**. Only Design Patterns currently contains playable papers. The **12 active pattern papers** cover Simple Factory, Factory Method, Abstract Factory, Strategy, Observer, Decorator, Command, **Bridge, Flyweight, Interpreter, Iterator and Visitor**. Each is a **30-minute, 20-question / 20-mark** quiz with **15 contextual multiple-choice questions** (including Java execution traces and code bug spotting) and **5 true/false statements**. All questions are automatically marked, with explanatory memoranda revealed only after submission. There are no long written definition or essay questions. The older Chain of Responsibility, Proxy and Spring Security pilots remain withdrawn. Browser-local ADP attempts use **v3 storage keys**, with the five newly added papers receiving unique chapter keys. Earlier attempts for the existing seven papers remain usable because their questions and IDs were not modified.
+The ADP module has **four active topic tiles**: **Design Patterns** (12 papers), **Spring Security** (papers pending), **Spring Data JPA** (papers pending), and **SOLID Principles** (3 papers). The 12 Design Patterns papers cover Simple Factory, Factory Method, Abstract Factory, Strategy, Observer, Decorator, Command, Bridge, Flyweight, Interpreter, Iterator and Visitor. The new SOLID section adds **60 questions** across three papers: **SRP + OCP**, **LSP + ISP**, and **DIP + mixed SOLID scenarios**. Each paper has **20 questions / 20 marks / 30 minutes**, comprising **15 contextual, Java-focused MCQs (including code tracing, bug spotting, and design decisions) and 5 true/false questions**. Every question is auto-marked, with an explanatory memo after submission. There are no long definitions, essays or eight-mark written answers. The earlier Chain of Responsibility, Proxy and Spring Security pilot papers remain withdrawn. Existing browser-local ADP attempt/history keys remain **v3**; the three new SOLID papers use unique chapter keys and do not overwrite attempts for the prior 12 papers.
 
 The 12 Design Patterns papers include independent real-world contexts, Java code traces and common design mistakes. A separate outline for possible future Spring Security papers remains in `papers/adp/SECURITY-LAYERS.md`; there is currently no live Spring Security pilot.
 
@@ -75,7 +75,7 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `app.js`: exam engine, timer, local state, marking and review
 - `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
-- `papers/adp/*.js`: twelve standalone, one-mark objective Java design-pattern practice papers; older pilots withdrawn
+- `papers/adp/*.js`: twelve design-pattern and three SOLID standalone, one-mark objective Java practice papers; older pilots withdrawn
 - `rich-content.js`: sanitized Markdown and diagrams
 - `concept-atlas.js` / `concept-atlas.css`: ITS master/Chapter 8/Chapter 9 concept maps, zoomable viewport, streamlined concept chat and local learning signals
 - `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference
