@@ -35,7 +35,7 @@
   const $ = (sel) => document.querySelector(sel);
   const esc = (str) => String(str == null ? "" : str).replace(/[&<>"']/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[s]);
   const canon = (str) => String(str || "").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
-  const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
+  const mins = (n) => n >= 3600 ? [Math.floor(n / 3600),Math.floor(n % 3600 / 60),n % 60].map(v=>String(v).padStart(2,"0")).join(":") : String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
   const rich = text => window.PAPERROOM_RICH?.render(text) || `<p>${esc(text)}</p>`;
@@ -290,7 +290,7 @@
       <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>${m.id==="its"?"Other chapter notes.":"Your notes."}</h2></div><small>${sourceNotes.length} chapter${sourceNotes.length===1?"":"s"}</small></div>
       ${notesCards}</section>`:"";
     const historySection=isPractice?`<section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
-      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].module==="ADP"?esc(PAPERBANK[x.key].title):PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
       ${recent?'<div class="history-list">'+recent+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
       <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p></section>`:"";
     const sessions=m.id==="prm"?15:m.id==="its"?18:0;
