@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A browser sends a JWT in `Authorization: Bearer <token>` to a Spring OAuth2 resource server. Which activity is required before trusting the token's claims?",
       "options": [
+        "Parse it as SQL",
         "Decode its Base64URL payload only",
         "Validate its signature, expiry, and relevant issuer/audience constraints as configured",
-        "Ask the controller to compare Strings",
-        "Parse it as SQL"
+        "Ask the controller to compare Strings"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "JWT payloads are merely encoded, not inherently trustworthy. The resource server must validate the cryptographic signature and relevant registered claims.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A client obtains an access token from an authorization server, then calls a protected API. Which role does the API usually perform?",
       "options": [
+        "CSS rendering service",
         "OAuth2 resource server",
         "JPA entity manager",
-        "OAuth2 authorization server automatically",
-        "CSS rendering service"
+        "OAuth2 authorization server automatically"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "The API consuming and validating bearer access tokens is a resource server, separate from the issuer/authorization server.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A JWT is syntactically well-formed and not expired, but its issuer is not the trusted issuer configured for your API. What should happen?",
       "options": [
-        "Accept it because it has three dot-separated sections",
-        "Reject it if issuer validation is required by the configured resource server",
         "Convert it to a session cookie automatically",
-        "Grant ROLE_ADMIN"
+        "Grant ROLE_ADMIN",
+        "Accept it because it has three dot-separated sections",
+        "Reject it if issuer validation is required by the configured resource server"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "A token may be correctly formatted yet untrusted. Validate issuer according to your authorization-server configuration.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A JWT header says `alg=none` while the API expects signed tokens from a trusted authority. Which behavior is safe?",
       "options": [
-        "Accept it if the username claim is present",
-        "Reject unsigned tokens in a signed-token validation flow",
         "Treat it as a password hash",
-        "Call the authorization server's logout endpoint"
+        "Call the authorization server's logout endpoint",
+        "Accept it if the username claim is present",
+        "Reject unsigned tokens in a signed-token validation flow"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "An unsigned token must not bypass signature validation; trust only configured token algorithms and keys.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A user has `ROLE_ADMIN` authority, but Spring's default JWT resource server maps scopes to `SCOPE_...` authorities. What do you need before `hasRole(\"ADMIN\")` will work with those tokens?",
       "options": [
+        "Rename the endpoint to /admin",
         "Nothing, because `scope` always means role",
         "Map the relevant token claim into the expected role authority, or authorize using the actual `SCOPE_...` values",
-        "Disable all signature verification",
-        "Rename the endpoint to /admin"
+        "Disable all signature verification"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "By default scopes appear as SCOPE_ authorities, not ROLE_ authorities. Configure appropriate converters or use hasAuthority for scopes.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An access token has scopes `read:orders` but not `write:orders`. What is the clearest way to protect a read-only endpoint?",
       "options": [
+        "Allow all authenticated callers to write",
         "Require a corresponding scope authority such as `SCOPE_read:orders`",
         "Trust the token's email domain alone",
-        "Demand a browser session regardless of the API design",
-        "Allow all authenticated callers to write"
+        "Demand a browser session regardless of the API design"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Method or request authorization may target mapped SCOPE_ authorities. Scope strings are independent of roles.",
       "marks": 1
     },
@@ -143,12 +143,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An authorization server rotates signing keys and publishes JWKS. What is the resource server's relationship to JWKS?",
       "options": [
-        "It can use trusted published public keys to validate signed tokens and accommodate key rotation",
         "It should download private signing keys into every client",
         "It must store plaintext passwords in JWKS",
-        "It ignores JWT signatures when keys rotate"
+        "It ignores JWT signatures when keys rotate",
+        "It can use trusted published public keys to validate signed tokens and accommodate key rotation"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "JWKS exposes public key material for verifying signatures. A configured JWK source can accommodate rotating public keys.",
       "marks": 1
     },
@@ -157,12 +157,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An API endpoint is public and accepts optional bearer authentication. A malformed bearer token is submitted. Why might the request still be rejected even though the endpoint has permitAll()?",
       "options": [
-        "Authentication filters may reject invalid presented credentials before the authorization decision",
-        "permitAll disables all authentication filters",
         "The controller creates a session automatically",
-        "Malformed JSON always means SQL injection"
+        "Malformed JSON always means SQL injection",
+        "Authentication filters may reject invalid presented credentials before the authorization decision",
+        "permitAll disables all authentication filters"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "PermitAll controls authorization; presenting invalid bearer credentials can still fail authentication during the filter chain.",
       "marks": 1
     },
@@ -171,12 +171,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A developer writes `hasAuthority(\"ADMIN\")` but authentication grants `ROLE_ADMIN`. Why is access denied?",
       "options": [
+        "Authority names are ignored by Spring",
         "hasAuthority checks for the exact authority String; ADMIN differs from ROLE_ADMIN",
         "hasAuthority automatically adds ROLE_",
-        "Java compares Strings ignoring prefixes",
-        "Authority names are ignored by Spring"
+        "Java compares Strings ignoring prefixes"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "hasAuthority checks an exact authority, unlike hasRole with its default ROLE_ convention.",
       "snippet": ".requestMatchers(\"/ops/**\").hasAuthority(\"ADMIN\")",
       "marks": 1
@@ -214,12 +214,12 @@ window.PAPERROOM_LIBRARY["adp-23-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A frontend app uses Authorization Code with PKCE. What attack does PKCE primarily help prevent?",
       "options": [
-        "An intercepted authorization code being redeemed by an unauthorized party that lacks the code verifier",
         "XSS from any source on all pages",
         "SQL injection in every JDBC query",
-        "Duplicate JPA results"
+        "Duplicate JPA results",
+        "An intercepted authorization code being redeemed by an unauthorized party that lacks the code verifier"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "PKCE binds the authorization request to a secret code verifier, reducing authorization-code interception/replay by a different party.",
       "marks": 1
     },
