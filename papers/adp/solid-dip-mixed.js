@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An application defines `PaymentGateway` as an interface in its business/application layer. `StripeGateway` implements it in infrastructure. `CheckoutService` uses PaymentGateway. Which dependency direction is desirable?",
       "options": [
+        "PaymentGateway needs to construct CheckoutService internally",
         "CheckoutService imports StripeGateway directly",
         "StripeGateway depends on the PaymentGateway contract, and CheckoutService also depends on that contract",
-        "The interface must extend StripeGateway",
-        "PaymentGateway needs to construct CheckoutService internally"
+        "The interface must extend StripeGateway"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "DIP puts the abstraction at a stable boundary relevant to the high-level policy. Both high-level and low-level modules depend on the contract.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `ReportService` receives a `PdfWriter` interface, but the only implementation is `PdfWriterImpl`, and the interface duplicates every method of that implementation without an identified need for variability. Which conclusion is most sensible?",
       "options": [
-        "DIP demands an interface for every class regardless of design",
-        "An interface alone doesn't guarantee meaningful DIP; design the abstraction around the consumer's actual needs",
         "The implementation should import ReportService",
-        "The class must be a Singleton"
+        "The class must be a Singleton",
+        "DIP demands an interface for every class regardless of design",
+        "An interface alone doesn't guarantee meaningful DIP; design the abstraction around the consumer's actual needs"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Dependency inversion is about dependency direction and stable abstractions, not mechanically creating one interface per class.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** Two implementations of a `Sender` interface are supplied to the same service. What prints?",
       "options": [
-        "EMAIL then SMS",
-        "EMAIL twice",
         "SMS twice",
-        "Compilation fails because Sender is an interface"
+        "Compilation fails because Sender is an interface",
+        "EMAIL then SMS",
+        "EMAIL twice"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "MessageService delegates to its injected Sender. Instantiating it with EmailSender then SmsSender changes behavior without changing MessageService.",
       "snippet": "interface Sender { String send(); }\nclass EmailSender implements Sender { public String send(){return \"EMAIL\";} }\nclass SmsSender implements Sender { public String send(){return \"SMS\";} }\nclass MessageService {\n private final Sender sender;\n MessageService(Sender sender){this.sender=sender;}\n String notifyUser(){return sender.send();}\n}\nSystem.out.println(new MessageService(new EmailSender()).notifyUser());\nSystem.out.println(new MessageService(new SmsSender()).notifyUser());",
       "marks": 1
@@ -88,12 +88,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A test replaces `OrderRepository` with an in-memory fake that records saved orders. Why is this easier when `OrderService` depends on the repository abstraction?",
       "options": [
-        "It makes the Java compiler skip all tests",
         "The high-level service can be tested without constructing a database-backed repository",
         "It forces every fake to perform real SQL",
-        "It removes the need for business assertions"
+        "It removes the need for business assertions",
+        "It makes the Java compiler skip all tests"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Tests can inject a fake implementing the consumer's contract and verify business behavior without a real persistence dependency.",
       "marks": 1
     },
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A team uses Spring constructor injection but the controller parameter type is `MySqlRepositoryImpl` rather than a repository interface. Has dependency injection automatically achieved DIP?",
       "options": [
-        "Yes, any `@Autowired` proves DIP",
-        "No; injection is a mechanism, but the high-level class still depends on a concrete low-level implementation",
         "Yes, because constructors are always abstractions",
-        "No, because Java forbids injection of concrete classes"
+        "No, because Java forbids injection of concrete classes",
+        "Yes, any `@Autowired` proves DIP",
+        "No; injection is a mechanism, but the high-level class still depends on a concrete low-level implementation"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Dependency injection can be used with concrete types, but DIP is about the abstraction and dependency direction.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the bug:** The service accepts a `Storage` interface in its constructor but ignores it, creating a concrete storage object inside `save()`. What is the design problem?",
       "options": [
-        "The interface is too small",
-        "The implementation bypasses the injected abstraction, reintroducing coupling and making tests unreliable",
         "The constructor must call super()",
-        "The `save` method can't take Strings"
+        "The `save` method can't take Strings",
+        "The interface is too small",
+        "The implementation bypasses the injected abstraction, reintroducing coupling and making tests unreliable"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Accepting an interface does not help if code ignores it and constructs a concrete dependency during use.",
       "snippet": "class UploadService {\n private final Storage storage;\n UploadService(Storage storage){this.storage=storage;}\n void save(byte[] data){new CloudStorage().save(data);}\n}",
       "marks": 1
@@ -145,12 +145,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A service depends on a `Clock` abstraction rather than calling the system time directly. What is a practical benefit beyond changing clock implementations?",
       "options": [
+        "It guarantees the service needs no other tests",
         "It can provide a deterministic fake clock in tests",
         "It automatically changes the operating system's clock",
-        "It removes all time zones from Java",
-        "It guarantees the service needs no other tests"
+        "It removes all time zones from Java"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "A clock interface makes time an injectable dependency. Test clocks can supply fixed instants for repeatable boundary tests.",
       "marks": 1
     },
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `Book` class mixes persistence, formatting, tax calculations and notification delivery. A designer introduces one huge `BookOperations` interface with all those methods and injects it everywhere. Which evaluation is strongest?",
       "options": [
+        "One interface is preferable to several focused contracts in every case",
         "DIP and ISP are guaranteed because an interface exists",
         "The interface may still violate ISP and preserve SRP problems; injection doesn't fix poor responsibility boundaries",
-        "All responsibilities are automatically separated",
-        "One interface is preferable to several focused contracts in every case"
+        "All responsibilities are automatically separated"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Abstractions must be designed around cohesive client needs. A giant interface does not automatically fix SRP or ISP and may leak unrelated operations.",
       "marks": 1
     },
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `FileExporter` subtype throws for valid files even though its base contract promises successful export; a caller also hardcodes an `instanceof PdfExporter` special case. What two concerns are most clearly present?",
       "options": [
-        "LSP contract violation and weakened OCP/polymorphism through concrete checks",
         "SRP only because two classes exist",
         "Flyweight only because files may be shared",
-        "DIP is satisfied automatically by the cast"
+        "DIP is satisfied automatically by the cast",
+        "LSP contract violation and weakened OCP/polymorphism through concrete checks"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "The subtype breaks a base guarantee (LSP); concrete type checks require changing stable caller code when types are added, weakening OCP.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-18-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A university module uses a `Notifier` interface, but one `BulkNotifier` implementation also exposes an extra `sendThousands()` method. The caller casts to BulkNotifier to use it. Which redesign most directly improves the client contract?",
       "options": [
+        "Convert all method calls to Strings",
         "Add a focused BulkSending capability interface if that operation is legitimately needed",
         "Delete the Notifier interface and cast everywhere",
-        "Force all notifiers to support bulk delivery even when impossible",
-        "Convert all method calls to Strings"
+        "Force all notifiers to support bulk delivery even when impossible"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "A separate capability contract can expose bulk sending to relevant clients without forcing unrelated Notifier implementations to support it (ISP) or relying on concrete casts.",
       "marks": 1
     },
