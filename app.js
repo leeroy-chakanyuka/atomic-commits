@@ -25,7 +25,7 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
-  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1"];
+  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
@@ -35,7 +35,7 @@
   const $ = (sel) => document.querySelector(sel);
   const esc = (str) => String(str == null ? "" : str).replace(/[&<>"']/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[s]);
   const canon = (str) => String(str || "").normalize("NFKD").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim().replace(/^(a|an|the) /,"");
-  const mins = (n) => String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
+  const mins = (n) => n >= 3600 ? [Math.floor(n / 3600),Math.floor(n % 3600 / 60),n % 60].map(v=>String(v).padStart(2,"0")).join(":") : String(Math.floor(n / 60)).padStart(2,"0") + ":" + String(n % 60).padStart(2,"0");
   const quote = (x) => x.replace(/\*\*(.*?)\*\*/g,"$1");
   const qOf = (id) => DATA.questions[id - 1];
   const rich = text => window.PAPERROOM_RICH?.render(text) || `<p>${esc(text)}</p>`;
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"15 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"17 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -147,9 +147,10 @@
             <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download ${esc(title)} questions as PDF">PDF</button></div></div>`;
       };
       const topics=[
-        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"12 papers ready",
-          description:"Twelve concise Java design-pattern papers: contextual MCQs, code spotting and true/false. All automatically marked.",
-          detail:`<p class="adp-topic-guidance">20 questions per paper: 15 MCQs (including Java code spotting) and 5 true/false. One mark each, 30 minutes, instantly auto-marked after submission.</p>
+        {number:"01",slug:"design-patterns",title:"Design Patterns",status:"13 papers ready",
+          description:"12 topic papers plus a 120-question mixed mega exam covering every design pattern. All automatically marked.",
+          detail:`<p class="adp-topic-guidance">Individual papers: 20 questions, 30 minutes, 1 mark per question. The mega paper combines ten questions from each of the 12 patterns in mixed order, with a three-hour timer. Answers and explanatory memos appear after submission.</p>
+          <div class="adp-subsection"><strong>MEGA PAPER · All 12 patterns</strong><p>120 mixed questions (96 MCQs + 24 true/false) from every pattern; topics interleaved so you cannot rely on chapter order. 180 minutes.</p>${adpPaper("adp-20-1","Design Patterns Mega Paper")}</div>
           <div class="adp-subsection"><strong>Simple Factory</strong><p>Importers, exporters, safe VM configuration, Java static methods and tests.</p>${adpPaper("adp-4-1","Practice Paper 01")}</div>
           <div class="adp-subsection"><strong>Factory Method</strong><p>Provider-independent checkout, report creators, overriding, polymorphism and Java tracing.</p>${adpPaper("adp-5-1","Practice Paper 02")}</div>
           <div class="adp-subsection"><strong>Abstract Factory</strong><p>Cloud product families, provider compatibility, VM/storage/LB design and UML.</p>${adpPaper("adp-6-1","Practice Paper 03")}</div>
@@ -169,9 +170,10 @@
         {number:"03",slug:"spring-data-jpa",title:"Spring Data JPA",status:"Papers pending",
           description:"Reserved for JPA entities, repositories, relationships and persistence practice.",
           detail:`<p class="adp-topic-guidance">No JPA questions have been published yet.</p>`},
-        {number:"04",slug:"solid",title:"SOLID Principles",status:"3 papers ready",
-          description:"60 Java questions across SRP, OCP, LSP, ISP and DIP: challenging MCQs, code review and true/false.",
-          detail:`<p class="adp-topic-guidance">Three standalone papers, 20 questions and 20 marks each: 15 MCQs and 5 true/false. 30 minutes per paper, automatically marked, with explanatory memos after submission.</p>
+        {number:"04",slug:"solid",title:"SOLID Principles",status:"4 papers ready",
+          description:"Three topic papers plus a 60-question mixed mega exam across all five SOLID principles.",
+          detail:`<p class="adp-topic-guidance">Individual papers: 20 questions and 30 minutes each. The mega paper mixes all 60 questions across SRP, OCP, LSP, ISP and DIP with a 90-minute timer. Both are automatically marked with memos after submission.</p>
+          <div class="adp-subsection"><strong>MEGA PAPER · All five SOLID principles</strong><p>60 mixed questions (45 MCQs + 15 true/false), not grouped by principle. 90 minutes.</p>${adpPaper("adp-19-1","SOLID Mega Paper")}</div>
           <div class="adp-subsection"><strong>Paper 01: SRP and OCP</strong><p>Reasons to change, cohesion, separating responsibilities, extensibility and polymorphism.</p>${adpPaper("adp-16-1","SOLID Paper 01")}</div>
           <div class="adp-subsection"><strong>Paper 02: LSP and ISP</strong><p>Behavioral contracts, substitutability, method preconditions and focused interfaces.</p>${adpPaper("adp-17-1","SOLID Paper 02")}</div>
           <div class="adp-subsection"><strong>Paper 03: DIP and Mixed</strong><p>Dependency inversion, injection, testing and identifying SOLID trade-offs in Java.</p>${adpPaper("adp-18-1","SOLID Paper 03")}</div>`}
@@ -186,9 +188,9 @@
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
         <p>Design Patterns, Spring Security, Spring Data JPA and SOLID Principles.</p></div>
-        <div class="module-summary-chip"><strong>15</strong><small>papers</small></div></div></div>
+        <div class="module-summary-chip"><strong>17</strong><small>papers</small></div></div></div>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>15 live papers · 4 topics</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>17 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
               <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
@@ -288,7 +290,7 @@
       <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>${m.id==="its"?"Other chapter notes.":"Your notes."}</h2></div><small>${sourceNotes.length} chapter${sourceNotes.length===1?"":"s"}</small></div>
       ${notesCards}</section>`:"";
     const historySection=isPractice?`<section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
-      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].module==="ADP"?esc(PAPERBANK[x.key].title):PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
       ${recent?'<div class="history-list">'+recent+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
       <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p></section>`:"";
     const sessions=m.id==="prm"?15:m.id==="its"?18:0;
