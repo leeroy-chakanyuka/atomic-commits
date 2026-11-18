@@ -686,13 +686,9 @@ body:has(#examScreen:not([hidden])) main,
 @media(max-width:680px){.its-one-chapter{grid-template-columns:1fr}}
 
 
-/* ADP mixed-exam shortcuts: visible without opening collapsed topic tiles */
-.adp-mega-section{margin:30px 0 36px}
-.adp-mega-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.adp-mega-link{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:24px 25px;text-decoration:none;color:inherit;background:#fffefa;border:1px solid #dce4d7;border-radius:17px;box-shadow:0 5px 20px #41573d08;transition:border-color .16s,transform .16s}
-.adp-mega-link:hover,.adp-mega-link:focus-visible{border-color:#83a17a;transform:translateY(-2px);outline-offset:3px}
-.adp-mega-eyebrow{font-size:10px;letter-spacing:.12em;font-weight:750;color:#698364}
-.adp-mega-link strong{font-family:var(--serif);font-size:clamp(20px,2.3vw,29px);line-height:1.2;font-weight:600;color:#365036}
-.adp-mega-link small{font-size:12px;color:#6e806a}
-.adp-mega-action{margin-top:6px;font-size:12px;font-weight:750;color:#3e6e3f}
-@media(max-width:650px){.adp-mega-grid{grid-template-columns:1fr}.adp-mega-link{padding:20px 22px}}
+
+/* Standalone ADP372S 100-mark exams below the four topic dropdowns. */
+.adp-full-mocks{margin:42px 0 34px;padding-top:7px}
+.adp-full-mocks>.adp-topic-guidance{max-width:850px;margin-bottom:18px;line-height:1.8}
+.adp-full-mock-list{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
+.adp-full-mock-list .session-file{margin:0}

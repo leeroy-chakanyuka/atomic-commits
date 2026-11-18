@@ -6,7 +6,7 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 
 | Module | Exam date | Status |
 |---|---|---|
-| ADP | 18 November 2026 | **27 playable papers / 460 unique questions**: 12 Design Patterns sets + mega, 3 SOLID sets + mega, 4 Spring Security sets + mega, 4 Spring Data JPA sets + mega |
+| ADP | 18 November 2026 | **31 playable papers / 660 original questions**: four topic dropdowns (23 topic sets + 4 mixed megas) and four new 100-mark ADP372S-style full mock exams |
 | ITS | 19 November 2026 | **18 playable papers**: 3 each for Chapters 8–12 plus 3 integrated mixed papers |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
@@ -44,7 +44,11 @@ The source scope follows the textbook *Database Systems: Design, Implementation,
 
 ## ADP topic tiles and exam pilots
 
-ADP has **four topic tiles** and a prominent **Mega exams** section with direct practice links visible above the tiles. Total: **27 playable papers**, comprising **23 original topic papers** and **4 mixed mega exams**. Design Patterns has 12 individual papers (20 questions each) and a 120-question mega (10 from each pattern, 180 minutes). SOLID has 3 individual papers (20 each) and a 60-question mega (90 minutes). Spring Security has **4 original sets × 20 questions** (authorization, authentication/CSRF, JWT/OAuth2, testing/threats) and an **80-question mega** (120 minutes). Spring Data JPA has **4 original sets × 20 questions** (entities/lifecycle, relationships, transactions, repositories/JPQL/pagination) and an **80-question mega** (120 minutes). Individual papers are **15 MCQs + 5 true/false**, 20 marks and 30 minutes each. Security and JPA mega exams each include **60 MCQs + 20 true/false**. All questions are one mark, automatically graded, and have post-submission explanatory memoranda. The 4 mega exams **reuse interleaved questions from their component banks**, rather than claiming 340 additional unique questions. There are **460 unique original topic-bank questions** and **800 question appearances** including the mega assemblies. All ADP examples use Java (Spring Boot 3 / Spring Security 6-style conventions where relevant), not SQL disguised as Java. Browser-local attempts retain **v3 storage keys**; new Security/JPA chapters use 21–30 so existing ADP attempts are preserved. The earlier Chain of Responsibility, Proxy and legacy Spring Security pilots remain withdrawn.
+ADP has **four topic dropdowns**: Design Patterns (12 original topic papers + 120-question mega), Spring Security (four 20-question sets + 80-question mega), Spring Data JPA (four 20-question sets + 80-question mega), and SOLID Principles (three 20-question sets + 60-question mega). **All four mega papers appear first INSIDE their respective topic dropdowns**, not as separate cards above the topics. The topic banks have **460 original one-mark questions** across 23 sets; the 4 mega exams reuse 340 of those questions with topics interleaved, giving 800 question appearances before the new mocks. Existing source papers and history keys are unchanged.
+
+The separate **ADP372S Mock Exams** section below the topic dropdowns contains four **original 100-mark, 120-minute full syllabus mocks**, written to mirror the user's supplied `ADP372S Nov Mock Exam.pdf` structure (not copy its text): **Section One: 9 True or False (18 marks); Section Two: 11 single-term Fill in the Blanks (22 marks); Section Three: 30 Multiple Choice (60 marks)**. Each question is **two marks**, with fully automatic marking of one-click true/false and MCQs, and accepted-term checking for single-word/annotation fill-ins. Existing two-mark true/false papers elsewhere retain their original self-marked correction requirement; the new full mocks use the explicit `truthOnly` flag to mirror the source paper's instruction that students write only TRUE or FALSE. The mock MCQs use an explicit `fullMarksOnCorrect` flag so legacy one-mark exams' scoring is untouched. All model-answer explanations remain hidden until submission.
+
+The full mock topics match the example's level: design-pattern recognition and Java code traces, all five SOLID principles, Spring Security (filter chain, CORS, JWT, roles), Spring Data JPA (entities, mappings, fetching, transactions) and REST controllers/HTTP verbs. **Singleton, Adapter and Builder** are included because they appear in the supplied sample, even though they do not currently have separate design-pattern topic papers. The 4 mocks add **200 new original questions**, giving **31 playable ADP papers, 660 unique original questions** and **1,000 total question appearances including all four mega assemblies**. Mocks have unique keys `adp-31-1` through `adp-34-1`; existing v3 local history/attempt storage remains intact. The older Chain of Responsibility, Proxy and old Spring Security pilot papers remain withdrawn.
 
 The 12 Design Patterns papers include independent real-world contexts, Java code traces and common design mistakes. A separate outline for possible future Spring Security papers remains in `papers/adp/SECURITY-LAYERS.md`; there is currently no live Spring Security pilot.
 
@@ -75,7 +79,7 @@ The **`papers/` folder is intentionally retained**, because the interactive quiz
 - `app.js`: exam engine, timer, local state, marking and review
 - `exam-data.js`: PRM Chapter 11 Practice Session 01 (preserves previous deployments)
 - `papers/prm/*.js`: interactive question banks for Chapter 9, 11, 12, 14 and 15
-- `papers/adp/*.js`: 23 original Java ADP question banks and 4 mixed mega assemblies across Design Patterns, SOLID, Spring Security and Spring Data JPA.
+- `papers/adp/*.js`: 23 original Java topic banks, 4 reused mixed mega assemblies, and 4 new ADP372S full 100-mark mock exams (9 T/F + 11 fill + 30 MCQ).
 - `rich-content.js`: sanitized Markdown and diagrams
 - `concept-atlas.js` / `concept-atlas.css`: ITS master/Chapter 8/Chapter 9 concept maps, zoomable viewport, streamlined concept chat and local learning signals
 - `notes/ITS/ch08-practice-database.*`: Oracle SQL practice schema and Markdown reference

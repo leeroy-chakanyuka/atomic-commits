@@ -25,7 +25,7 @@
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
   const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
-  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1","adp-21-1","adp-22-1","adp-23-1","adp-24-1","adp-25-1","adp-26-1","adp-27-1","adp-28-1","adp-29-1","adp-30-1"];
+  const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1","adp-21-1","adp-22-1","adp-23-1","adp-24-1","adp-25-1","adp-26-1","adp-27-1","adp-28-1","adp-29-1","adp-30-1","adp-31-1","adp-32-1","adp-33-1","adp-34-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
   let paperKey="11-1";
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"27 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"31 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -198,25 +198,26 @@
         <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>ADP</strong></div>
         <div class="module-title-line"><div><span class="section-kicker">EXAM REVISION</span><h1>ADP<span class="title-period">.</span></h1>
         <p>Design Patterns, Spring Security, Spring Data JPA and SOLID Principles.</p></div>
-        <div class="module-summary-chip"><strong>27</strong><small>papers</small></div></div></div>
+        <div class="module-summary-chip"><strong>31</strong><small>papers</small></div></div></div>
 
-        <section class="adp-mega-section" aria-label="ADP mega exams">
-          <div class="library-heading"><div><span class="section-kicker">MIXED MOCK EXAMS</span><h2>Mega exams.</h2></div><small>4 directly accessible exams</small></div>
-          <div class="adp-mega-grid">
-            <a class="adp-mega-link" href="${sessionHash("adp-19-1")}"><span class="adp-mega-eyebrow">SOLID PRINCIPLES</span><strong>60-question mega</strong><small>90 minutes · 60 marks</small><span class="adp-mega-action">Start SOLID mega →</span></a>
-            <a class="adp-mega-link" href="${sessionHash("adp-20-1")}"><span class="adp-mega-eyebrow">DESIGN PATTERNS</span><strong>120-question mega</strong><small>180 minutes · 120 marks</small><span class="adp-mega-action">Start patterns mega →</span></a>
-            <a class="adp-mega-link" href="${sessionHash("adp-29-1")}"><span class="adp-mega-eyebrow">SPRING SECURITY</span><strong>80-question mega</strong><small>120 minutes · 80 marks</small><span class="adp-mega-action">Start Security mega →</span></a>
-            <a class="adp-mega-link" href="${sessionHash("adp-30-1")}"><span class="adp-mega-eyebrow">SPRING DATA JPA</span><strong>80-question mega</strong><small>120 minutes · 80 marks</small><span class="adp-mega-action">Start JPA mega →</span></a>
-          </div>
-        </section>
         <section class="adp-topics" aria-label="ADP study topics">
-          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>27 live papers · 4 topics</small></div>
+          <div class="library-heading"><div><span class="section-kicker">YOUR STUDY AREAS</span><h2>Choose a topic.</h2></div><small>31 live papers · 4 topics</small></div>
           <div class="adp-topic-grid">
             ${topics.map(t=>`<details class="adp-topic-tile" id="adp-${esc(t.slug)}">
               <summary><span class="adp-topic-top"><span class="adp-topic-number">${esc(t.number)}</span><span class="adp-topic-status">${esc(t.status)}</span></span>
                 <span class="adp-topic-title">${esc(t.title)}</span><span class="adp-topic-description">${esc(t.description)}</span>
                 <span class="adp-topic-action">View topic <span aria-hidden="true">+</span></span></summary>
               <div class="adp-topic-detail">${t.detail}</div></details>`).join("")}
+          </div>
+        </section>
+        <section class="adp-full-mocks" aria-label="ADP372S full mock examinations">
+          <div class="library-heading"><div><span class="section-kicker">EXAM-STYLE REVISION</span><h2>ADP372S mock exams.</h2></div><small>4 original papers · 100 marks each</small></div>
+          <p class="adp-topic-guidance">Based on your November mock format: Section One has 9 true/false questions (18 marks), Section Two has 11 fill-in questions (22 marks), and Section Three has 30 multiple-choice questions (60 marks). All four papers are 120 minutes and automatically marked. Every question is worth two marks.</p>
+          <div class="adp-full-mock-list">
+            ${adpPaper("adp-31-1","Mock Exam 01 · Full syllabus")}
+            ${adpPaper("adp-32-1","Mock Exam 02 · Full syllabus")}
+            ${adpPaper("adp-33-1","Mock Exam 03 · Full syllabus")}
+            ${adpPaper("adp-34-1","Mock Exam 04 · Full syllabus")}
           </div>
         </section>
         <section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>ADP attempts.</h2></div><small>Saved on this device</small></div>
@@ -358,7 +359,7 @@
     if (q.kind === "Matching") {
       return (q.matchItems || []).every((_,i)=>Boolean(a["match"+(i+1)]));
     }
-    if (q.kind === "True or false") return Boolean(a.truth && (q.marks === 1 || a.truth === "true" || a.correction?.trim()));
+    if (q.kind === "True or false") return Boolean(a.truth && (q.marks === 1 || q.truthOnly || a.truth === "true" || a.correction?.trim()));
     return Boolean(a.text?.trim());
   }
   function numberAnswered() { return DATA.questions.filter(isAnswered).length; }
@@ -431,7 +432,7 @@
       return `<span class="answer-label">Choose an answer</span><div class="choice-list">
       <label class="choice-item"><input type="radio" name="truth" data-field="truth" value="true" ${a.truth==="true"?"checked":""}><span>True</span></label>
       <label class="choice-item"><input type="radio" name="truth" data-field="truth" value="false" ${a.truth==="false"?"checked":""}><span>False</span></label>
-      </div>${q.marks === 1 ? "" : `<div style="margin-top:23px"><label for="correction" class="answer-label">Correction / explanation ${a.truth==="false"?"(required for false answers)":"(where needed)"}</label><textarea id="correction" class="answer-textarea medium" data-field="correction" placeholder="Explain or correct the statement here...">${esc(a.correction || "")}</textarea></div>`}`;
+      </div>${q.marks === 1 || q.truthOnly ? "" : `<div style="margin-top:23px"><label for="correction" class="answer-label">Correction / explanation ${a.truth==="false"?"(required for false answers)":"(where needed)"}</label><textarea id="correction" class="answer-textarea medium" data-field="correction" placeholder="Explain or correct the statement here...">${esc(a.correction || "")}</textarea></div>`}`;
     }
     if (q.kind === "Identify the term") {
       return `<label class="answer-label" for="shortAnswer">Your answer</label><input class="answer-input" id="shortAnswer" data-field="text" autocomplete="off" placeholder="Write the exact term here..." value="${esc(a.text || "")}"><p class="answer-hint">Use the clearest technical term you know.</p>`;
@@ -446,7 +447,7 @@
   function showQuestion(id, scroll = false) {
     current = Math.max(1, Math.min(DATA.questions.length, id));
     const q = qOf(current);
-    $("#questionSection").textContent = q.kind.toUpperCase();
+    $("#questionSection").textContent = q.section || q.kind.toUpperCase();
     $("#questionNumber").textContent = "QUESTION " + String(current).padStart(2,"0") + " OF " + DATA.questions.length;
     $("#questionMarks").textContent = q.marks + (q.marks === 1 ? " mark" : " marks");
     $("#questionPrompt").innerHTML = rich(q.prompt);
@@ -514,7 +515,7 @@
 
   function autoGrade(q,source=attempt) {
     const a = answer(q.id,source);
-    if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? 1 : 0, pending:0, objective:true };
+    if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? (q.fullMarksOnCorrect ? q.marks : 1) : 0, pending:0, objective:true };
     if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
     if (q.kind === "Matching") {
       const pairs=q.matchItems||[];
@@ -530,7 +531,7 @@
     if (q.kind === "True or false") {
       if (!a.truth) return { score:0,pending:0,objective:true };
       if (a.truth !== q.correct) return { score:0,pending:0,objective:true };
-      if (q.marks === 1 || q.correct === "true") return { score:q.marks,pending:0,objective:true };
+      if (q.marks === 1 || q.truthOnly || q.correct === "true") return { score:q.marks,pending:0,objective:true };
       // First mark for correctly identifying false; second for correcting it.
       return { score:1,pending:a.correction?.trim()?1:0,objective:false };
     }
