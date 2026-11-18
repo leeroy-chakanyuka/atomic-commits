@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A shipping calculator accepts a `Delivery` subtype and promises `cost()` returns a nonnegative amount. `OvernightDelivery` throws an exception for all parcels above 2 kg, although the base contract accepts parcels up to 20 kg. What principle is most clearly at risk?",
       "options": [
-        "Single Responsibility",
-        "Liskov Substitution",
         "Interface Segregation",
-        "Flyweight"
+        "Flyweight",
+        "Single Responsibility",
+        "Liskov Substitution"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "LSP requires subtypes to satisfy the parent's advertised contract. Rejecting inputs the parent promises to accept strengthens a precondition and breaks substitutability.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** The method below accepts `Bird`. What happens when called with a `Penguin` object?",
       "options": [
-        "It prints 'flying'",
         "The `UnsupportedOperationException` is thrown",
         "The Bird object is automatically converted to Sparrow",
-        "The compiler rejects all overrides"
+        "The compiler rejects all overrides",
+        "It prints 'flying'"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Penguin overrides fly() to throw; a client depending on Bird.fly() no longer works. The hierarchy's behavioral contract is invalid for non-flying birds.",
       "snippet": "class Bird { void fly() { System.out.println(\"flying\"); } }\nclass Penguin extends Bird {\n @Override void fly() { throw new UnsupportedOperationException(); }\n}\nstatic void launch(Bird b) { b.fly(); }\nlaunch(new Penguin());",
       "marks": 1
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A report exporter promises to return a non-null result. An `XmlExporter` subtype returns `null` when a file is empty, while all callers dereference the result. Which fix most directly supports LSP?",
       "options": [
+        "Replace the entire program with a factory",
         "Accept the null and require special checks in every caller",
         "Make the subtype honor the non-null contract, such as returning an empty valid report or documented failure",
-        "Hide the subtype's implementation in a private class only",
-        "Replace the entire program with a factory"
+        "Hide the subtype's implementation in a private class only"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A subtype should preserve guaranteed postconditions, including non-null results if promised by the base contract.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `PaymentProcessor.process()` contract says it either records a successful payment or throws PaymentException, leaving the transaction uncharged on failure. One subclass charges the card but returns 'failed' without recording the charge. What is the primary issue?",
       "options": [
+        "Interfaces prohibit card payments",
         "It violates the promised success/failure behavior and substitutability",
         "The class has only one public method",
-        "All failures must be ignored",
-        "Interfaces prohibit card payments"
+        "All failures must be ignored"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "LSP includes observable behavioral guarantees, side effects and failure semantics. A subtype cannot silently contradict a meaningful processor contract.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A base `SortedQueue.next()` guarantees items come out in ascending priority. A new subclass returns items in insertion order without telling clients. Which principle fails?",
       "options": [
-        "DIP",
-        "LSP",
         "OCP cannot be related",
-        "No principle, because the method name is still next"
+        "No principle, because the method name is still next",
+        "DIP",
+        "LSP"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Subtypes must preserve the ordering semantics promised by their base contract, not merely implement the right method signatures.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Spot the error:** A Java class tries to override `save()` with *weaker access* than the public interface. What happens?",
       "options": [
+        "The method compiles but only violates LSP at runtime",
         "The method is a valid private override",
         "The code fails to compile because an interface's public method cannot be implemented with weaker access",
-        "Java silently changes private to public",
-        "The method compiles but only violates LSP at runtime"
+        "Java silently changes private to public"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Java enforces method visibility rules here at compile time. This is a static contract error, different from a behavioral LSP violation.",
       "snippet": "interface Store { void save(String value); }\nclass FileStore implements Store {\n  void save(String value) { /* write */ }\n}",
       "marks": 1
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A parent `Rectangle` offers independently writable width and height. A `Square` subclass forces both dimensions to remain equal. A client sets width 5 then height 7 and expects area 35. Why is the design risky?",
       "options": [
-        "Squares can never be represented in object-oriented code",
         "The subtype changes the effects of operations a Rectangle client is allowed to rely on",
         "Area calculations cannot use multiplication",
-        "The parent must always be an interface"
+        "The parent must always be an interface",
+        "Squares can never be represented in object-oriented code"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "This classic mutable Square/Rectangle example violates behavioral substitution if base clients rely on independent setters. Immutable shapes or different abstraction may help.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A machine-control interface declares `print()`, `scan()` and `fax()`. A cheap receipt printer cannot scan or fax and throws from both methods. Which SOLID principle most directly points to a better design?",
       "options": [
-        "Interface Segregation Principle",
-        "Open/Closed Principle only",
         "Single Responsibility automatically means one interface",
-        "Interpreter Pattern"
+        "Interpreter Pattern",
+        "Interface Segregation Principle",
+        "Open/Closed Principle only"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "ISP says clients shouldn't depend on methods they don't use; separate printer, scanner and fax capabilities into focused interfaces.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A warehouse scanner only needs `scanBarcode()`, yet it depends on `OfficeMachine` with twelve methods for printing, faxing, and stapling. Which refactor best follows ISP?",
       "options": [
-        "Add ten more optional methods to OfficeMachine",
         "Introduce a narrow BarcodeScanner interface and type the scanner client to it",
         "Make every method throw UnsupportedOperationException",
-        "Replace every dependency with `Object`"
+        "Replace every dependency with `Object`",
+        "Add ten more optional methods to OfficeMachine"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "A role-specific interface keeps the client coupled only to needed operations.",
       "marks": 1
     },
@@ -172,12 +172,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** `Printer` clients only need `print()`. What coupling problem remains in the example?",
       "options": [
-        "`Fax` is a Java keyword",
-        "The client still depends on a FatDevice interface and its unused fax() capability",
         "Calling print() is illegal",
-        "Interfaces require every method to be static"
+        "Interfaces require every method to be static",
+        "`Fax` is a Java keyword",
+        "The client still depends on a FatDevice interface and its unused fax() capability"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The client should receive a narrow Printer interface. A fat interface forces client-level dependency on unrelated operations even when unused.",
       "snippet": "interface FatDevice { void print(); void fax(); }\nclass PrintClient {\n private final FatDevice device;\n PrintClient(FatDevice device) { this.device = device; }\n void run() { device.print(); }\n}",
       "marks": 1
@@ -187,12 +187,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An API contains one interface with `read()`, `write()`, `delete()` and `adminReset()`. A read-only dashboard uses only read() and must be recompiled when adminReset() changes. Which design change addresses this?",
       "options": [
-        "Split a ReadOnlyStore interface from separate write/admin capabilities",
         "Force the dashboard to call adminReset() once",
         "Make the entire API protected",
-        "Use a giant abstract class instead of an interface"
+        "Use a giant abstract class instead of an interface",
+        "Split a ReadOnlyStore interface from separate write/admin capabilities"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "ISP narrows client dependencies to the operations each client actually needs.",
       "marks": 1
     },
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-17-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A team interprets ISP as 'every interface must contain exactly one method.' Which assessment is correct?",
       "options": [
+        "ISP only applies to database repositories",
         "That's exactly ISP's formal requirement",
         "It's too literal: cohesive client-focused interfaces may legitimately have several related methods",
-        "Interfaces cannot contain more than two methods in Java",
-        "ISP only applies to database repositories"
+        "Interfaces cannot contain more than two methods in Java"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "ISP concerns unnecessary dependencies, not a rigid method count. A role interface can have several cohesive operations.",
       "marks": 1
     },
