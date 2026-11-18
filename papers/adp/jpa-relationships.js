@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** Each `Order` belongs to exactly one `Customer`, while a customer has many orders. Which mapping belongs on `Order.customer`?",
       "options": [
+        "`@ElementCollection`",
         "`@ManyToOne`",
         "`@OneToMany`",
-        "`@ManyToMany`",
-        "`@ElementCollection`"
+        "`@ManyToMany`"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Each order references one customer, and many orders may reference the same customer. The many-to-one side typically holds the FK.",
       "marks": 1
     },
@@ -45,12 +45,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** In a bidirectional Customer/Order one-to-many relationship, `Order.customer` owns the FK mapping. What should Customer.orders use?",
       "options": [
-        "`@OneToMany(mappedBy = \"customer\")`",
         "`@ManyToOne(mappedBy = \"orders\")`",
         "`@Column(unique = true)`",
-        "`@Transient`"
+        "`@Transient`",
+        "`@OneToMany(mappedBy = \"customer\")`"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "mappedBy names the owning property on Order. It prevents a second independently owned association mapping.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A developer writes `@OneToMany(mappedBy=\"customer_id\")` on Customer.orders while Order's Java association field is named `customer`. What's wrong?",
       "options": [
-        "mappedBy references the Java association property name, not the database column",
-        "mappedBy can only be used on basic Strings",
         "mappedBy must be a table name",
-        "There is no error"
+        "There is no error",
+        "mappedBy references the Java association property name, not the database column",
+        "mappedBy can only be used on basic Strings"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "In bidirectional mapping, mappedBy names the owning-side entity attribute: customer, not its database FK column.",
       "snippet": "class Customer {\n  @OneToMany(mappedBy = \"customer_id\")\n  private List<Order> orders;\n}\nclass Order {\n  @ManyToOne @JoinColumn(name = \"customer_id\")\n  private Customer customer;\n}",
       "marks": 1
@@ -74,12 +74,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A parent `Order` and its child OrderLines should be persisted together when a new Order is persisted. Which cascade option is most relevant?",
       "options": [
-        "CascadeType.PERSIST",
-        "CascadeType.REMOVE only",
         "FetchType.LAZY",
-        "LockModeType.READ"
+        "LockModeType.READ",
+        "CascadeType.PERSIST",
+        "CascadeType.REMOVE only"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Cascade PERSIST propagates persistence of a new parent to new children reachable through the annotated association.",
       "marks": 1
     },
@@ -88,12 +88,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** Removing an `OrderLine` from `Order.lines` should delete that now-unowned row when the parent relationship is correctly maintained. Which mapping option is designed for that behavior?",
       "options": [
+        "`@Version` on the child",
         "`orphanRemoval = true`",
         "`fetch = FetchType.EAGER`",
-        "`@Transient` on parent",
-        "`@Version` on the child"
+        "`@Transient` on parent"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "orphanRemoval triggers removal for an entity orphaned from the relevant relationship, distinct from cascading parent deletes.",
       "marks": 1
     },
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer assumes `@ManyToOne` is LAZY by default. What's the JPA specification default?",
       "options": [
-        "EAGER",
         "LAZY",
         "NEVER",
-        "DETACHED"
+        "DETACHED",
+        "EAGER"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "The JPA default for @ManyToOne is EAGER (although explicit LAZY is often desirable to control performance).",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer assumes `@OneToMany` is EAGER by default. What's the JPA specification default?",
       "options": [
-        "EAGER",
-        "LAZY",
         "ALWAYS",
-        "AUTO"
+        "AUTO",
+        "EAGER",
+        "LAZY"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "The JPA default fetch type for @OneToMany is LAZY.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** Code loops over 100 orders and accesses `order.customer.name` after initially loading orders. Many separate customer queries execute. What performance issue is likely?",
       "options": [
-        "N+1 selects",
-        "Optimistic locking",
         "CSRF failure",
-        "A missing @Id on Customer"
+        "A missing @Id on Customer",
+        "N+1 selects",
+        "Optimistic locking"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Fetching a list plus per-row relationship queries leads to the N+1 select problem. Consider appropriate join fetch, entity graphs or DTO queries.",
       "marks": 1
     },
@@ -158,12 +158,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code reasoning:** A JPQL query uses `select o from Order o join fetch o.customer` to load Order entities and their Customer association. What is the purpose of `join fetch`?",
       "options": [
+        "Disable all transactions",
         "Load the associated customer as part of the query to avoid later lazy loads for it",
         "Replace the Order's primary key with Customer's",
-        "Force a database INSERT",
-        "Disable all transactions"
+        "Force a database INSERT"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "JOIN FETCH instructs the provider to initialize the chosen relationship alongside the root entity.",
       "snippet": "@Query(\"select o from Order o join fetch o.customer\")\nList<Order> findWithCustomer();",
       "marks": 1
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A project membership must store `joinedAt` and `role`. Why might a `Membership` entity be preferable to a direct `@ManyToMany`?",
       "options": [
-        "The association has its own data and lifecycle",
         "Many-to-many cannot express any relation",
         "A Membership entity prevents all SQL queries",
-        "Only Java records support associations"
+        "Only Java records support associations",
+        "The association has its own data and lifecycle"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Promoting the association to an entity allows attached attributes, constraints and explicit lifecycle rules.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-26-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A controller returns a detached Order object, and its lazy `lines` collection was never initialized. Accessing the collection later without an open persistence context may cause what?",
       "options": [
-        "A LazyInitializationException with Hibernate or similar provider-specific lazy access failure",
-        "Automatic load without any persistence context",
         "The database commits a transaction",
-        "Deletion of all rows"
+        "Deletion of all rows",
+        "A LazyInitializationException with Hibernate or similar provider-specific lazy access failure",
+        "Automatic load without any persistence context"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Uninitialized proxies/collections need a suitable context to load. Prefer fetching required data and returning DTOs within the service transaction.",
       "marks": 1
     },
