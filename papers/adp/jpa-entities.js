@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A JPA entity has `@Id` on a field. Which annotation is commonly added to use database-generated numeric identifiers?",
       "options": [
-        "`@Transactional`",
-        "`@GeneratedValue`",
         "`@RestController`",
-        "`@JsonIgnore`"
+        "`@JsonIgnore`",
+        "`@Transactional`",
+        "`@GeneratedValue`"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "@GeneratedValue configures a generation strategy for entity primary keys. Its strategy should fit the database.",
       "snippet": "@Entity\nclass Student {\n  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\n  private Long id;\n}",
       "marks": 1
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A managed entity is loaded in a transaction. A setter changes its name, and the transaction commits without calling repository.save on that object again. Why can the update reach the database?",
       "options": [
+        "Changes persist only when the garbage collector runs",
         "JPA dirty checking detects changes to managed entities and flushes them",
         "Java automatically updates every String in a database",
-        "A servlet filter saves entities",
-        "Changes persist only when the garbage collector runs"
+        "A servlet filter saves entities"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Within a suitable transactional persistence context, dirty checking synchronizes managed entity state during flush/commit.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** What is missing from the mapping if `username` must be unique in the database?",
       "options": [
-        "`@Column(unique = true)` or an equivalent table-level uniqueness constraint",
         "`@Transient` on the username",
         "`@Lob` on every field",
-        "`@OrderBy(\"username\")`"
+        "`@OrderBy(\"username\")`",
+        "`@Column(unique = true)` or an equivalent table-level uniqueness constraint"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "A database unique constraint must be expressed in DDL/schema generation or a migration; application-level validation alone doesn't enforce concurrency-safe uniqueness.",
       "snippet": "@Entity\nclass Account {\n  @Id private Long id;\n  @Column(nullable = false)\n  private String username;\n}",
       "marks": 1
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A field caches a calculated display string that should never be stored as a database column. Which annotation applies?",
       "options": [
-        "`@Transient`",
-        "`@EmbeddedId`",
         "`@JoinColumn`",
-        "`@ManyToOne`"
+        "`@ManyToOne`",
+        "`@Transient`",
+        "`@EmbeddedId`"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "@Transient tells JPA not to persist/map that field. Java's transient keyword also affects serialization but has different broader semantics.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A Java field is named `postalCode` while the database column is named `postal_code`. Which mapping makes the relationship explicit?",
       "options": [
-        "`@Column(name = \"postal_code\")`",
-        "`@Table(name = \"postal_code\")` on the field",
         "`@Repository` on the field",
-        "`@OrderBy(\"postal_code\")`"
+        "`@OrderBy(\"postal_code\")`",
+        "`@Column(name = \"postal_code\")`",
+        "`@Table(name = \"postal_code\")` on the field"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "@Column(name=...) maps a basic attribute to a named column.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `Product` embeds a reusable `Money` value object consisting of `amount` and `currency` into its own table. What JPA modeling feature fits best?",
       "options": [
+        "`@EnableMethodSecurity`",
         "`@Embeddable` on Money and `@Embedded` on Product's property",
         "`@Controller` on Money",
-        "`@ManyToMany` on a String",
-        "`@EnableMethodSecurity`"
+        "`@ManyToMany` on a String"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Embeddables represent component/value objects stored as part of the owning entity's table by default.",
       "marks": 1
     },
@@ -172,12 +172,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** You persist a new entity using EntityManager.persist. What does this operation usually do?",
       "options": [
-        "Make the entity managed and schedule insertion according to flush/generation behavior",
         "Immediately delete the row",
         "Guarantee a SQL INSERT was already sent before the method returns in every strategy",
-        "Merge all detached objects"
+        "Merge all detached objects",
+        "Make the entity managed and schedule insertion according to flush/generation behavior"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Persist makes a transient entity managed. When INSERT executes depends on flush, generation strategy and provider behavior.",
       "marks": 1
     },
@@ -186,12 +186,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** With `@Id @GeneratedValue(strategy = GenerationType.IDENTITY)`, how is a primary key normally obtained?",
       "options": [
-        "From a database identity/auto-increment mechanism",
         "By hashing every getter",
         "By choosing a random Spring Bean",
-        "From `@RequestParam`"
+        "From `@RequestParam`",
+        "From a database identity/auto-increment mechanism"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "IDENTITY delegates key generation to the database identity mechanism; specific SQL timing differs from sequence-based strategies.",
       "snippet": "@Id\n@GeneratedValue(strategy = GenerationType.IDENTITY)\nprivate Long id;",
       "marks": 1
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A table `courses` should be mapped to a Java `Course` entity. Which annotation specifies the table name explicitly?",
       "options": [
-        "`@Table(name = \"courses\")` on the entity class",
-        "`@Column(name = \"courses\")` on every field",
         "`@ResponseBody` on the class",
-        "`@NamedQuery(\"courses\")` alone"
+        "`@NamedQuery(\"courses\")` alone",
+        "`@Table(name = \"courses\")` on the entity class",
+        "`@Column(name = \"courses\")` on every field"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "@Table names the backing table; @Column names individual columns.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-25-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A field `externalCode` must not be null in the database. Which annotation is an appropriate DDL mapping hint, assuming schema generation/migrations honor it?",
       "options": [
+        "`@Pageable`",
         "`@Column(nullable = false)`",
         "`@Transient`",
-        "`@OneToMany` on String",
-        "`@Pageable`"
+        "`@OneToMany` on String"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "@Column(nullable=false) expresses nullability in the mapping for schema generation; actual database constraints still must exist in production.",
       "marks": 1
     },
