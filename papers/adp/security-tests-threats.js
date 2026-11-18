@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A protected Spring MVC endpoint works when called normally but your `MockMvc` test expects a 200 with no credentials and receives 401 or a redirect. What's the most likely explanation?",
       "options": [
-        "Security is active and the test needs an appropriate authenticated principal or must expect an unauthenticated response",
         "JPA entities cannot be tested",
         "GET always requires CSRF tokens",
-        "The test method must be static"
+        "The test method must be static",
+        "Security is active and the test needs an appropriate authenticated principal or must expect an unauthenticated response"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "A secured endpoint may respond with 401 or an authentication redirect when no principal is provided. Match the test to the authorization contract.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A MockMvc POST to a session-authenticated, CSRF-protected endpoint returns 403 despite an authenticated test user. What should the test add?",
       "options": [
-        "`.with(csrf())` to the request where appropriate",
-        "`.with(anonymous())`",
         "`.accept(\"image/jpeg\")`",
-        "`.with(user(\"admin\").roles(\"ADMIN\"))` is enough to bypass CSRF"
+        "`.with(user(\"admin\").roles(\"ADMIN\"))` is enough to bypass CSRF",
+        "`.with(csrf())` to the request where appropriate",
+        "`.with(anonymous())`"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "An authenticated user is not enough for CSRF-protected state-changing requests; add a CSRF token in test requests.",
       "snippet": "mockMvc.perform(post(\"/profile\")\n  .with(user(\"alice\").roles(\"USER\"))\n  .with(csrf()))\n  .andExpect(status().isOk());",
       "marks": 1
@@ -45,12 +45,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `@PreAuthorize` rule reads `#id`, but the Java method parameter is named `recordId` and no suitable parameter metadata/annotation maps it to `id`. What is the probable failure?",
       "options": [
+        "Spring converts it to a CSS class",
         "The SpEL parameter reference may not resolve as intended, causing authorization failure",
         "Method-security expressions ignore parameter names",
-        "The database renames the parameter",
-        "Spring converts it to a CSS class"
+        "The database renames the parameter"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Method-security expressions need valid parameter references. Match the actual parameter or use an explicit naming mechanism.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer tests an admin endpoint using `@WithMockUser(roles=\"ADMIN\")`. Which authority is typically granted to that test user?",
       "options": [
-        "`ROLE_ADMIN`",
         "`ADMIN` without prefix",
         "`SCOPE_ADMIN` only",
-        "Every role in the application"
+        "Every role in the application",
+        "`ROLE_ADMIN`"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "WithMockUser roles commonly map to ROLE_-prefixed GrantedAuthority values.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A test request uses `@WithMockUser(username=\"jo\", roles=\"USER\")`. The controller is guarded by `hasRole('ADMIN')`. What result should a correctly configured method-security test expect?",
       "options": [
-        "Access is denied",
-        "Access is granted because the user exists",
         "The controller is skipped only for anonymous users",
-        "ROLE_USER is automatically promoted to ROLE_ADMIN"
+        "ROLE_USER is automatically promoted to ROLE_ADMIN",
+        "Access is denied",
+        "Access is granted because the user exists"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "The authenticated mock principal has ROLE_USER, not ROLE_ADMIN, so the admin rule denies access.",
       "snippet": "@PreAuthorize(\"hasRole('ADMIN')\")\npublic String restricted() { return \"secret\"; }",
       "marks": 1
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** Your logging filter records the complete `Authorization` header for every request. What's the most important security flaw?",
       "options": [
+        "It forces 404 responses",
         "It may leak bearer tokens into log systems",
         "It improves encryption",
-        "Authorization headers cannot contain secrets",
-        "It forces 404 responses"
+        "Authorization headers cannot contain secrets"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Bearer tokens are credentials. Logging them can expose authenticated access via logs and monitoring systems.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An API stores the login user's numeric ID in a request query parameter and trusts it to select whose records to edit. What is the main authorization risk?",
       "options": [
+        "GET endpoints cannot have parameters",
         "IDOR / broken object-level authorization: an attacker can change the ID to target someone else's records",
         "SQL is always executed twice",
-        "Spring's role prefix is doubled",
-        "GET endpoints cannot have parameters"
+        "Spring's role prefix is doubled"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Bind authorization to the authenticated principal and resource ownership rather than trusting caller-supplied object IDs.",
       "marks": 1
     },
@@ -158,12 +158,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A user is authenticated, but a controller action is forbidden by authorization rules. The application responds 403. What should the developer inspect first?",
       "options": [
-        "Assigned authorities and the applicable authorization matcher or method rule",
         "CSS media queries",
         "JPA generation strategy",
-        "File upload multipart size"
+        "File upload multipart size",
+        "Assigned authorities and the applicable authorization matcher or method rule"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "An authenticated user's 403 usually points to missing authority, ownership, CSRF, or another authorization failure.",
       "marks": 1
     },
@@ -172,12 +172,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A POST protected by session authentication fails with 403 even for an admin. Which cause is worth checking before assuming role mapping is broken?",
       "options": [
-        "A missing or invalid CSRF token",
-        "Whether the application has an index on the user table",
         "Whether the request uses DTOs",
-        "Whether there is a favicon"
+        "Whether there is a favicon",
+        "A missing or invalid CSRF token",
+        "Whether the application has an index on the user table"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "CSRF checks can reject POST before authorization outcomes; investigate error details and the security filter chain.",
       "marks": 1
     },
@@ -186,12 +186,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A CORS preflight OPTIONS request contains an Origin and Access-Control-Request-Method but no session cookie. Why may correct CORS processing order matter?",
       "options": [
-        "Preflight typically lacks credentials and should be handled by appropriate CORS processing before security rules deny it as unauthenticated",
-        "OPTIONS always bypasses all servlet filters automatically",
         "CSRF tokens must be in preflight bodies",
-        "Origin header proves authentication"
+        "Origin header proves authentication",
+        "Preflight typically lacks credentials and should be handled by appropriate CORS processing before security rules deny it as unauthenticated",
+        "OPTIONS always bypasses all servlet filters automatically"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Proper CORS integration can handle preflight requests without requiring user credentials and avoid accidental 401/403 responses.",
       "marks": 1
     },
@@ -200,12 +200,12 @@ window.PAPERROOM_LIBRARY["adp-24-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A team adds a password reset token to a URL and records full URLs in analytics. What should be addressed?",
       "options": [
+        "Passwords should be embedded in token URLs",
         "Secret reset tokens can leak through logs, referrers, and analytics; minimize exposure and use short-lived one-time tokens",
         "Logging secrets is harmless behind HTTPS",
-        "Reset tokens should be valid forever",
-        "Passwords should be embedded in token URLs"
+        "Reset tokens should be valid forever"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Reset URLs often carry sensitive temporary credentials; protect against disclosure, replay and persistence.",
       "marks": 1
     },
