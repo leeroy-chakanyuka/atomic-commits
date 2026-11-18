@@ -16,12 +16,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An `InvoiceService` calculates totals, formats a PDF, and emails the invoice. The accounts team changes tax rules while the design team changes PDF layout. Which refactor best follows the Single Responsibility Principle (SRP)?",
       "options": [
+        "Create one superclass that handles all invoice-related actions",
         "Put each method in a separate subclass regardless of purpose",
         "Keep calculation in an invoice policy/service and delegate rendering and delivery to dedicated collaborators",
-        "Make every method static",
-        "Create one superclass that handles all invoice-related actions"
+        "Make every method static"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "SRP means a module should have one reason to change, normally tied to one responsibility/actor. Calculating, rendering, and delivering invoices have different change pressures.",
       "marks": 1
     },
@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A `Customer` object holds `name`, `email`, and a method `changeEmail()` that enforces the customer's domain rule. A colleague says SRP forbids more than one method per class. What's right?",
       "options": [
-        "SRP requires exactly one method",
         "These cohesive state-changing methods can belong together; SRP concerns reasons for change, not method count",
         "Customer must implement an EmailSender interface",
-        "All validation belongs inside a PDF renderer"
+        "All validation belongs inside a PDF renderer",
+        "SRP requires exactly one method"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "A single cohesive responsibility may require multiple methods. SRP does not mean 'one method' or 'one field'.",
       "marks": 1
     },
@@ -44,12 +44,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A report's database-save method also chooses CSS colors and renders HTML. What is the clearest SRP risk?",
       "options": [
-        "Both operations are private",
-        "Persistence schema and presentation design can change independently, forcing unrelated edits to one class",
         "The method returns String",
-        "Java classes cannot hold strings"
+        "Java classes cannot hold strings",
+        "Both operations are private",
+        "Persistence schema and presentation design can change independently, forcing unrelated edits to one class"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Persistence and presentation are independently varying responsibilities; separating them reduces coupled changes.",
       "snippet": "class ReportService {\n  String saveAndRender(Report r) {\n    database.save(r);\n    return \"<div class='blue'>\" + r.title() + \"</div>\";\n  }\n}",
       "marks": 1
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer extracts each line of `OrderService.placeOrder()` into a different micro-class. The overall workflow still changes for one business reason. Is this necessarily better SRP?",
       "options": [
-        "Yes, SRP mandates the greatest possible number of classes",
         "No; excessive fragmentation does not automatically improve cohesion or reduce reasons to change",
         "Yes, because class names become shorter",
-        "No, Java limits the number of files per package"
+        "No, Java limits the number of files per package",
+        "Yes, SRP mandates the greatest possible number of classes"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "SRP is about cohesive responsibilities and change reasons, not maximum class count.",
       "marks": 1
     },
@@ -87,12 +87,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An application should support new shipping methods without editing `Checkout.calculateShipping()` each time. Which design follows the Open/Closed Principle (OCP)?",
       "options": [
+        "Store carrier names as Strings and switch in every controller",
         "Hardcode another `else if` for every carrier",
         "Define `ShippingRate` and inject a new implementation for each carrier",
-        "Make `Checkout` final and hard-code all rates",
-        "Store carrier names as Strings and switch in every controller"
+        "Make `Checkout` final and hard-code all rates"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "An abstraction such as ShippingRate lets new behavior be added as a new implementation while stable checkout logic delegates to it.",
       "marks": 1
     },
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A notification service receives a `Notifier` interface and calls `notifyUser()`. Adding `PushNotifier` requires no modification to the service. Which principle is principally illustrated?",
       "options": [
-        "Open/Closed Principle",
         "SRP automatically, and no other",
         "Flyweight",
-        "Law of Demeter exclusively"
+        "Law of Demeter exclusively",
+        "Open/Closed Principle"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "The service is closed to that form of modification but open to extension through new Notifier implementations.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code trace:** A `TotalCalculator` delegates to a `Discount` interface. What prints when `HalfPrice` is used?",
       "options": [
-        "50",
         "100",
         "0",
-        "A compile error because an interface cannot be a field type"
+        "A compile error because an interface cannot be a field type",
+        "50"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "HalfPrice.apply(100) returns 50 and TotalCalculator delegates through the Discount interface.",
       "snippet": "interface Discount { int apply(int price); }\nclass HalfPrice implements Discount {\n  public int apply(int price) { return price / 2; }\n}\nclass TotalCalculator {\n  private final Discount discount;\n  TotalCalculator(Discount discount) { this.discount = discount; }\n  int total(int price) { return discount.apply(price); }\n}\nSystem.out.println(new TotalCalculator(new HalfPrice()).total(100));",
       "marks": 1
@@ -159,12 +159,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer makes `DiscountPolicy` abstract and then creates ten subclasses that each duplicate the same database lookup code. Which statement is most accurate?",
       "options": [
-        "Inheritance guarantees OCP and good design",
         "The extension mechanism exists, but duplicated responsibilities still suggest a poor design",
         "OCP prohibits an abstract class",
-        "The database automatically deduplicates Java methods"
+        "The database automatically deduplicates Java methods",
+        "Inheritance guarantees OCP and good design"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "An abstract extension point alone does not ensure maintainability; duplicated common behavior should be composed or factored appropriately.",
       "marks": 1
     },
@@ -173,12 +173,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** Every `EmailFormatter` subclass must be edited when the app changes a required compliance footer, because the footer text is copied into each subclass. What's the best improvement?",
       "options": [
+        "Add more `instanceof` tests in callers",
         "Let each implementation keep its own unrelated copy",
         "Centralize the shared compliance behavior while allowing format-specific logic to vary",
-        "Remove every formatter interface",
-        "Add more `instanceof` tests in callers"
+        "Remove every formatter interface"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Keep truly common behavior in one place and extend only the intended variation. Both duplication and unnecessary modification across subclasses are warning signs.",
       "marks": 1
     },
@@ -187,12 +187,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A checkout uses an abstract `TaxCalculator`, but it repeatedly casts to `VATCalculator` to access VAT-only methods. Why is this a problem?",
       "options": [
+        "Only Visitor can calculate taxes",
         "Casts always cause compilation errors",
         "The client still depends on concrete types, undermining its extension boundary",
-        "Abstract classes can't have methods",
-        "Only Visitor can calculate taxes"
+        "Abstract classes can't have methods"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Concrete-type checks and casts tie callers to implementations; design a suitable abstraction for behavior actually needed by checkout.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-16-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A class both validates orders and generates printable invoices. A team extracts `InvoicePrinter`, then injects a new `Printer` implementation for HTML. Which principles are being improved?",
       "options": [
+        "Neither because Java requires inheritance",
         "SRP only; extensibility cannot improve",
         "OCP only; responsibilities haven't changed",
-        "SRP through separation and OCP through substitutable printer implementations",
-        "Neither because Java requires inheritance"
+        "SRP through separation and OCP through substitutable printer implementations"
       ],
-      "correct": "C",
+      "correct": "D",
       "memo": "The extraction separates validation from printing (SRP); introducing a Printer abstraction allows new formats without changing the caller (OCP).",
       "marks": 1
     },
