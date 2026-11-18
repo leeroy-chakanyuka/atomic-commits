@@ -45,12 +45,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A user successfully authenticates with their email and password. Which Spring Security object normally represents the verified identity and authorities for the request?",
       "options": [
-        "An Authentication placed in the SecurityContext",
         "The HTML template",
         "A JPA EntityManager transaction",
-        "The servlet's URL only"
+        "The servlet's URL only",
+        "An Authentication placed in the SecurityContext"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Successful authentication is represented by Authentication, typically held in the SecurityContext.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** `UserDetailsService.loadUserByUsername` is implemented to fetch users from your database. Does that method itself normally verify a submitted password?",
       "options": [
+        "No; passwords are never checked by Spring Security",
         "Yes, it must compare raw passwords manually inside SQL",
         "No; it loads user details and a provider, such as DaoAuthenticationProvider, performs password verification using PasswordEncoder",
-        "Yes; servlet filters are never involved",
-        "No; passwords are never checked by Spring Security"
+        "Yes; servlet filters are never involved"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "UserDetailsService loads the record/authorities; a configured authentication provider performs credential checks.",
       "marks": 1
     },
@@ -73,12 +73,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A web app authenticates users with a session cookie. The attacker places a malicious POST form on another website, hoping the browser will submit the victim's authenticated cookie. Which protection addresses this class of attack?",
       "options": [
-        "CSRF protection",
-        "SQL query caching",
         "Unique indexes",
-        "CORS alone"
+        "CORS alone",
+        "CSRF protection",
+        "SQL query caching"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "CSRF defenses ensure state-changing cookie-authenticated requests have a valid origin/token; CORS is not itself a sufficient CSRF defense.",
       "marks": 1
     },
@@ -101,12 +101,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** A session-backed browser login app globally disables CSRF with no alternative protection. What's the concern?",
       "options": [
-        "There is no concern, since HTTPS prevents CSRF",
         "Cross-site state-changing requests may exploit automatically sent session cookies",
         "Authentication stops working automatically",
-        "All GET requests become SQL injections"
+        "All GET requests become SQL injections",
+        "There is no concern, since HTTPS prevents CSRF"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "For browser form/session authentication, disabling CSRF can expose writes to cross-site request forgery.",
       "snippet": "http.csrf(csrf -> csrf.disable());\nhttp.formLogin(Customizer.withDefaults());",
       "marks": 1
@@ -116,12 +116,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer says CORS and CSRF are identical: enabling CORS with one allowed origin prevents fraudulent POST submissions. What's correct?",
       "options": [
-        "CORS controls cross-origin browser access to responses and some requests; it does not replace CSRF defenses for cookie-authenticated actions",
         "CORS verifies password hashes",
         "Both technologies are JPA annotations",
-        "CSRF only changes MIME types"
+        "CSRF only changes MIME types",
+        "CORS controls cross-origin browser access to responses and some requests; it does not replace CSRF defenses for cookie-authenticated actions"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "CORS and CSRF solve different problems. Simple cross-origin form submissions can happen without reading the response.",
       "marks": 1
     },
@@ -130,12 +130,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A stateless resource server should avoid using HTTP sessions to persist request authentication between API calls. Which setting is commonly used?",
       "options": [
-        "`SessionCreationPolicy.STATELESS`",
         "`FetchType.EAGER`",
         "`Propagation.REQUIRES_NEW`",
-        "`GenerationType.AUTO`"
+        "`GenerationType.AUTO`",
+        "`SessionCreationPolicy.STATELESS`"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Stateless session policy tells Spring Security not to use an HTTP session to obtain the SecurityContext across requests.",
       "marks": 1
     },
@@ -144,12 +144,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code tracing:** With `SessionCreationPolicy.STATELESS`, a client authenticates with a valid bearer token on one request, then sends a second request with no token. What should it expect for an otherwise protected endpoint?",
       "options": [
+        "Second request always succeeds because the first request did",
         "Second request inherits the previous authentication from session",
         "Second request is unauthenticated because credentials must be supplied again",
-        "The database deletes the user",
-        "Second request always succeeds because the first request did"
+        "The database deletes the user"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "No session-based authentication is retained; each request must present credentials in the chosen stateless architecture.",
       "snippet": "http.sessionManagement(s ->\n    s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));",
       "marks": 1
@@ -201,12 +201,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A session fixation defense rotates a session ID after successful login. What's the intended result?",
       "options": [
-        "A pre-login session ID chosen or known by an attacker should not remain the authenticated session identifier",
         "All database primary keys rotate",
         "Authentication becomes impossible",
-        "CSRF tokens are never necessary"
+        "CSRF tokens are never necessary",
+        "A pre-login session ID chosen or known by an attacker should not remain the authenticated session identifier"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "Changing the session ID on authentication reduces the chance an attacker can reuse a pre-established session identifier.",
       "marks": 1
     },
@@ -215,12 +215,12 @@ window.PAPERROOM_LIBRARY["adp-22-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** You want to log out a user in a stateful session-based application. Which behavior is important?",
       "options": [
-        "Invalidate the authenticated session and clear appropriate security state",
-        "Delete all users from the database",
         "Log the user's plaintext password",
-        "Disable all HTTP filters"
+        "Disable all HTTP filters",
+        "Invalidate the authenticated session and clear appropriate security state",
+        "Delete all users from the database"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Session logout should terminate the server-side session and remove security context as configured; browser cookie cleanup may also be needed.",
       "marks": 1
     },
