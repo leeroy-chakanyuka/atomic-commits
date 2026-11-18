@@ -15,7 +15,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q01.** In Observer, one subject can keep references to multiple subscribed observers and notify them when its state changes.",
       "correct": "true",
-      "memo": "Observer models subject-to-subscriber notification, commonly a one-to-many relationship.",
+      "memo": "**Correct answer: TRUE.** Observer models subject-to-subscriber notification, commonly a one-to-many relationship.",
       "marks": 2,
       "truthOnly": true,
       "id": 1,
@@ -25,7 +25,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q02.** Builder requires all optional object properties to be supplied in a single positional constructor call.",
       "correct": "false",
-      "memo": "Builder commonly supports incremental and readable configuration, avoiding long positional constructors.",
+      "memo": "**Correct answer: FALSE.** Builder commonly supports incremental and readable configuration, avoiding long positional constructors.",
       "marks": 2,
       "truthOnly": true,
       "id": 2,
@@ -35,7 +35,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q03.** In nested decorators, reversing the order of wrappers can change the behaviour of the final object.",
       "correct": "true",
-      "memo": "Wrappers execute in a nesting order; changing the order can alter logging, transformations or other effects.",
+      "memo": "**Correct answer: TRUE.** Wrappers execute in a nesting order; changing the order can alter logging, transformations or other effects.",
       "marks": 2,
       "truthOnly": true,
       "id": 3,
@@ -45,7 +45,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q04.** Dependency Inversion recommends that high-level business modules import concrete infrastructure classes instead of abstractions.",
       "correct": "false",
-      "memo": "High- and low-level modules should depend on stable abstractions; low-level implementation details should not control policy.",
+      "memo": "**Correct answer: FALSE.** High- and low-level modules should depend on stable abstractions; low-level implementation details should not control policy.",
       "marks": 2,
       "truthOnly": true,
       "id": 4,
@@ -55,7 +55,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q05.** With a suitable active transaction, JPA can persist changes to a managed entity through dirty checking.",
       "correct": "true",
-      "memo": "Changes to managed entities are normally synchronized during flush/commit.",
+      "memo": "**Correct answer: TRUE.** Changes to managed entities are normally synchronized during flush/commit.",
       "marks": 2,
       "truthOnly": true,
       "id": 5,
@@ -65,7 +65,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q06.** Reading a JWT's payload without verifying its signature proves the token is authentic.",
       "correct": "false",
-      "memo": "Decoded JWT claims can be forged; signature and claim validation establish trust.",
+      "memo": "**Correct answer: FALSE.** Decoded JWT claims can be forged; signature and claim validation establish trust.",
       "marks": 2,
       "truthOnly": true,
       "id": 6,
@@ -75,7 +75,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q07.** Two iterators created for the same collection can track different current positions.",
       "correct": "true",
-      "memo": "Each iterator normally owns its own cursor/traversal state.",
+      "memo": "**Correct answer: TRUE.** Each iterator normally owns its own cursor/traversal state.",
       "marks": 2,
       "truthOnly": true,
       "id": 7,
@@ -85,17 +85,18 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "True or false",
       "prompt": "**Q08.** A subclass may reject valid inputs guaranteed by its superclass without affecting Liskov Substitution.",
       "correct": "false",
-      "memo": "Strengthening preconditions breaks the guarantees expected by clients of the base type.",
+      "memo": "**Correct answer: FALSE.** Strengthening preconditions breaks the guarantees expected by clients of the base type.",
       "marks": 2,
       "truthOnly": true,
       "id": 8,
-      "section": "SECTION ONE · TRUE OR FALSE"
+      "section": "SECTION ONE · TRUE OR FALSE",
+      "snippet": "class BaseStore {\n  void save(String value) { /* records all valid values */ }\n}\nclass LimitedStore extends BaseStore {\n  @Override void save(String value) {\n    if (value.length() > 5) throw new IllegalArgumentException();\n  }\n}"
     },
     {
       "kind": "True or false",
       "prompt": "**Q09.** The default fetch type for a JPA `@OneToMany` association is LAZY.",
       "correct": "true",
-      "memo": "JPA defines LAZY as the default for one-to-many collections.",
+      "memo": "**Correct answer: TRUE.** JPA defines LAZY as the default for one-to-many collections.",
       "marks": 2,
       "truthOnly": true,
       "id": 9,
@@ -111,7 +112,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "Factory Method pattern"
         ]
       ],
-      "memo": "Factory Method defines a product-creation method whose implementation may vary in subclasses.",
+      "memo": "**Correct answer: `Factory Method`.** Factory Method defines a product-creation method whose implementation may vary in subclasses.",
       "marks": 2,
       "id": 10,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -126,7 +127,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "PostMapping"
         ]
       ],
-      "memo": "@PostMapping is a specialized mapping annotation for POST handlers.",
+      "memo": "**Correct answer: `@PostMapping`.** @PostMapping is a specialized mapping annotation for POST handlers.",
       "marks": 2,
       "id": 11,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -142,7 +143,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "Liskov Substitution"
         ]
       ],
-      "memo": "LSP is the Liskov Substitution Principle.",
+      "memo": "**Correct answer: `LSP`.** LSP is the Liskov Substitution Principle.",
       "marks": 2,
       "id": 12,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -157,7 +158,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "OneToMany"
         ]
       ],
-      "memo": "The collection-valued side of a one-to-many association is annotated @OneToMany.",
+      "memo": "**Correct answer: `@OneToMany`.** The collection-valued side of a one-to-many association is annotated @OneToMany.",
       "marks": 2,
       "id": 13,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -172,7 +173,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "Adapter pattern"
         ]
       ],
-      "memo": "An Adapter converts interface calls without modifying the existing dependency.",
+      "memo": "**Correct answer: `Adapter`.** An Adapter converts interface calls without modifying the existing dependency.",
       "marks": 2,
       "id": 14,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -187,7 +188,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "PreAuthorize"
         ]
       ],
-      "memo": "@PreAuthorize evaluates an authorization expression prior to method invocation when method security is enabled.",
+      "memo": "**Correct answer: `@PreAuthorize`.** @PreAuthorize evaluates an authorization expression prior to method invocation when method security is enabled.",
       "marks": 2,
       "id": 15,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -202,7 +203,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "Strategy pattern"
         ]
       ],
-      "memo": "Strategy encapsulates interchangeable algorithms in separate implementations.",
+      "memo": "**Correct answer: `Strategy`.** Strategy encapsulates interchangeable algorithms in separate implementations.",
       "marks": 2,
       "id": 16,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -217,7 +218,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "JoinColumn"
         ]
       ],
-      "memo": "@JoinColumn specifies the join column for an owning association.",
+      "memo": "**Correct answer: `@JoinColumn`.** @JoinColumn specifies the join column for an owning association.",
       "marks": 2,
       "id": 17,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -232,7 +233,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "Command pattern"
         ]
       ],
-      "memo": "Command stores a receiver, an operation and sometimes undo information as an executable object.",
+      "memo": "**Correct answer: `Command`.** Command stores a receiver, an operation and sometimes undo information as an executable object.",
       "marks": 2,
       "id": 18,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -247,7 +248,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "HTTP PUT"
         ]
       ],
-      "memo": "PUT commonly creates or replaces the representation at the specified URI; semantics depend on endpoint design.",
+      "memo": "**Correct answer: `PUT`.** PUT commonly creates or replaces the representation at the specified URI; semantics depend on endpoint design.",
       "marks": 2,
       "id": 19,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -262,7 +263,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
           "orphanRemoval()"
         ]
       ],
-      "memo": "orphanRemoval removes child entities orphaned from a configured parent association.",
+      "memo": "**Correct answer: `orphanRemoval`.** orphanRemoval removes child entities orphaned from a configured parent association.",
       "marks": 2,
       "id": 20,
       "section": "SECTION TWO · FILL IN THE BLANKS"
@@ -277,7 +278,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "SQL inheritance"
       ],
       "correct": "A",
-      "memo": "Each element's accept calls visitor.visit(this), selecting the appropriate type-specific overload.",
+      "memo": "**Correct answer: A.** Each element's accept calls visitor.visit(this), selecting the appropriate type-specific overload.",
       "marks": 2,
       "id": 21,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -286,13 +287,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q22.** The team then adds a new LaserGun type to the same Visitor hierarchy. What maintenance cost is typical?",
       "options": [
-        "All existing guns must be rewritten",
-        "The visitor contract and existing concrete visitors need to handle LaserGun",
+        "The visitor becomes a Factory Method",
         "All visitors disappear automatically",
-        "The visitor becomes a Factory Method"
+        "All existing guns must be rewritten",
+        "The visitor contract and existing concrete visitors need to handle LaserGun"
       ],
-      "correct": "B",
-      "memo": "Adding an element type generally requires a new visit overload and updates to existing concrete visitors.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Adding an element type generally requires a new visit overload and updates to existing concrete visitors.",
       "marks": 2,
       "id": 22,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -307,7 +308,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "Automatically makes the collection thread-safe"
       ],
       "correct": "C",
-      "memo": "Iterator separates traversal from the concrete representation of the collection.",
+      "memo": "**Correct answer: C.** Iterator separates traversal from the concrete representation of the collection.",
       "marks": 2,
       "id": 23,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -316,13 +317,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q24.** A robot simulation shares immutable model textures between 10,000 instances while keeping per-instance coordinates outside the shared type. Which state is intrinsic?",
       "options": [
-        "Each robot's current position",
-        "Each robot's unique serial number",
+        "The shared model texture",
         "Each robot's current owner",
-        "The shared model texture"
+        "Each robot's unique serial number",
+        "Each robot's current position"
       ],
-      "correct": "D",
-      "memo": "Intrinsic state is shared, stable data such as common assets/configuration; unique positions and IDs remain extrinsic.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Intrinsic state is shared, stable data such as common assets/configuration; unique positions and IDs remain extrinsic.",
       "marks": 2,
       "id": 24,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -337,7 +338,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "It creates an SQL table"
       ],
       "correct": "A",
-      "memo": "Terminals evaluate leaf-level grammar constructs; composite expressions combine child nodes.",
+      "memo": "**Correct answer: A.** Terminals evaluate leaf-level grammar constructs; composite expressions combine child nodes.",
       "marks": 2,
       "id": 25,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -346,13 +347,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q26.** A `Meal` interface is wrapped by `ExtraCheese`, then `GiftWrap`, each adding to `price()`. Which design is this?",
       "options": [
-        "Abstract Factory",
         "Decorator",
+        "Bridge",
         "Singleton",
-        "Bridge"
+        "Abstract Factory"
       ],
-      "correct": "B",
-      "memo": "Decorators implement the same component interface and wrap another component to add behavior.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Decorators implement the same component interface and wrap another component to add behavior.",
       "marks": 2,
       "id": 26,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -367,7 +368,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "two/two"
       ],
       "correct": "B",
-      "memo": "The outermost PrefixDecorator runs first and then delegates to the wrapped decorator.",
+      "memo": "**Correct answer: B.** The outermost PrefixDecorator runs first and then delegates to the wrapped decorator.",
       "snippet": "interface Step { String run(); }\nclass Base implements Step { public String run(){return \"one\";} }\nclass Prefix implements Step {\n  private final Step s;\n  Prefix(Step s){this.s=s;}\n  public String run(){return \"two/\" + s.run();}\n}\nSystem.out.println(new Prefix(new Base()).run());",
       "marks": 2,
       "id": 27,
@@ -377,13 +378,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q28.** A `TaskManager` has `StartButton` and `StopButton` UI controls that invoke independently queued operations on a server task. Which decoupling belongs to Command?",
       "options": [
-        "Invokers know the task receiver's concrete fields",
+        "Each command must be a Singleton",
         "Receiver never performs operations",
         "Invokers depend on a Command interface, not concrete operation details",
-        "Each command must be a Singleton"
+        "Invokers know the task receiver's concrete fields"
       ],
       "correct": "C",
-      "memo": "Invoker controls when to execute but depends only on Command.execute rather than receiver details.",
+      "memo": "**Correct answer: C.** Invoker controls when to execute but depends only on Command.execute rather than receiver details.",
       "marks": 2,
       "id": 28,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -392,13 +393,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q29.** A device supports several protocols and models. The product's high-level remote-control API and low-level device-driver API vary separately. Which pattern is best suited?",
       "options": [
+        "Bridge",
         "Builder",
         "Strategy only",
-        "Visitor",
-        "Bridge"
+        "Visitor"
       ],
-      "correct": "D",
-      "memo": "Bridge composes the remote abstraction with a device implementation hierarchy.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Bridge composes the remote abstraction with a device implementation hierarchy.",
       "marks": 2,
       "id": 29,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -407,13 +408,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q30.** A `SceneFactory` exposes `createButton()` and `createCheckbox()` for two consistent visual themes. Choose:",
       "options": [
+        "Command",
         "Abstract Factory",
-        "Simple Factory only",
         "Iterator",
-        "Command"
+        "Simple Factory only"
       ],
-      "correct": "A",
-      "memo": "Abstract Factory creates related products from consistent families.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Abstract Factory creates related products from consistent families.",
       "marks": 2,
       "id": 30,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -422,13 +423,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q31.** A legacy parser requires `load(String)` while a new API requires `parse(InputStream)`. A wrapper translates one to the other. Which pattern?",
       "options": [
-        "Decorator",
         "Adapter",
+        "Decorator",
         "Interpreter",
         "Observer"
       ],
-      "correct": "B",
-      "memo": "Adapter changes the interface expected by a client while reusing the old code.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Adapter changes the interface expected by a client while reusing the old code.",
       "marks": 2,
       "id": 31,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -437,13 +438,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q32.** A production app needs one shared `SettingsManager`. A naïve `static SettingsManager instance;` is created lazily without synchronization on multiple threads. What's the danger?",
       "options": [
-        "Settings are always immutable",
+        "All methods become synchronized automatically",
         "Object creation becomes compile-time only",
-        "Two threads may create separate instances during a race",
-        "All methods become synchronized automatically"
+        "Settings are always immutable",
+        "Two threads may create separate instances during a race"
       ],
-      "correct": "C",
-      "memo": "Unsafe lazy initialization can race, violating intended singleton uniqueness. Use safe initialization strategies.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Unsafe lazy initialization can race, violating intended singleton uniqueness. Use safe initialization strategies.",
       "marks": 2,
       "id": 32,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -453,12 +454,12 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "prompt": "**Q33.** Why can making a single `Customer` class handle CSV import, PDF export, validation and emailing be troublesome?",
       "options": [
         "Java requires one method per class",
+        "Unrelated responsibilities can change for independent reasons",
         "It automatically improves reusability",
-        "It ensures OCP",
-        "Unrelated responsibilities can change for independent reasons"
+        "It ensures OCP"
       ],
-      "correct": "D",
-      "memo": "SRP is about cohesive responsibilities/reasons for change.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** SRP is about cohesive responsibilities/reasons for change.",
       "marks": 2,
       "id": 33,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -467,13 +468,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q34.** You add `BankTransferProcessor` implementing `PaymentProcessor` while `Checkout` depends only on the interface. Which principle does this primarily facilitate?",
       "options": [
-        "OCP",
-        "LSP is impossible",
+        "ISP requires twenty methods",
         "SRP forbids this",
-        "ISP requires twenty methods"
+        "OCP",
+        "LSP is impossible"
       ],
-      "correct": "A",
-      "memo": "New implementations extend behavior without editing stable checkout decision logic.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** New implementations extend behavior without editing stable checkout decision logic.",
       "marks": 2,
       "id": 34,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -482,13 +483,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q35.** Suppose a `Bird` base type exposes `fly()` as a guaranteed operation but a `Penguin` subtype throws whenever it is called. Which principle is violated?",
       "options": [
-        "ISP only",
         "LSP",
+        "ISP only",
         "OCP only",
         "DIP only"
       ],
-      "correct": "B",
-      "memo": "Penguin cannot satisfy the behavior guaranteed by the general Bird contract.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** Penguin cannot satisfy the behavior guaranteed by the general Bird contract.",
       "marks": 2,
       "id": 35,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -497,13 +498,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q36.** The `Printable` interface has `print()`, `scan()` and `fax()`; a thermal label printer throws for the latter two. What is the best redesign?",
       "options": [
-        "Add an `unsupported` flag to every caller",
+        "Require all printers to fax",
         "Remove all interfaces",
-        "Split focused Printer/Scanner/Fax capabilities",
-        "Require all printers to fax"
+        "Add an `unsupported` flag to every caller",
+        "Split focused Printer/Scanner/Fax capabilities"
       ],
-      "correct": "C",
-      "memo": "ISP lets clients depend only on supported operations; LSP problems from throwing unsupported methods are reduced.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** ISP lets clients depend only on supported operations; LSP problems from throwing unsupported methods are reduced.",
       "marks": 2,
       "id": 36,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -518,22 +519,23 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "Inject a Uploader interface, implemented by S3Uploader"
       ],
       "correct": "D",
-      "memo": "High-level report logic should depend on a stable abstraction supplied by configuration.",
+      "memo": "**Correct answer: D.** High-level report logic should depend on a stable abstraction supplied by configuration.",
       "marks": 2,
       "id": 37,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "snippet": "interface MessageSender { void send(String text); }\nclass AlertService {\n  private final MessageSender sender;\n  AlertService(MessageSender sender) { this.sender = sender; }\n  void alert(String text) { sender.send(text); }\n}"
     },
     {
       "kind": "Multiple choice",
       "prompt": "**Q38.** Which code correctly configures public access to `/health` and authentication for other requests?",
       "options": [
-        "`.requestMatchers(\"/health\").permitAll().anyRequest().authenticated()`",
-        "`.anyRequest().permitAll().requestMatchers(\"/health\").authenticated()`",
+        "`.requestMatchers(\"/health\").hasRole(\"ADMIN\")`",
         "`.anyRequest().denyAll()`",
-        "`.requestMatchers(\"/health\").hasRole(\"ADMIN\")`"
+        "`.requestMatchers(\"/health\").permitAll().anyRequest().authenticated()`",
+        "`.anyRequest().permitAll().requestMatchers(\"/health\").authenticated()`"
       ],
-      "correct": "A",
-      "memo": "Specific public matcher before the authenticated catch-all implements the stated policy.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** Specific public matcher before the authenticated catch-all implements the stated policy.",
       "marks": 2,
       "id": 38,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -542,13 +544,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q39.** With session-based browser login, why is CSRF protection still relevant even when passwords are hashed and TLS is enabled?",
       "options": [
-        "Hashed passwords are transmitted in every request",
         "Browsers automatically attach session cookies to some cross-site requests",
+        "Hashed passwords are transmitted in every request",
         "CSRF is part of a password encoding algorithm",
         "TLS turns unsafe POST into GET"
       ],
-      "correct": "B",
-      "memo": "CSRF targets an authenticated browser's ambient session cookie, not password hashing or transport encryption.",
+      "correct": "A",
+      "memo": "**Correct answer: A.** CSRF targets an authenticated browser's ambient session cookie, not password hashing or transport encryption.",
       "marks": 2,
       "id": 39,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -557,13 +559,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q40.** A resource-server API accepts signed JWTs. Which validation is critical before trusting a claim such as `scope`?",
       "options": [
-        "Read it as an unauthenticated String only",
+        "Decode Base64 and ignore the signature",
         "Compare token length to ID size",
-        "Validate signature and relevant expiry/issuer/audience rules",
-        "Decode Base64 and ignore the signature"
+        "Read it as an unauthenticated String only",
+        "Validate signature and relevant expiry/issuer/audience rules"
       ],
-      "correct": "C",
-      "memo": "Token authenticity and valid claims must be established before using its authorities.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** Token authenticity and valid claims must be established before using its authorities.",
       "marks": 2,
       "id": 40,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -574,11 +576,11 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "options": [
         "Every user must be ADMIN",
         "Only POST is permitted",
-        "Requests are denied without HTTPS by definition",
-        "An authenticated principal is required, not a particular role"
+        "An authenticated principal is required, not a particular role",
+        "Requests are denied without HTTPS by definition"
       ],
-      "correct": "D",
-      "memo": "authenticated() checks the authentication status; add role/authority rules separately.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** authenticated() checks the authentication status; add role/authority rules separately.",
       "marks": 2,
       "id": 41,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -587,13 +589,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q42.** A `@PreAuthorize(\"hasRole('ADMIN')\")` annotation is present but method security was never enabled. What should be checked?",
       "options": [
+        "Replace hasRole with SQL",
         "Enable method security, e.g. @EnableMethodSecurity",
-        "Add @Entity to the controller",
         "Call EntityManager.flush",
-        "Replace hasRole with SQL"
+        "Add @Entity to the controller"
       ],
-      "correct": "A",
-      "memo": "Method security needs the corresponding advice/interceptor infrastructure.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** Method security needs the corresponding advice/interceptor infrastructure.",
       "marks": 2,
       "id": 42,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -608,37 +610,39 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "Accept: Bearer xyz"
       ],
       "correct": "B",
-      "memo": "Bearer access tokens are commonly supplied using the Authorization header.",
+      "memo": "**Correct answer: B.** Bearer access tokens are commonly supplied using the Authorization header.",
       "marks": 2,
       "id": 43,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "snippet": "http.authorizeHttpRequests(auth -> auth\n  .requestMatchers(\"/public/**\").permitAll()\n  .anyRequest().authenticated());"
     },
     {
       "kind": "Multiple choice",
       "prompt": "**Q44.** In a JPA bidirectional association, which side determines the foreign-key mapping?",
       "options": [
-        "The side whose field name is alphabetically first",
+        "The Java class with more methods",
         "Always the @OneToMany side",
-        "The owning association side, often the @ManyToOne field",
-        "The Java class with more methods"
+        "The side whose field name is alphabetically first",
+        "The owning association side, often the @ManyToOne field"
       ],
-      "correct": "C",
-      "memo": "JPA ownership determines updates to the underlying join column/association mapping.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** JPA ownership determines updates to the underlying join column/association mapping.",
       "marks": 2,
       "id": 44,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "snippet": "class Order {\n  @ManyToOne\n  @JoinColumn(name = \"customer_id\")\n  private Customer customer;\n}"
     },
     {
       "kind": "Multiple choice",
       "prompt": "**Q45.** `@ManyToOne` has which default fetch behavior under the JPA specification?",
       "options": [
         "LAZY",
+        "EAGER",
         "NEVER",
-        "DETACHED",
-        "EAGER"
+        "DETACHED"
       ],
-      "correct": "D",
-      "memo": "The JPA default for @ManyToOne is EAGER; many projects choose explicit LAZY for performance.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** The JPA default for @ManyToOne is EAGER; many projects choose explicit LAZY for performance.",
       "marks": 2,
       "id": 45,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -647,13 +651,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q46.** A service loads an Order entity in a transaction, changes `status`, then commits without another save. What mechanism can persist the change?",
       "options": [
-        "Dirty checking",
-        "@CrossOrigin",
+        "Simple Factory",
         "Observer subscription",
-        "Simple Factory"
+        "@CrossOrigin",
+        "Dirty checking"
       ],
-      "correct": "A",
-      "memo": "JPA dirty checking syncs managed entity changes at flush or transaction commit.",
+      "correct": "D",
+      "memo": "**Correct answer: D.** JPA dirty checking syncs managed entity changes at flush or transaction commit.",
       "marks": 2,
       "id": 46,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -668,7 +672,7 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
         "Select the primary key"
       ],
       "correct": "B",
-      "memo": "Version fields support optimistic concurrency control.",
+      "memo": "**Correct answer: B.** Version fields support optimistic concurrency control.",
       "marks": 2,
       "id": 47,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -677,13 +681,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q48.** What does `PageRequest.of(0, 25)` request?",
       "options": [
-        "Twenty-five pages of one item",
+        "All results",
         "Items starting at index 25 only",
         "First zero-based page, up to 25 results",
-        "All results"
+        "Twenty-five pages of one item"
       ],
       "correct": "C",
-      "memo": "Spring Data Pageable page numbering is zero based.",
+      "memo": "**Correct answer: C.** Spring Data Pageable page numbering is zero based.",
       "marks": 2,
       "id": 48,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -693,12 +697,12 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "prompt": "**Q49.** A Spring MVC endpoint maps `GET /orders/{id}`. Which annotation binds `{id}` to a method argument?",
       "options": [
         "@RequestBody",
+        "@PathVariable",
         "@Table",
-        "@GeneratedValue",
-        "@PathVariable"
+        "@GeneratedValue"
       ],
-      "correct": "D",
-      "memo": "@PathVariable reads a URI-template path parameter.",
+      "correct": "B",
+      "memo": "**Correct answer: B.** @PathVariable reads a URI-template path parameter.",
       "marks": 2,
       "id": 49,
       "section": "SECTION THREE · MULTIPLE CHOICE"
@@ -707,13 +711,13 @@ window.PAPERROOM_LIBRARY["adp-32-1"]={
       "kind": "Multiple choice",
       "prompt": "**Q50.** A REST API wants to replace an existing order resource at a known URI using the client's complete representation. Which HTTP method commonly expresses this intent?",
       "options": [
-        "PUT",
-        "HEAD",
+        "TRACE",
         "OPTIONS",
-        "TRACE"
+        "PUT",
+        "HEAD"
       ],
-      "correct": "A",
-      "memo": "PUT is commonly used for full resource replacement at a known URI.",
+      "correct": "C",
+      "memo": "**Correct answer: C.** PUT is commonly used for full resource replacement at a known URI.",
       "marks": 2,
       "id": 50,
       "section": "SECTION THREE · MULTIPLE CHOICE"
