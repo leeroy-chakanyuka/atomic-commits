@@ -30,12 +30,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** Which rule allows public access to `/health` while requiring authentication for all other requests?",
       "options": [
-        "Put `anyRequest().authenticated()` first",
-        "Use `requestMatchers(\"/health\").permitAll()` before `anyRequest().authenticated()`",
         "Use `requestMatchers(\"/health\").denyAll()`",
-        "Remove the SecurityFilterChain bean"
+        "Remove the SecurityFilterChain bean",
+        "Put `anyRequest().authenticated()` first",
+        "Use `requestMatchers(\"/health\").permitAll()` before `anyRequest().authenticated()`"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Authorization rules are evaluated by match order; the more specific public matcher should precede a catch-all.",
       "snippet": "http.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/health\").permitAll()\n    .anyRequest().authenticated()\n);",
       "marks": 1
@@ -45,12 +45,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A controller is guarded by `.anyRequest().authenticated()`. A logged-in user without any admin role calls `/admin`. If no additional admin rule exists, what does this configuration alone guarantee?",
       "options": [
+        "A 404 response",
         "The user is automatically denied",
         "Only authentication; it does not enforce an ADMIN role",
-        "Automatic CSRF protection on all GET routes only",
-        "A 404 response"
+        "Automatic CSRF protection on all GET routes only"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "authenticated() checks that the principal is authenticated, not whether they have a particular role. Add a suitable authorization rule.",
       "marks": 1
     },
@@ -59,12 +59,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code tracing:** Which request is blocked by these authorization rules, assuming no other filters or security constraints?",
       "options": [
-        "An anonymous GET to `/public/status`",
         "An authenticated GET to `/orders`",
         "An anonymous GET to `/orders`",
-        "An authenticated GET to `/public/status`"
+        "An authenticated GET to `/public/status`",
+        "An anonymous GET to `/public/status`"
       ],
-      "correct": "C",
+      "correct": "B",
       "memo": "The public URL is permitted. Everything else requires authentication, so anonymous `/orders` requests are denied.",
       "snippet": "http.authorizeHttpRequests(a -> a\n  .requestMatchers(\"/public/**\").permitAll()\n  .anyRequest().authenticated()\n);",
       "marks": 1
@@ -88,12 +88,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A developer uses `.requestMatchers(\"/api/**\").authenticated()` inside `authorizeHttpRequests`. Does that matcher itself restrict *which requests the SecurityFilterChain applies to*?",
       "options": [
-        "Yes, it turns off Spring Security for every other path",
         "No, it declares an authorization rule within a matched filter chain; `securityMatcher` controls chain matching",
         "Yes, it changes the servlet context root",
-        "Only if method security is enabled"
+        "Only if method security is enabled",
+        "Yes, it turns off Spring Security for every other path"
       ],
-      "correct": "B",
+      "correct": "A",
       "memo": "Security-chain selection (`securityMatcher`) differs from authorization-rule matching (`requestMatchers` inside authorization configuration).",
       "marks": 1
     },
@@ -102,12 +102,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** You want `/admin/**` to be accessible only to users with `ROLE_ADMIN`. Which matcher expression is the conventional choice?",
       "options": [
-        "`.hasRole(\"ADMIN\")`",
         "`.hasRole(\"ROLE_ADMIN\")` because hasRole adds no prefix",
         "`.permitAll()`",
-        "`.anonymous()`"
+        "`.anonymous()`",
+        "`.hasRole(\"ADMIN\")`"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "hasRole(\"ADMIN\") checks the ROLE_ADMIN authority by default. Supplying ROLE_ADMIN to hasRole is generally incorrect with default role prefix behavior.",
       "snippet": ".requestMatchers(\"/admin/**\").hasRole(\"ADMIN\")",
       "marks": 1
@@ -117,12 +117,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** An API has rules for `/admin/**` and `/api/**`, followed by `anyRequest().denyAll()`. What happens to an unmatched `/diagnostics` route?",
       "options": [
+        "It's allowed only on Fridays",
         "It's automatically public",
         "It's denied by the final fallback rule",
-        "It's handled by the database",
-        "It's allowed only on Fridays"
+        "It's handled by the database"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "A deny-all catch-all makes unexpected endpoints inaccessible unless explicitly allowed.",
       "marks": 1
     },
@@ -131,12 +131,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code reasoning:** A configuration has `.requestMatchers(\"/**\").permitAll()` before `.requestMatchers(\"/admin/**\").hasRole(\"ADMIN\")`. What is the practical issue?",
       "options": [
-        "The `/admin/**` rule is shadowed by the broader first matcher (and this ordering can be rejected as unreachable in validation)",
-        "Specific matchers are always automatically reordered",
         "permitAll() implicitly requires admin",
-        "Java method chaining evaluates from right to left"
+        "Java method chaining evaluates from right to left",
+        "The `/admin/**` rule is shadowed by the broader first matcher (and this ordering can be rejected as unreachable in validation)",
+        "Specific matchers are always automatically reordered"
       ],
-      "correct": "A",
+      "correct": "C",
       "memo": "Broad catch-all rules before specific ones prevent the intended specific authorization from taking effect; Spring may detect invalid/unreachable ordering.",
       "snippet": ".requestMatchers(\"/**\").permitAll()\n.requestMatchers(\"/admin/**\").hasRole(\"ADMIN\")",
       "marks": 1
@@ -146,12 +146,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A team moves from a monolithic MVC app with sessions to an API protected by bearer tokens. What should they revisit rather than blindly copying defaults?",
       "options": [
+        "The Java file encoding",
         "HTTP session policy and CSRF threat model",
         "Only the CSS stylesheet",
-        "Database auto-commit settings",
-        "The Java file encoding"
+        "Database auto-commit settings"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Session creation and CSRF requirements depend on how clients authenticate. A token in an Authorization header differs from an automatically sent session cookie.",
       "marks": 1
     },
@@ -160,12 +160,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A request's authentication has succeeded, but its principal lacks the authority required for `/reports/private`. Which HTTP status normally represents this authorization failure?",
       "options": [
-        "201 Created",
-        "302 Found",
         "403 Forbidden",
-        "500 Internal Server Error"
+        "500 Internal Server Error",
+        "201 Created",
+        "302 Found"
       ],
-      "correct": "C",
+      "correct": "A",
       "memo": "An authenticated principal lacking permission normally gets 403; unauthenticated access typically results in an authentication entry point such as 401 or a redirect.",
       "marks": 1
     },
@@ -174,12 +174,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A client sends no credentials to an API secured with HTTP Basic and requests a protected endpoint. Which status does an API-style Basic authentication entry point normally return?",
       "options": [
-        "401 Unauthorized with a WWW-Authenticate challenge",
         "403 Forbidden by definition",
         "204 No Content",
-        "200 OK"
+        "200 OK",
+        "401 Unauthorized with a WWW-Authenticate challenge"
       ],
-      "correct": "A",
+      "correct": "D",
       "memo": "HTTP Basic authentication challenges unauthenticated clients with 401 and a WWW-Authenticate header.",
       "marks": 1
     },
@@ -188,12 +188,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Code spotting:** Why might a method annotated `@PreAuthorize(\"hasRole('ADMIN')\")` not be protected in a project that has servlet security but no method-security activation?",
       "options": [
-        "`@PreAuthorize` only works in C++",
-        "Method security must be enabled (for example `@EnableMethodSecurity`) to enforce the annotation",
         "Controller methods cannot have annotations",
-        "The annotation always applies without any infrastructure"
+        "The annotation always applies without any infrastructure",
+        "`@PreAuthorize` only works in C++",
+        "Method security must be enabled (for example `@EnableMethodSecurity`) to enforce the annotation"
       ],
-      "correct": "B",
+      "correct": "D",
       "memo": "Method-security interception requires the corresponding configuration, such as @EnableMethodSecurity.",
       "marks": 1
     },
@@ -202,12 +202,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A single endpoint `GET /products` is public, but `POST /products` should require admin authority. What is the clearest authorization approach?",
       "options": [
+        "Delete the POST endpoint",
         "Make all `/products` requests public",
         "Match both the path and HTTP method in authorization rules",
-        "Use one String comparison inside every entity",
-        "Delete the POST endpoint"
+        "Use one String comparison inside every entity"
       ],
-      "correct": "B",
+      "correct": "C",
       "memo": "Security authorization can distinguish methods: GET permitAll and POST hasRole(ADMIN), ordered before the catch-all.",
       "marks": 1
     },
@@ -216,12 +216,12 @@ window.PAPERROOM_LIBRARY["adp-21-1"]={
       "kind": "Multiple choice",
       "prompt": "**Scenario:** A service decides whether a user may edit a record based on whether the record belongs to them. Why can a path-only rule such as `/records/** authenticated()` be insufficient?",
       "options": [
+        "Security filters cannot run on POST",
         "The record ownership is domain data not captured by authentication alone",
         "It always denies all users",
-        "Spring cannot read path variables",
-        "Security filters cannot run on POST"
+        "Spring cannot read path variables"
       ],
-      "correct": "A",
+      "correct": "B",
       "memo": "Ownership is contextual authorization. Authentication alone doesn't guarantee access to a specific record; enforce ownership in application or method-level authorization.",
       "marks": 1
     },
