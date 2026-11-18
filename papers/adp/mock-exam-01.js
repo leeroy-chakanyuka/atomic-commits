@@ -283,7 +283,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** Abstract Factory creates related product families behind a common factory interface.",
       "marks": 2,
       "id": 21,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -298,7 +299,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** Bridge composes a shape abstraction with a renderer interface and allows each family to vary independently.",
       "marks": 2,
       "id": 22,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -313,7 +315,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** Command encapsulates requests as objects that can be passed, stored and executed by an invoker.",
       "marks": 2,
       "id": 23,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -328,7 +331,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** OR combines child expressions and therefore represents a nonterminal production in the expression tree.",
       "marks": 2,
       "id": 24,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -343,7 +347,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** Visitor separates new operations from a stable hierarchy of elements.",
       "marks": 2,
       "id": 25,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -358,7 +363,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** Observer provides a subject/subscriber update mechanism and decouples the producer from subscribers.",
       "marks": 2,
       "id": 26,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -373,7 +379,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** Strategy uses a HAS-A relationship to the algorithm interface, not multiple inheritance.",
       "marks": 2,
       "id": 27,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -389,7 +396,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "snippet": "interface N { void send(); }\nclass Inner implements N { public void send(){ System.out.print(\"A\"); } }\nclass Outer implements N {\n private final N n;\n Outer(N n){ this.n=n; }\n public void send(){ n.send(); System.out.print(\"B\"); }\n}\nnew Outer(new Inner()).send();",
       "marks": 2,
       "id": 28,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -404,7 +412,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** Each iterator has its own cursor, so y.next() returns the first element, a.",
       "marks": 2,
       "id": 29,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -419,7 +428,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** Flyweight shares intrinsic state such as model meshes or configurations and leaves unique state per drone.",
       "marks": 2,
       "id": 30,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -434,7 +444,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** Builder constructs complex objects step-by-step and is useful with many optional parameters.",
       "marks": 2,
       "id": 31,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -449,7 +460,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** Factory Method delegates product selection/creation to overriding creator subclasses.",
       "marks": 2,
       "id": 32,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -464,7 +476,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** A central creation function choosing a concrete type is conventionally called Simple Factory.",
       "marks": 2,
       "id": 33,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -479,7 +492,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** An adapter implements the expected Notifier contract and translates calls to the legacy API.",
       "marks": 2,
       "id": 34,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -494,7 +508,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** A private constructor limits external construction; a static accessor exposes the shared singleton.",
       "marks": 2,
       "id": 35,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -509,7 +524,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** Unrelated responsibilities have separate change pressures, so the class lacks one cohesive reason to change.",
       "marks": 2,
       "id": 36,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -524,7 +540,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** Checkout is closed to provider-specific modification yet open to new policy implementations.",
       "marks": 2,
       "id": 37,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -539,7 +556,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** ElectricVehicle does not honor a valid operation promised by Vehicle. Use capabilities or a better abstraction.",
       "marks": 2,
       "id": 38,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -554,7 +572,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** ISP advocates small client-specific contracts instead of depending on unrelated operations.",
       "marks": 2,
       "id": 39,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -569,7 +588,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: D.** DIP puts high-level and low-level code behind an appropriate abstraction.",
       "marks": 2,
       "id": 40,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -585,7 +605,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "marks": 2,
       "id": 41,
       "section": "SECTION THREE · MULTIPLE CHOICE",
-      "snippet": "http.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/api/admin/**\").hasRole(\"ADMIN\")\n    .anyRequest().authenticated());"
+      "snippet": "http.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/api/admin/**\").hasRole(\"ADMIN\")\n    .anyRequest().authenticated());",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -600,7 +621,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** The signature is verified against trusted signing material. Claims also need their own validation.",
       "marks": 2,
       "id": 42,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -615,7 +637,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** The server must permit the requesting origin and relevant methods/headers through CORS configuration.",
       "marks": 2,
       "id": 43,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -630,7 +653,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: B.** Cross-site request forgery exploits automatically attached browser authentication, such as session cookies.",
       "marks": 2,
       "id": 44,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -645,7 +669,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** Access is forbidden to an authenticated principal without required authorization.",
       "marks": 2,
       "id": 45,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -660,7 +685,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** @Id identifies the entity's primary key.",
       "marks": 2,
       "id": 46,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -675,7 +701,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: A.** The inverse side uses mappedBy pointing to the owning-side Java association property.",
       "marks": 2,
       "id": 47,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -691,7 +718,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "marks": 2,
       "id": 48,
       "section": "SECTION THREE · MULTIPLE CHOICE",
-      "snippet": "List<Order> orders = orderRepository.findAll();\nfor (Order order : orders) {\n    System.out.println(order.getCustomer().getName());\n}"
+      "snippet": "List<Order> orders = orderRepository.findAll();\nfor (Order order : orders) {\n    System.out.println(order.getCustomer().getName());\n}",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -706,7 +734,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** @GetMapping maps GET requests to controller handler methods.",
       "marks": 2,
       "id": 49,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     },
     {
       "kind": "Multiple choice",
@@ -721,7 +750,8 @@ window.PAPERROOM_LIBRARY["adp-31-1"]={
       "memo": "**Correct answer: C.** @RequestBody reads and converts the request body into the handler's parameter type.",
       "marks": 2,
       "id": 50,
-      "section": "SECTION THREE · MULTIPLE CHOICE"
+      "section": "SECTION THREE · MULTIPLE CHOICE",
+      "fullMarksOnCorrect": true
     }
   ],
   "totalMarks": 100
