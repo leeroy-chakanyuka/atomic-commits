@@ -24,7 +24,7 @@
   const repoNoteDownloadUrl=(module,file)=>"https://raw.githubusercontent.com/leeroy-chakanyuka/atomic-commits/main/notes/"+module+"/"+encodeURIComponent(file);
   const PAPERBANK={"11-1":DATA,...(window.PAPERROOM_LIBRARY||{})};
   const PAPER_KEYS=["9-1","9-2","9-3","11-1","11-2","11-3","12-1","12-2","12-3","14-1","14-2","14-3","15-1","15-2","15-3"];
-  const ITS_PAPER_KEYS=[8,9,10,11,12,812].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
+  const ITS_PAPER_KEYS=[8,9,10,11,12,812,88].flatMap(ch=>[1,2,3].map(s=>`its-${ch}-${s}`));
   const ADP_PAPER_KEYS=["adp-4-1","adp-5-1","adp-6-1","adp-7-1","adp-8-1","adp-9-1","adp-10-1","adp-11-1","adp-12-1","adp-13-1","adp-14-1","adp-15-1","adp-16-1","adp-17-1","adp-18-1","adp-19-1","adp-20-1","adp-21-1","adp-22-1","adp-23-1","adp-24-1","adp-25-1","adp-26-1","adp-27-1","adp-28-1","adp-29-1","adp-30-1","adp-31-1","adp-32-1","adp-33-1","adp-34-1"];
   const storageFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:prm:ch${ch}:s${s}:v1`};
   const historyFor=key=>{if(key.startsWith("adp-")){const [,ch,s]=key.split("-");return `paperroom:history:adp:ch${ch}:s${s}:v3`;}if(key.startsWith("its-")){const [,ch,s]=key.split("-");return `paperroom:history:its:ch${ch}:s${s}:v2`;}const [ch,s]=key.split("-");return `paperroom:history:prm:ch${ch}:s${s}:v1`};
@@ -128,7 +128,7 @@
         <div class="module-card-top"><span class="module-abbr">${m.id.toUpperCase()}</span><span class="module-card-flower">✳</span></div>
         <h3>${esc(m.name)}</h3><p class="module-exam-date">Exam · ${esc(m.date)} 2026</p>
         <span class="module-exam-time">${m.confirmed?"14:00 confirmed":"14:00 provisional · check your timetable"}</span>
-        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"18 practice papers · Chapters 8–12":m.id==="adp"?"31 practice papers · 4 topics":"Sessions coming soon"}</span>
+        <span class="module-status ${m.active||m.pilot||m.id==="adp"?"":"soon"}"><i class="status-dot"></i>${m.active?"15 live practice sessions":m.pilot?"21 papers · 3 SQL intensive":m.id==="adp"?"31 practice papers · 4 topics":"Sessions coming soon"}</span>
       </a>`).join("");
   }
   function renderModule(id){
@@ -271,7 +271,7 @@
       const date=new Date(item.startedAt).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
       return `<a class="history-row" href="${sessionHash(key,"results")}/${item.startedAt}">
         <span class="history-icon">✓</span>
-        <span class="history-name"><strong>${paper.chapter===812?"Chapters 8–12":"Chapter "+paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
+        <span class="history-name"><strong>${paper.chapter===88?"SQL intensive":paper.chapter===812?"Chapters 8–12":"Chapter "+paper.chapter} · Session ${String(paper.session).padStart(2,"0")}</strong><small>${date} · ${item.timedOut?"Timed out":"Submitted"}</small></span>
         <span class="history-score"><strong>${stats.score}/${paper.totalMarks}</strong><small>${wrong} to revisit${stats.pending?" · "+stats.pending+" marks pending":""}</small></span>
         <span class="history-link">Review</span>
       </a>`;
@@ -280,6 +280,28 @@
     const practiceSection=isPractice?`<div class="library-heading"><div><span class="section-kicker">${m.id==="its"?"ITS PRACTICE PAPERS":"YOUR CHAPTERS"}</span><h2>${m.id==="its"?"Choose a chapter.":"Choose your focus."}</h2></div>
        <small>${m.id==="its"?"15 chapter papers · 3 mixed papers":"15 ready · 6 combined sessions coming soon"}</small></div>
        <div class="chapter-tiles ${m.id==="its"?"its-one-chapter":""}">${tiles}</div>`:"";
+    const sqlSection=m.id==="its"?`
+      <section class="combined-library" id="its-sql-intensive">
+        <div class="combined-copy">
+          <span class="section-kicker">40 MARKS · SQL WRITING ONLY</span>
+          <h2>SQL intensive.</h2>
+          <p>Three original 40-mark, 30-minute papers. Eight written Oracle SQL / PL/SQL problems in each: joins, subqueries, aggregation, views, sequences, cursors, procedures, triggers and debugging. No multiple-choice questions. Write the code, submit, then self-mark against worked solutions.</p>
+          <p><strong>Exam-day tip:</strong> Complete Paper 01 first. Papers 02 and 03 increase application difficulty. Equivalent valid Oracle SQL earns credit.</p>
+        </div>
+        <div class="combined-sessions">
+          ${[1,2,3].map(session=>{
+            const key="its-88-"+session,paper=PAPERBANK[key],prior=readAttemptFor(key);
+            if(!paper)return "";
+            const active=prior&&!prior.submittedAt&&prior.endsAt>Date.now();
+            return `<div class="session-file">
+              <div class="session-file-info"><span class="session-file-title">SQL intensive · Paper ${String(session).padStart(2,"0")}</span>
+              <small>${paper.questions.length} written questions · ${Math.round(paper.limitSeconds/60)} minutes · ${paper.totalMarks} marks</small></div>
+              <div class="session-file-actions"><a class="session-start-link" href="${sessionHash(key)}">${active?"Resume":"Start"}</a>
+              <button type="button" class="session-download-link" data-download-paper="${key}" aria-label="Download SQL paper ${session} as PDF">PDF</button></div>
+            </div>`;
+          }).join("")}
+        </div>
+      </section>`:"";
     const combinedSection=m.id==="its"?
       `<section class="combined-library"><div class="combined-copy"><span class="section-kicker">MIXED REVISION · ALL FIVE CHAPTERS</span>
         <h2>Combined papers.</h2><p>Three integrated 80-question papers spanning Chapters 8–12, including cross-chapter cases on SQL, design, transactions, optimization and distributed systems.</p></div>
@@ -311,18 +333,18 @@
       <div class="library-heading"><div><span class="section-kicker">READ &amp; REVISE</span><h2>${m.id==="its"?"Other chapter notes.":"Your notes."}</h2></div><small>${sourceNotes.length} chapter${sourceNotes.length===1?"":"s"}</small></div>
       ${notesCards}</section>`:"";
     const historySection=isPractice?`<section class="history-section"><div class="library-heading"><div><span class="section-kicker">YOUR PROGRESS</span><h2>Previous attempts.</h2></div><small>Saved on this device</small></div>
-      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].module==="ADP"?esc(PAPERBANK[x.key].title):PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
+      ${running.map(x=>`<a class="resume-banner" href="${sessionHash(x.key)}"><strong>Resume ${PAPERBANK[x.key].module==="ADP"?esc(PAPERBANK[x.key].title):PAPERBANK[x.key].chapter===88?"SQL intensive":PAPERBANK[x.key].chapter===812?"Chapters 8–12":"Chapter "+PAPERBANK[x.key].chapter}, Session ${String(PAPERBANK[x.key].session).padStart(2,"0")}</strong><span>${mins(Math.max(0,Math.ceil((x.item.endsAt-Date.now())/1000)))} left</span></a>`).join("")}
       ${recent?'<div class="history-list">'+recent+'</div>':'<div class="history-empty"><span>✳</span><div><strong>Your practice history starts here.</strong><p>Return tomorrow to review your answers and mistakes.</p></div></div>'}
       <p class="storage-note">Saved in this browser, not synced across devices. Clearing site data erases local history.</p></section>`:"";
-    const sessions=m.id==="prm"?15:m.id==="its"?18:0;
+    const sessions=m.id==="prm"?15:m.id==="its"?21:0;
     $("#moduleContent").innerHTML=`<div class="module-compact-head">
       <div class="module-breadcrumb"><a href="#/home#modules">All modules</a><span>/</span><strong>${m.id.toUpperCase()}</strong></div>
       <div class="module-title-line"><div><span class="section-kicker">${isPractice?"EXAM PRACTICE LIBRARY":"READING LIBRARY"}</span><h1>${esc(m.name)}<span class="title-period">.</span></h1>
-        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"Five chapters, eighteen practice papers, one focused hour per paper. Chapter 8 and 9 concept maps remain available.":"Study notes and resources for this module."}</p></div>
+        <p>${m.id==="prm"?"Five chapters, fifteen sessions, one focused hour each.":m.id==="its"?"Five chapters, eighteen chapter/mixed papers plus three fast 40-mark SQL writing papers. Chapter 8 and 9 concept maps remain available.":"Study notes and resources for this module."}</p></div>
         <div class="module-summary-chip"><strong>${String(sessions).padStart(2,"0")}</strong><small>sessions</small></div>
       </div></div>
       ${m.id==="its"?`<div id="itsConceptMap"></div>`:""}
-      ${m.id==="its"?`<section class="its-database-access" id="its-shared-db"><div><span class="section-kicker">REFERENCE DATA FOR SQL QUESTIONS</span><h2>Shared ITS database: Chapter 8</h2><p>Use this data dictionary for table names, columns, sample rows and the relationship diagram. Individual questions may give different data: when they do, use the data in the question.</p><p class="its-db-examples">Includes CUSTOMERS, ORDERS, PRODUCTS, EMPLOYEES, DEPARTMENTS, PAYMENTS and related tables.</p></div><div class="its-database-links"><a href="https://github.com/leeroy-chakanyuka/atomic-commits/blob/main/notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Open shared database tables ↗</a><a href="notes/ITS/ch08-practice-database.sql" download>Download sample Oracle database (.sql)</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>See sample tables and ER diagram in Paperroom</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Expand this section to display the shared database, table relationships and example queries.</p></div></details>`:""}${practiceSection}${combinedSection}${notesSection}${historySection}`;
+      ${m.id==="its"?`<section class="its-database-access" id="its-shared-db"><div><span class="section-kicker">REFERENCE DATA FOR SQL QUESTIONS</span><h2>Shared ITS database: Chapter 8</h2><p>Use this data dictionary for table names, columns, sample rows and the relationship diagram. Individual questions may give different data: when they do, use the data in the question.</p><p class="its-db-examples">Includes CUSTOMERS, ORDERS, PRODUCTS, EMPLOYEES, DEPARTMENTS, PAYMENTS and related tables.</p></div><div class="its-database-links"><a href="https://github.com/leeroy-chakanyuka/atomic-commits/blob/main/notes/ITS/ch08-practice-database.md" target="_blank" rel="noopener noreferrer">Open shared database tables ↗</a><a href="notes/ITS/ch08-practice-database.sql" download>Download sample Oracle database (.sql)</a></div></section><details class="its-database-reference" id="itsDbDetails"><summary>See sample tables and ER diagram in Paperroom</summary><div id="itsDatabaseMarkdown" class="md-body"><p>Expand this section to display the shared database, table relationships and example queries.</p></div></details>`:""}${sqlSection}${practiceSection}${combinedSection}${notesSection}${historySection}`;
     if(m.id==="its"){
       window.PAPERROOM_CONCEPT_MAP?.mount();
       const dbDetails=$("#itsDbDetails"),holder=$("#itsDatabaseMarkdown");
@@ -618,7 +640,7 @@
   }
   function renderIntro() {
     show("intro");
-    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():DATA.chapter===812?"CHAPTERS 8–12":"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
+    $("#introKicker").textContent=(DATA.module==="ADP"?DATA.title.toUpperCase():DATA.chapter===88?"SQL INTENSIVE":DATA.chapter===812?"CHAPTERS 8–12":"CHAPTER "+DATA.chapter)+" · PRACTICE SESSION "+String(DATA.session).padStart(2,"0");
     $("#introDescription").textContent=DATA.intro || (DATA.title+". "+DATA.questions.length+" exam-style questions and room to think.");
     $("#introTotalMarks").textContent=String(DATA.totalMarks);
     $("#introQuestionCount").textContent=String(DATA.questions.length);
@@ -626,7 +648,7 @@
     $("#introSheetModule").textContent=DATA.module==="ADP"?"APPLICATION DEVELOPMENT":DATA.module==="ITS"?"INFORMATION SYSTEMS 3":"PROJECT MANAGEMENT";
     $("#resultsTimeAllowed").textContent="of "+Math.round(DATA.limitSeconds/60)+" minutes allowed";
     $("#introSheetTitle").innerHTML=DATA.module==="ADP"?"ADP<br><em>"+esc(DATA.title)+"</em>":
-      DATA.module==="ITS"?(DATA.chapter===812?"Chapters 8–12":"Chapter "+DATA.chapter)+"<br><em>"+esc(({8:"Advanced SQL.",9:"Database design.",10:"Transactions.",11:"Query tuning.",12:"Distributed DB.",812:"Mixed revision."})[DATA.chapter]||DATA.title)+"</em>":
+      DATA.module==="ITS"?(DATA.chapter===88?"SQL intensive":DATA.chapter===812?"Chapters 8–12":"Chapter "+DATA.chapter)+"<br><em>"+esc(({8:"Advanced SQL.",9:"Database design.",10:"Transactions.",11:"Query tuning.",12:"Distributed DB.",812:"Mixed revision.",88:"Oracle SQL."})[DATA.chapter]||DATA.title)+"</em>":
       "Chapter "+DATA.chapter+"<br><em>"+(DATA.chapter===12?"Quality.":DATA.chapter===15?"Closure.":DATA.chapter===14?"Progress.":DATA.chapter===9?"Resourcing.":"Uncertainty.")+"</em>";
     const introLink=$("#introScreen .back-link");
     if(introLink){introLink.href="#/module/"+DATA.module.toLowerCase();introLink.textContent=DATA.module+" library";}
