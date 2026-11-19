@@ -7,13 +7,17 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 | Module | Exam date | Status |
 |---|---|---|
 | ADP | 18 November 2026 | **31 playable papers / 660 original questions**: four topic dropdowns (23 topic sets + 4 mixed megas) and four new 100-mark ADP372S-style full mock exams |
-| ITS | 19 November 2026 | **18 playable papers**: 3 each for Chapters 8–12 plus 3 integrated mixed papers |
+| ITS | 19 November 2026 | **21 playable papers**: 3 each for Chapters 8–12, 3 integrated mixed papers, plus 3 SQL-only 40-mark written exams |
 | PRM (Project Management) | 20 November 2026 | **15 sessions live** |
 | ADT | 24 November 2026 | Coming soon |
 
 ADP and ITS exams are **confirmed by the student at 14:00**. PRM and ADT show 14:00 as provisional pending confirmation on the final institutional timetable.
 
 For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-question practice sessions** (15 total). Each chapter has its own expandable session folder with downloadable question-only PDF versions, a 60-minute limit, mark allocations, self-marking for written answers, and a local attempt archive. Six combined revision papers remain labelled *coming soon*. No separate question-paper PDFs are published.
+
+### ITS SQL intensive: three 40-mark written papers
+
+A dedicated **SQL intensive** section appears first in the ITS library. It offers three original 30-minute, 40-mark papers (eight 5-mark questions each, 24 original problems total). Every answer requires writing or fixing Oracle SQL/PL/SQL. Focus: joins, subqueries, EXISTS/ALL, GROUP BY/HAVING, set operations, views, sequences, anonymous blocks, cursors, stored procedures, triggers and safe dynamic SQL. Full worked answer memos appear only after submission; written code uses self-marking, not automatic SQL execution. The papers are exam revision, not official CPUT papers.
 
 ### ITS practice papers: Chapters 8–12
 
