@@ -629,7 +629,8 @@
         <div class="review-body">
           ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet"><code class="language-${esc(snippetLanguage(q))}">${esc(q.snippet)}</code></pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
-          <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div></div>
+          <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div>
+            ${Array.isArray(q.rubric)?`<div class="marking-rubric"><strong>Marking rubric · ${q.marks} marks</strong><p>Full credit for a complete point, partial credit for a partly correct point.</p><ol>${q.rubric.map(r=>`<li><span>${esc(r.text)}</span><b>${r.marks} marks</b></li>`).join("")}</ol></div>`:""}</div>
           <div class="review-mark">
             <div><strong>${q.marks} marks available</strong><br><small>${g.pending ? "Compare your answer to the memorandum and award only earned marks." : "Checked automatically or no answer provided."}</small></div>
             ${g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
