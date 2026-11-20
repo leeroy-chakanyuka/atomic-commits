@@ -351,11 +351,16 @@
     }
     if(q.kind==="Identify the term")
       return [{text:"Names the technical concept accurately, including accepted equivalent terminology: "+q.memo,marks:1}];
-    if(q.kind==="Definitions")
+    if(q.kind==="Definitions"){
+      const memo=String(q.memo).trim();
+      const split=memo.match(/^(.*?)(?:[,;]\s*(?:enabling|including|allowing|providing|which|so that|with|while|to ensure)\b|\.\s+)(.*)$/i);
+      const meaning=split?.[1]?.trim()||memo;
+      const detail=split?.[2]?.trim()||memo;
       return [
-        {text:"Accurately identifies and defines the core concept: "+String(q.memo).split(/[.;]/)[0].trim(),marks:1},
-        {text:"Includes the purpose, key property or distinguishing detail asked for, consistent with the complete memorandum: "+q.memo,marks:q.marks-1}
+        {text:"Core definition or meaning: "+meaning,marks:1},
+        {text:"An additional correct purpose, key property or practical detail beyond merely naming the term: "+detail,marks:q.marks-1}
       ];
+    }
     if(q.kind==="Numerical reasoning"){
       const texts=[
         "Selects the correct formula or appropriate calculation method.",
@@ -385,14 +390,21 @@
         marks:1
       }));
     }
-    // For explanations and scenarios, match short, concrete points from
-    // the existing memo; never award marks for verbosity or unsupported claims.
-    return Array.from({length:n},(_,i)=>({
-      text:parts[i]?
-        "Correct point "+(i+1)+": "+parts[i]:
-        "Another distinct, relevant, accurately explained point or justified action from the memorandum: "+q.memo,
-      marks:1
-    }));
+    // Explanations and scenarios may need fewer richer criteria than available
+    // marks. Allocate one or two marks per memo-supported point, not duplicate
+    // generic criteria that could unfairly punish correct answers.
+    const content=parts.length?parts:[String(q.memo||"").trim()];
+    const target=Math.max(Math.ceil(n/2),Math.min(n,content.length));
+    const points=Array.from({length:target},(_,i)=>{
+      if(i<target-1)return content[i]||"A distinct, justified point relevant to the question";
+      return content.slice(i).join("; ")||"A distinct justified implication or action supported by the memorandum";
+    });
+    let extras=n-target;
+    return points.map((point,i)=>{
+      const marks=extras>0?2:1;
+      if(extras>0)extras--;
+      return {text:"Correct explained point "+(i+1)+": "+point,marks};
+    });
   }
   function withRubric(q) {
     return {...q,rubric:makeRubric(q)};
