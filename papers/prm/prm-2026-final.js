@@ -341,6 +341,72 @@
     return clean.split(/;\s*|\.\s+(?=[A-Z])|,\s+(?=[a-zA-Z])/)
       .map(x=>x.trim().replace(/[.;]$/,"")).filter(x=>x.length>3);
   }
+  function makeDefinitionRubric(q) {
+    const memo=String(q.memo||"").trim().replace(/\s+/g," ");
+    const question=String(q.prompt||"").toLowerCase();
+    // Definitions should earn separate marks for the core meaning and an
+    // independent distinguishing feature, not two marks for the same sentence.
+    if(/\bdefine (?:a )?threat\b/.test(question))
+      return [
+        {text:"Identifies a threat as an uncertain risk with a negative effect.",marks:1},
+        {text:"Connects that possible negative effect to one or more project objectives if the event occurs.",marks:1}
+      ];
+    if(/\bdefine (?:an )?opportunity\b/.test(question))
+      return [
+        {text:"Identifies an opportunity as an uncertain event or condition.",marks:1},
+        {text:"Explains that its possible effect on project objectives is positive or beneficial.",marks:1}
+      ];
+    if(/\bdefine project risk\b/.test(question))
+      return [
+        {text:"Defines project risk as an uncertain event or condition.",marks:1},
+        {text:"Explains that its occurrence may affect project objectives, positively or negatively.",marks:1}
+      ];
+    if(/\bdefine (?:a )?risk trigger\b/.test(question))
+      return [
+        {text:"Identifies a risk trigger as an observable circumstance, warning sign or threshold.",marks:1},
+        {text:"Explains that the trigger activates a planned risk response.",marks:1}
+      ];
+    const clauses=memo.split(/\s*;\s*|\.\s+(?=[A-Z])/).map(x=>x.trim().replace(/[.;]+$/,"")).filter(Boolean);
+    let core=clauses[0]||memo;
+    let detail=clauses.slice(1).join("; ");
+    // Example-only clauses illustrate the definition but should not be a
+    // mandatory extra mark when the question simply asks for a definition.
+    if(/^(?:e\.g\.?|example\b|for example\b)/i.test(detail))detail="";
+    if(!detail){
+      const separators=[
+        /\s+used to\s+/i,/\s+so that\s+/i,/\s+so\s+/i,/\s+against\s+/i,
+        /\s+in order to\s+/i,/\s+specifying how\s+/i,
+        /\s+which\s+/i,/\s+whereby\s+/i,/\s+enabling\s+/i,
+        /\s+through\s+/i,/\s+including\s+/i,/\s+to\s+/i,
+        /\s+by\s+/i,/\s+and\s+/i
+      ];
+      for(const separator of separators){
+        const match=separator.exec(core);
+        if(match && match.index>=21 && core.length-match.index>=15){
+          detail=core.slice(match.index).trim();
+          core=core.slice(0,match.index).trim();
+          break;
+        }
+      }
+    }
+    if(!detail && core.includes(",")){
+      const comma=core.lastIndexOf(",");
+      if(comma>=20 && core.length-comma>=14){
+        detail=core.slice(comma+1).trim();
+        core=core.slice(0,comma).trim();
+      }
+    }
+    if(!detail){
+      // Some memorandums contain just one concise clause. In that case,
+      // make the second criterion a distinct application/qualification and
+      // tell the marker not to count an identical phrase twice.
+      detail="Adds a distinct correct purpose, defining condition or practical implication supported by the memorandum (no duplicate credit).";
+    }
+    return [
+      {text:"Core meaning: "+core,marks:1},
+      {text:"Separate defining feature, purpose or project context: "+detail,marks:1}
+    ];
+  }
   function makeRubric(q) {
     if(Array.isArray(q.rubric) && q.rubric.length)return q.rubric;
     if(["Multiple choice","Fill in the blanks","SQL completion","Matching"].includes(q.kind))return undefined;
@@ -351,16 +417,7 @@
     }
     if(q.kind==="Identify the term")
       return [{text:"Names the technical concept accurately, including accepted equivalent terminology: "+q.memo,marks:1}];
-    if(q.kind==="Definitions"){
-      const memo=String(q.memo).trim();
-      const split=memo.match(/^(.*?)(?:[,;]\s*(?:enabling|including|allowing|providing|which|so that|with|while|to ensure)\b|\.\s+)(.*)$/i);
-      const meaning=split?.[1]?.trim()||memo;
-      const detail=split?.[2]?.trim()||memo;
-      return [
-        {text:"Core definition or meaning: "+meaning,marks:1},
-        {text:"An additional correct purpose, key property or practical detail beyond merely naming the term: "+detail,marks:q.marks-1}
-      ];
-    }
+    if(q.kind==="Definitions")return makeDefinitionRubric(q);
     if(q.kind==="Numerical reasoning"){
       const texts=[
         "Selects the correct formula or appropriate calculation method.",
