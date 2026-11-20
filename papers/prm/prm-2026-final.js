@@ -333,8 +333,83 @@
       marks:12,rubric,sourceChapter:ch,
       memo:"Use the itemised six-criterion rubric below. Award two marks for a complete, accurate point; one for a partly correct point; zero for an absent or incorrect point. Credit well-justified equivalent terminology."};
   }
+  // Mark every non-deterministic PRM answer at the level of individual,
+  // independently-awardable criteria, including the short definitions.
+  const manuallyMarked=new Set([
+    "Definitions","Identify the term","Compare and contrast","Lists and sequences",
+    "Short explanations","Numerical reasoning","Scenarios and applied reasoning",
+    "Essay / case study"
+  ]);
+  const tidyMemo=memo=>String(memo||"").replace(/\s*\[[0-9]+\]\s*SECTION.*$/s,"").trim().replace(/\s+/g," ");
+  const segments=memo=>tidyMemo(memo).replace(/^Any (?:four|five|six|three)\s*:\s*/i,"")
+    .split(/\s*;\s*|\.\s+(?=[A-Z])|,\s+(?=[A-Za-z]{3})/)
+    .map(x=>x.trim().replace(/[.;]+$/,"")).filter(Boolean);
+  const point=(text,marks=1)=>({text,marks});
+  function buildRubric(q){
+    if(Array.isArray(q.rubric)&&q.rubric.length)return q.rubric;
+    if(q.kind==="True or false"&&q.marks===2&&q.correct==="false"&&!q.truthOnly)
+      return [point("Correct the false claim accurately: "+tidyMemo(q.memo).replace(/^False[.;]\s*/i,""),1)];
+    if(!manuallyMarked.has(q.kind))return null;
+    const n=q.marks, memo=tidyMemo(q.memo), parts=segments(memo), kind=q.kind;
+    let criteria=[];
+    if(kind==="Definitions"){
+      const head=parts[0]||memo;
+      const second=parts.slice(1).join("; ")||memo;
+      criteria=[point("Core meaning / defining feature: "+head),point("Correct purpose, effect, qualification or project context: "+second)];
+    }else if(kind==="Identify the term"){
+      criteria=[point("Identifies the correct technical term or an unambiguous equivalent: "+memo)];
+    }else if(kind==="Lists and sequences"){
+      criteria=Array.from({length:n},(_,i)=>point("Distinct correct item "+(i+1)+" of "+n+"; assess against the accepted items or sequence in the memo."));
+    }else if(kind==="Compare and contrast"){
+      criteria=[
+        point("Accurate explanation of the first concept or side of the comparison."),
+        point("Accurate explanation of the second concept or side of the comparison."),
+        point("Clear, correct distinction or relationship between the concepts."),
+        point(/example|illustrat/i.test(q.prompt)?"Relevant, correct example(s) as requested.":"Additional distinct, accurate point of comparison or practical implication.")
+      ];
+    }else if(kind==="Numerical reasoning"){
+      criteria=[
+        point("Appropriate formula, calculation method or quantitative relationship."),
+        point("Correct identification and substitution of given numerical values."),
+        point("Correct arithmetic and numerical result."),
+        point(/interpret|explain|rank|recommend|state what|indicate/i.test(q.prompt)
+          ?"Correct interpretation of the result in the context of the question."
+          :"Correct units, sign, rounding or clearly shown calculation reasoning.")
+      ];
+    }else{
+      // Make the expected evidence visible, not an opaque '4 / 5' field.
+      const candidates=parts.slice(0,n);
+      criteria=candidates.map(x=>point("Accurately addresses this expected element: "+x));
+      const fallback=kind==="Short explanations"
+        ?["States the relevant concept or issue correctly.",
+          "Explains why it matters / the mechanism behind it.",
+          "Gives the requested consequence, example or project implication."]
+        :["Identifies the important problem, objective or stakeholder concern.",
+          "Selects a relevant project-management technique or action.",
+          "Explains how the chosen action addresses the scenario.",
+          "Describes the necessary sequence, evidence or responsible actor.",
+          "Gives a justified conclusion, follow-up or project impact.",
+          "Addresses any further requirement explicitly stated in the prompt."];
+      for(let i=criteria.length; i<n;i++)
+        criteria.push(point(fallback[i%fallback.length]));
+    }
+    // Allow at most 2 marks per distinct criterion. Never invent extra total marks.
+    // A small adjustment for marks above rubric row count keeps all mark values exact.
+    if(criteria.length>n)criteria=criteria.slice(0,n);
+    if(criteria.length<n){
+      let remaining=n-criteria.length;
+      for(let i=0;remaining>0;i=(i+1)%criteria.length){criteria[i].marks++;remaining--;}
+    }
+    if(criteria.reduce((total,c)=>total+c.marks,0)!==n)
+      throw Error("Invalid itemised rubric for "+kind+": "+q.prompt);
+    return criteria;
+  }
   function normalise(p,questions) {
-    const qs=questions.map((q,i)=>({...q,id:i+1}));
+    const qs=questions.map((q,i)=>{
+      const next={...q,id:i+1};
+      const rubric=buildRubric(next);
+      return rubric?{...next,rubric}:next;
+    });
     return {...p,questions:qs,totalMarks:qs.reduce((n,q)=>n+q.marks,0)};
   }
   const revised={};
