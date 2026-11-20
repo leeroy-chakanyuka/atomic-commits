@@ -591,7 +591,7 @@
     const marked=base.pending===0||(assigned!==undefined&&assigned!==null);
     const score=base.score+(base.pending&&marked?Number(assigned||0):0);
     return {...base,score,marked,ungraded:marked?0:base.pending,
-      legacyBreakdown:base.pending>0&&marked&&DATA.module==="PRM"&&criteria.length};
+      legacyBreakdown:Boolean(base.pending>0&&marked&&DATA.module==="PRM"&&criteria.length)};
   }
   function scoreStats(source=attempt,paper=DATA) {
     const values=paper.questions.map(q=>grade(q,source));
@@ -614,7 +614,7 @@
     return a.text || "No answer submitted";
   }
   function reviewBadge(q,g) {
-    if(!g.marked)return {className:"pending",label:"Needs marking"};
+    if(!g.marked)return {className:"pending",label:g.criterionScores?.some(v=>v!==null)?g.score+" / "+q.marks+" · "+g.ungraded+" ungraded":"Needs marking"};
     if(g.score===q.marks)return {className:"",label:"Full marks"};
     return {className:"needs",label:g.score + " / " + q.marks + " marks"};
   }
