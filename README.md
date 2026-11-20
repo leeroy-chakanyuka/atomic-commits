@@ -8,12 +8,23 @@ A calm exam-practice website, hosted from this repository on GitHub Pages. The f
 |---|---|---|
 | ADP | 18 November 2026 | **31 playable papers / 660 original questions**: four topic dropdowns (23 topic sets + 4 mixed megas) and four new 100-mark ADP372S-style full mock exams |
 | ITS | 19 November 2026 | **21 playable papers**: 3 each for Chapters 8–12, 3 integrated mixed papers, plus 3 SQL-only 40-mark written exams |
-| PRM (Project Management) | 20 November 2026 | **15 sessions live** |
+| PRM (Project Management) | 20 November 2026 | **15 final-revision papers: 12 chapter papers + 3 combined finals** |
 | ADT | 24 November 2026 | Coming soon |
 
 ADP and ITS exams are **confirmed by the student at 14:00**. PRM and ADT show 14:00 as provisional pending confirmation on the final institutional timetable.
 
-For PRM, **Chapters 9, 11, 12, 14 and 15** now each have **three playable 80-question practice sessions** (15 total). Each chapter has its own expandable session folder with downloadable question-only PDF versions, a 60-minute limit, mark allocations, self-marking for written answers, and a local attempt archive. Six combined revision papers remain labelled *coming soon*. No separate question-paper PDFs are published.
+For PRM, the **active November final scope is Chapters 11, 12, 14 and 15**, with **three original 60-question papers per chapter** and **three 60-question combined finals**: 15 playable papers. Chapter 9 is excluded from the live final-revision library; the original source files and lecture note remain in Git history/files for reference. Chapter papers allow 90 minutes; combined finals allow 120 minutes. Each paper has a question-only PDF download and persistent browser-local attempt archive. Explanatory answer memos and self-markable detailed rubrics appear after submission. Self-marking works with **no API key**. Optional Gemini 3.5/3.1 Flash-Lite marking accepts a locally saved API key and returns grades only, without commentary.
+
+
+### PRM November final scope and marking
+
+- **Ch11: Risks** — risk definitions and events, risk registers, identifying triggers, qualitative/quantitative analysis, threats/opportunities, positive and negative response strategies, plus Agile uncertainty.
+- **Ch12: Quality** — quality management plans, process management, PDCA, quality assurance/control, continuous improvement, costs of quality, Agile quality and kickoff.
+- **Ch14: Progress and finance** — communication, PV/EV/AC/BAC, CPI/SPI, cost/schedule variance, EAC/ETC/TCPI and forecast assumptions; calculation-heavy practice.
+- **Ch15: Completion** — scope validation, acceptance, termination methods, documented closeout, handover, lessons, benefits and celebration of completion.
+- **Three combined papers**: 60 questions each, including calculations, definitions, lists, comparisons and longer cases. The mix approximates the supplied final format, not an official exam. Distinct real-world prompts are used rather than repeating the same answer sheet.
+
+**Marking mode:** submit answers and expand any written question in Results. The model answer and rubric become visible with a self-mark selector. Optionally paste a Gemini API key in the **Gemini grading** panel and select **Grade written answers**; answers, questions and rubrics are sent to Google's API only when that button is pressed. The generated response is constrained to integer mark values per question and does not supply commentary. Save-key is an explicit browser-only opt-in; clear it from the same panel. Never assume Gemini grades are authoritative: validate with the rubric.
 
 ### ITS SQL intensive: three 40-mark written papers
 
@@ -37,10 +48,10 @@ Each session contains **80 questions with its own memo**. The original Chapter 8
 The source scope follows the textbook *Database Systems: Design, Implementation, and Management*, 10th edition. Full question-by-question verification against every image or diagram in the uploaded lecture PDFs has not been performed, so learners should use their official course material to check terminology and emphasis.
 
 ### Exam workflow
-- Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
+- Each session has a strict paper-specific timer that starts only when **Begin practice session** is pressed (PRM chapters: 90 minutes; PRM combined finals: 120 minutes).
 - You may **submit with unanswered questions**. Unanswered items receive zero, and a confirmation explains how many are missing.
 - The answer memorandum is visible only after submission.
-- Direct objective answers are scored automatically where possible. Open-ended responses and calculations are marked against the memorandum by the learner until future server-side marking is available.
+- Direct objective answers are scored automatically where possible. Open-ended answers and calculations are self-marked against the rubric without a service or key. PRM-only optional browser-to-Gemini scoring can award a grade for each submitted written answer, subject to API availability. Gemini grades can be manually overridden.
 - The exam interface uses a compact tablet/mobile layout with the timer alone in the top navigation bar.
 - Completed attempts, responses, provisional scores, missed questions, self-marking, flags and dates are kept in browser localStorage and can be revisited after later attempts.
 
@@ -62,7 +73,7 @@ Questions, optional context blocks and memorandums can contain **GitHub-flavored
 
 ITS Chapter 8 retains its original **80 questions / 256 marks and existing v2 local storage keys**. Its result-tracing/case-study questions now display Markdown sample tables where useful. The module offers an expandable reference database with table inventory, sample rows, schema relationship diagram and a runnable Oracle SQL setup (`notes/ITS/ch08-practice-database.sql`). **When a question defines its own rows, those rows override the shared sample dataset**. Existing SQL answer memorandums and marking weights were preserved.
 
-The original PRM papers, question counts, marks, memorandums and local histories remain unchanged.
+The original 80-question PRM question sources remain in the repository for audit, but the site now assembles a distinct 60-question final-focused revision set on page load. It retains definition, list, compare/contrast, Agile, calculation and scenario questions, plus **eight 12-mark essays per chapter paper**. Every essay rubric has six 2-mark criteria, with partial-credit instructions. The three 60-question combined papers mix all four chapters, including Chapter 14 calculations (about 28% of marks), long-form essays and case studies (about 50% of marks), definitions, comparisons, lists and objective checks. No Microsoft Project software questions are included. Existing v1 PRM attempts are retained in browser storage but kept separate from the revised papers (v2) to avoid misaligning answers.
 
 ## Notes library
 
