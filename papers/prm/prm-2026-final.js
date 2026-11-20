@@ -486,8 +486,18 @@
       return {text:"Correct explained point "+(i+1)+": "+point,marks};
     });
   }
+  function normaliseTrueFalsePrompt(prompt){
+    return String(prompt||"")
+      .replace(/\s+True\s*\/\s*False:\s*_{1,}[\s\S]*$/i,"")
+      .replace(/\s+(?:Correct(?: the statement| the claim)? if false|Explain(?: briefly)?|Justify(?: briefly)?)\.\s*$/i,"")
+      .trim();
+  }
   function withRubric(q) {
-    return {...q,rubric:makeRubric(q)};
+    // PRM T/F requires one decision, not a written justification. Existing
+    // question marks are preserved; award all of them for the correct choice.
+    const item=q.kind==="True or false" ?
+      {...q,truthOnly:true,prompt:normaliseTrueFalsePrompt(q.prompt)} : q;
+    return {...item,rubric:makeRubric(item)};
   }
   function normalise(p,questions) {
     const qs=questions.map((q,i)=>({...withRubric(q),id:i+1}));
