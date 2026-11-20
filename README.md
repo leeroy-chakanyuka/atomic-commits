@@ -48,7 +48,7 @@ Each session contains **80 questions with its own memo**. The original Chapter 8
 The source scope follows the textbook *Database Systems: Design, Implementation, and Management*, 10th edition. Full question-by-question verification against every image or diagram in the uploaded lecture PDFs has not been performed, so learners should use their official course material to check terminology and emphasis.
 
 ### Exam workflow
-- Each session has a strict 60-minute timer that starts only when **Begin practice session** is pressed.
+- Each session has a strict paper-specific timer that starts only when **Begin practice session** is pressed (PRM chapters: 90 minutes; PRM combined finals: 120 minutes).
 - You may **submit with unanswered questions**. Unanswered items receive zero, and a confirmation explains how many are missing.
 - The answer memorandum is visible only after submission.
 - Direct objective answers are scored automatically where possible. Open-ended answers and calculations are self-marked against the rubric without a service or key. PRM-only optional browser-to-Gemini scoring can award a grade for each submitted written answer, subject to API availability. Gemini grades can be manually overridden.
