@@ -716,3 +716,44 @@ body:has(#examScreen:not([hidden])) main,
 .marking-rubric li:last-child{border-bottom:0}
 .marking-rubric li b{font-size:11px;white-space:nowrap;color:#526b4e;margin-left:8px}
 @media(max-width:700px){.gemini-marking-panel{padding:20px 16px}.gemini-fields{display:block}.gemini-fields label+label{margin-top:12px}.marking-rubric li{font-size:11px}}
+
+
+/* PRM rubric: a scored, accessible checklist rather than an opaque total. */
+.criterion-checklist{margin-top:18px;background:#f8faf5;border:1px solid #dbe5d6;border-radius:13px;overflow:hidden}
+.criterion-checklist-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 18px;background:#edf3e9;border-bottom:1px solid #dbe5d6}
+.criterion-checklist-header strong{display:block;font-size:13px;color:#334b36}
+.criterion-checklist-header span{display:block;font-size:11px;color:#71816e;margin-top:3px}
+.criterion-checklist-header b{white-space:nowrap;font-size:13px;color:#405b43}
+.criterion-rows{list-style:none;padding:0;margin:0}
+.criterion-row{display:grid;grid-template-columns:27px minmax(0,1fr) minmax(120px,142px);align-items:start;gap:12px;padding:15px 18px;border-bottom:1px solid #e3e9df;background:#fbfcf9}
+.criterion-row:last-child{border-bottom:0}
+.criterion-check{border:1px solid #c7d2c2;border-radius:7px;width:26px;height:26px;text-align:center;line-height:24px;font-size:16px;color:#879387;background:#fff}
+.criterion-row.earned{background:#f3f9ee}.criterion-row.earned .criterion-check{background:#e0efda;color:#385e37;border-color:#bad0b4}
+.criterion-row.partial{background:#fdfaf0}.criterion-row.partial .criterion-check{background:#f4e9c8;color:#80662f;border-color:#e5d3a1}
+.criterion-row.missed{background:#fef8f5}.criterion-row.missed .criterion-check{background:#f6e4df;color:#9a534b;border-color:#e3bbb3}
+.criterion-text{color:#3e4e3e;font-size:12px;font-weight:650;line-height:1.55;overflow-wrap:anywhere}
+.criterion-detail small{display:block;color:#8a8e83;font-size:10px;margin-top:7px}
+.criterion-detail .criterion-feedback{font-size:12px;font-weight:400;line-height:1.6;color:#657364;margin:6px 0 0;padding-left:9px;border-left:2px solid #d0dacb;overflow-wrap:anywhere}
+.criterion-row.missed .criterion-feedback{border-left-color:#d99d93}
+.criterion-row.partial .criterion-feedback{border-left-color:#dcc58f}
+.criterion-control{min-width:0;text-align:right}
+.criterion-control>span{display:block;font-size:13px;font-weight:750;color:#405944;margin-bottom:6px}
+.criterion-control label{display:flex;flex-direction:column;gap:4px;font-size:10px;color:#708070;text-align:left}
+.criterion-control select{width:100%;max-width:100%;border-radius:7px;border:1px solid #cbd8c6;background:white;color:#354937;padding:8px 4px;font-size:11px}
+.criterion-control select:focus-visible{outline:2px solid #5f8360;outline-offset:2px}
+.criterion-control select:disabled{opacity:.58;cursor:not-allowed}
+.criterion-summary,.criterion-next{margin:13px 18px 0;padding:12px 14px;border-radius:8px;border:1px solid #e0e7dc;background:white}
+.criterion-summary strong,.criterion-next strong{font-size:12px;color:#3d523f}
+.criterion-summary p,.criterion-next p{margin:6px 0 0;font-size:12px;line-height:1.55;color:#5f705f}
+.criterion-next{margin-bottom:0}
+.criterion-hint,.criterion-legacy{padding:0 18px;color:#758372;font-size:11px;line-height:1.6;margin:12px 0 16px}
+.criterion-legacy{color:#856633}
+@media(max-width:690px){
+  .criterion-row{grid-template-columns:25px minmax(0,1fr);gap:10px;padding:13px 12px}
+  .criterion-control{grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;margin-top:3px}
+  .criterion-control>span{margin:0;white-space:nowrap}
+  .criterion-control label{width:min(158px,65%)}
+  .criterion-checklist-header{padding:12px;gap:8px}
+  .criterion-checklist-header b{font-size:12px}
+  .criterion-summary,.criterion-next{margin-left:12px;margin-right:12px}
+}
