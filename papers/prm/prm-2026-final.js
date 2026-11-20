@@ -333,8 +333,72 @@
       marks:12,rubric,sourceChapter:ch,
       memo:"Use the itemised six-criterion rubric below. Award two marks for a complete, accurate point; one for a partly correct point; zero for an absent or incorrect point. Credit well-justified equivalent terminology."};
   }
+  // Each non-deterministic answer gets criteria worth individual marks.
+  // Original explicit essay rubrics are retained; shorter answers use the
+  // textbook-style memorandum as the single source of marking expectations.
+  function memoPoints(memo) {
+    const clean=String(memo||"").replace(/\[[0-9]+\]\s*SECTION [A-Z].*$/s,"").trim();
+    return clean.split(/;\s*|\.\s+(?=[A-Z])|,\s+(?=[a-zA-Z])/)
+      .map(x=>x.trim().replace(/[.;]$/,"")).filter(x=>x.length>3);
+  }
+  function makeRubric(q) {
+    if(Array.isArray(q.rubric) && q.rubric.length)return q.rubric;
+    if(["Multiple choice","Fill in the blanks","SQL completion","Matching"].includes(q.kind))return undefined;
+    if(q.kind==="True or false"){
+      if(q.correct==="false"&&q.marks>1&&!q.truthOnly)
+        return [{text:"Provide a factually correct correction or explanation of why the statement is false (see the memorandum).",marks:q.marks-1}];
+      return undefined;
+    }
+    if(q.kind==="Identify the term")
+      return [{text:"Names the technical concept accurately, including accepted equivalent terminology: "+q.memo,marks:1}];
+    if(q.kind==="Definitions")
+      return [
+        {text:"Accurately identifies and defines the core concept: "+String(q.memo).split(/[.;]/)[0].trim(),marks:1},
+        {text:"Includes the purpose, key property or distinguishing detail asked for, consistent with the complete memorandum: "+q.memo,marks:q.marks-1}
+      ];
+    if(q.kind==="Numerical reasoning"){
+      const texts=[
+        "Selects the correct formula or appropriate calculation method.",
+        "Substitutes the supplied quantities correctly and shows the working.",
+        "Calculates the required result accurately, with consistent units and sensible rounding.",
+        "Interprets the result or explains the decision correctly in the scenario."
+      ];
+      if(q.marks===4)return texts.map(text=>({text,marks:1}));
+      if(q.marks===5)return texts.map((text,i)=>({text,marks:i===2?2:1}));
+      if(q.marks===6)return texts.map((text,i)=>({text,marks:i===0||i===2?2:1}));
+      if(q.marks===8)return texts.map(text=>({text,marks:2}));
+    }
+    const n=q.marks,parts=memoPoints(q.memo),kind=q.kind;
+    const criteria=[];
+    if(kind==="Compare and contrast"){
+      const stems=[
+        "Explains the first concept or side of the comparison accurately.",
+        "Explains the second concept or side accurately.",
+        "States a meaningful and correct distinction, relationship or commonality.",
+        "Supports the comparison with a relevant example, effect or practical implication."
+      ];
+      return Array.from({length:n},(_,i)=>({text:(stems[i]||"Provides another valid comparison point")+" Reference: "+q.memo,marks:1}));
+    }
+    if(kind==="Lists and sequences"){
+      return Array.from({length:n},(_,i)=>({
+        text:"Distinct valid list item "+(i+1)+" of "+n+" (no duplicate credit). Check against the acceptable answer set: "+q.memo,
+        marks:1
+      }));
+    }
+    // For explanations and scenarios, match short, concrete points from
+    // the existing memo; never award marks for verbosity or unsupported claims.
+    return Array.from({length:n},(_,i)=>({
+      text:parts[i]?
+        "Correct point "+(i+1)+": "+parts[i]:
+        "Another distinct, relevant, accurately explained point or justified action from the memorandum: "+q.memo,
+      marks:1
+    }));
+  }
+  function withRubric(q) {
+    return {...q,rubric:makeRubric(q)};
+  }
   function normalise(p,questions) {
-    const qs=questions.map((q,i)=>({...q,id:i+1}));
+    const qs=questions.map((q,i)=>({...withRubric(q),id:i+1}));
     return {...p,questions:qs,totalMarks:qs.reduce((n,q)=>n+q.marks,0)};
   }
   const revised={};
