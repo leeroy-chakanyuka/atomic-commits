@@ -344,6 +344,21 @@
   function makeDefinitionRubric(q) {
     const memo=String(q.memo||"").trim().replace(/\s+/g," ");
     const question=String(q.prompt||"").toLowerCase();
+    if(q.marks===4 && /cost of quality/.test(question)){
+      return [
+        {text:"Defines cost of quality as the total costs of achieving and failing to achieve required quality.",marks:1},
+        {text:"Identifies cost of conformance as prevention/appraisal activities such as planning, training, testing and inspection.",marks:1},
+        {text:"Identifies cost of nonconformance as failure costs such as scrap, rework, warranties or complaints.",marks:1},
+        {text:"Correctly distinguishes the two categories as costs to meet quality versus costs incurred when quality is not met.",marks:1}
+      ];
+    }
+    if(q.marks===3 && /baselin/.test(question)){
+      return [
+        {text:"Defines the baseline as a formally approved project plan or agreed benchmark.",marks:1},
+        {text:"Explains how actual work, schedule or cost performance is compared with the approved baseline.",marks:1},
+        {text:"Explains how stakeholder approval and formal change control preserve a reliable reference for managing variations.",marks:1}
+      ];
+    }
     // Definitions should earn separate marks for the core meaning and an
     // independent distinguishing feature, not two marks for the same sentence.
     if(/\bdefine (?:a )?threat\b/.test(question))
@@ -402,10 +417,18 @@
       // tell the marker not to count an identical phrase twice.
       detail="Adds a distinct correct purpose, defining condition or practical implication supported by the memorandum (no duplicate credit).";
     }
-    return [
+    const rubric=[
       {text:"Core meaning: "+core,marks:1},
       {text:"Separate defining feature, purpose or project context: "+detail,marks:1}
     ];
+    // Guard unusual multi-mark definition questions not covered by a dedicated
+    // breakdown above. Never leave some marks structurally unawardable.
+    while(rubric.reduce((sum,r)=>sum+r.marks,0)<q.marks){
+      const row=rubric.find(r=>r.marks<2);
+      if(row)row.marks++;
+      else rubric.push({text:"Additional distinct correct detail explicitly supported by the model answer.",marks:1});
+    }
+    return rubric;
   }
   function makeRubric(q) {
     if(Array.isArray(q.rubric) && q.rubric.length)return q.rubric;
