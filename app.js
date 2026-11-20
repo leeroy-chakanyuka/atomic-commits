@@ -610,7 +610,7 @@
       const option=(q.matchOptions||[]).find(o=>o.letter===letter);
       return (i+1)+". "+letter+(option?" — "+option.text:"");
     }).join("\n");
-    if (q.kind==="True or false") return (a.truth||"Not answered").toUpperCase() + (a.correction?.trim() ? "\n\n" + a.correction : "");
+    if (q.kind==="True or false") return (a.truth||"Not answered").toUpperCase() + (!q.truthOnly && a.correction?.trim() ? "\n\n" + a.correction : "");
     return a.text || "No answer submitted";
   }
   function reviewBadge(q,g) {
@@ -870,6 +870,37 @@
     $("#geminiStatus").textContent="Saved Gemini key cleared. Self-marking is still available.";
   });
   $("#markWithGemini").addEventListener("click",markWithGemini);
+  // Enter advances to the next question from an answer field.
+  // Ctrl+Shift+Enter (and standard Shift+Enter) adds a line break in textareas.
+  function advanceFromAnswer(){
+    if(!attempt||attempt.submittedAt)return;
+    if(current>=DATA.questions.length){
+      notify("Last question. Use Submit paper when you're ready.");
+      $("#submitExam")?.focus();
+      return;
+    }
+    showQuestion(current+1,true);
+    $("#answerArea textarea, #answerArea input[data-field], #answerArea input[type=radio]")?.focus({preventScroll:true});
+  }
+  function insertNewline(field){
+    const start=field.selectionStart,end=field.selectionEnd;
+    field.setRangeText("\n",start,end,"end");
+    field.dispatchEvent(new Event("input",{bubbles:true}));
+  }
+  $("#examScreen").addEventListener("keydown",event=>{
+    if(event.key!=="Enter"||event.isComposing||!attempt||attempt.submittedAt)return;
+    const target=event.target;
+    if(!(target instanceof Element)||target.closest("button,a,select,[contenteditable]"))return;
+    const textarea=target.closest("textarea");
+    if(textarea&&event.shiftKey){
+      if(event.ctrlKey){event.preventDefault();insertNewline(textarea);}
+      return;
+    }
+    if(event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
+    if(!target.closest("input,textarea"))return;
+    event.preventDefault();
+    advanceFromAnswer();
+  });
   // Events
   $("#beginButton").addEventListener("click",startSession);
   $("#previousButton").addEventListener("click",()=>showQuestion(current-1,true));
