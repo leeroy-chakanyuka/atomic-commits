@@ -931,17 +931,33 @@ All rubric criteria must be present once in index order. Each marks value must b
     filter=b.dataset.filter;renderReviews();
   }));
   $("#reviewList").addEventListener("change",e=>{
+    if(!attempt?.submittedAt)return;
+    const criterionQuestion=Number(e.target?.dataset?.criterionQuestion);
+    if(criterionQuestion){
+      const q=DATA.questions.find(item=>item.id===criterionQuestion);
+      const index=Number(e.target?.dataset?.criterionIndex);
+      if(!q||!Array.isArray(q.rubric)||!Number.isInteger(index)||index<0||index>=q.rubric.length||autoGrade(q).pending<=0)return;
+      const raw=e.target.value,value=raw===""?null:Number(raw);
+      if(value!==null&&(!Number.isInteger(value)||value<0||value>q.rubric[index].marks))return;
+      if(!attempt.reviewDetails)attempt.reviewDetails={};
+      const existing=attempt.reviewDetails[criterionQuestion]||{};
+      const scores=Array.isArray(existing.scores)&&existing.scores.length===q.rubric.length
+        ?existing.scores.slice():q.rubric.map(()=>null);
+      const notes=Array.isArray(existing.notes)&&existing.notes.length===q.rubric.length
+        ?existing.notes.slice():q.rubric.map(()=>"");
+      scores[index]=value;notes[index]="";
+      attempt.reviewDetails[criterionQuestion]={scores,notes,source:"self",updatedAt:Date.now(),summary:"",nextStep:""};
+      if(scores.every(Number.isInteger))attempt.reviews[criterionQuestion]=scores.reduce((sum,n)=>sum+n,0);
+      else delete attempt.reviews[criterionQuestion];
+      save();updateResultsMeta();renderReviews();
+      return;
+    }
     const id=Number(e.target?.dataset?.grade);
-    if(!id||!attempt)return;
+    if(!id)return;
     const q=qOf(id),max=autoGrade(q).pending;
     const award=Number(e.target.value);
     if(!Number.isFinite(award)||award<0||award>max)return;
-    attempt.reviews[id]=award;save();
-    updateResultsMeta();
-    const details=e.target.closest("details");
-    const g=grade(q),state=reviewBadge(q,g);
-    if(details){const badge=details.querySelector(".review-status");badge.textContent=state.label;badge.className="review-status "+state.className;}
-    if(filter!=="all")renderReviews();
+    attempt.reviews[id]=award;save();updateResultsMeta();renderReviews();
   });
   window.addEventListener("hashchange",route);
   window.addEventListener("storage",(e)=>{if(e.key===STORAGE || e.key===HISTORY_STORAGE){attempt=readAttempt();route();}});
