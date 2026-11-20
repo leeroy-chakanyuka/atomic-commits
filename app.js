@@ -548,7 +548,12 @@
   function autoGrade(q,source=attempt) {
     const a = answer(q.id,source);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? (q.fullMarksOnCorrect ? q.marks : 1) : 0, pending:0, objective:true };
-    if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
+    if (q.kind === "Identify the term") {
+      const correct=Boolean(a.text && accepted(a.text,q.accepted?.[0] || []));
+      if(DATA.module==="PRM" && a.text?.trim() && !correct)
+        return {score:0,pending:q.marks,objective:false};
+      return {score:correct?q.marks:0,pending:0,objective:true};
+    }
     if (q.kind === "Matching") {
       const pairs=q.matchItems||[];
       const awarded=pairs.filter((item,i)=>a["match"+(i+1)]===item.correct).length;
@@ -565,23 +570,34 @@
       if (a.truth !== q.correct) return { score:0,pending:0,objective:true };
       if (q.marks === 1 || q.truthOnly || q.correct === "true") return { score:q.marks,pending:0,objective:true };
       // First mark for correctly identifying false; second for correcting it.
-      return { score:1,pending:a.correction?.trim()?1:0,objective:false };
+      return { score:1,pending:a.correction?.trim()?1:0,objective:!a.correction?.trim() };
     }
     if (!a.text?.trim()) return { score:0,pending:0,objective:true };
     return { score:0,pending:q.marks,objective:false };
   }
+  const validRubricAward=(value,max)=>Number.isInteger(value)&&value>=0&&value<=max;
   function grade(q,source=attempt) {
     const base=autoGrade(q,source);
-    const assigned = source.reviews[q.id];
-    const marked = base.pending === 0 || (assigned !== undefined && assigned !== null);
-    const score = base.score + (marked ? Number(assigned || 0) : 0);
-    return { ...base,score,marked };
+    const reviews=source?.criteriaReviews?.[q.id];
+    const criteria=Array.isArray(q.rubric)?q.rubric:[];
+    if(base.pending>0&&DATA.module==="PRM"&&criteria.length&&reviews&&Array.isArray(reviews.scores)){
+      const scores=criteria.map((c,i)=>validRubricAward(reviews.scores[i],c.marks)?reviews.scores[i]:null);
+      const score=base.score+scores.reduce((n,v)=>n+(v??0),0);
+      const ungraded=criteria.reduce((n,c,i)=>n+(scores[i]===null?c.marks:0),0);
+      return {...base,score,marked:ungraded===0,ungraded,criterionScores:scores,
+        grader:reviews.grader||"self"};
+    }
+    const assigned=source?.reviews?.[q.id];
+    const marked=base.pending===0||(assigned!==undefined&&assigned!==null);
+    const score=base.score+(base.pending&&marked?Number(assigned||0):0);
+    return {...base,score,marked,ungraded:marked?0:base.pending,
+      legacyBreakdown:base.pending>0&&marked&&DATA.module==="PRM"&&criteria.length};
   }
   function scoreStats(source=attempt,paper=DATA) {
     const values=paper.questions.map(q=>grade(q,source));
     return {
       score:values.reduce((n,g)=>n+g.score,0),
-      pending:values.reduce((n,g)=>n+(g.marked ? 0 : g.pending),0),
+      pending:values.reduce((n,g)=>n+g.ungraded,0),
       marked:values.filter(g=>g.marked).length
     };
   }
