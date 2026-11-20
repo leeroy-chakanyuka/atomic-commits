@@ -632,7 +632,52 @@
     const wrong=DATA.questions.filter(q=>{const g=grade(q);return g.marked&&g.score<q.marks;}).length;
     const el=$("#wrongCount");if(el)el.textContent=String(wrong);
   }
+  function renderCriterionChecklist(q,g){
+  if(!Array.isArray(q.rubric))return "";
+  const detail=attempt?.reviewDetails?.[q.id],scores=detail?.scores||[];
+  const hasAnswer=autoGrade(q).pending>0;
+  const completed=q.rubric.filter((r,i)=>Number.isInteger(scores[i])).length;
+  const oldTotal=g.source==="legacy";
+  return `<section class="criterion-checklist" aria-label="Question ${q.id} itemised rubric">
+    <div class="criterion-checklist-header"><div><strong>Criterion checklist</strong><span>${completed} / ${q.rubric.length} reviewed</span></div><b>${g.score} / ${q.marks} marks</b></div>
+    ${oldTotal?'<p class="criterion-legacy">Previous total-only score: regrade with Gemini or use the checklist for a per-item breakdown.</p>':""}
+    <ol class="criterion-rows">${q.rubric.map((criterion,i)=>{
+      const score=Number.isInteger(scores[i])?scores[i]:null;
+      const state=!hasAnswer?"not-answered":score===null?"unmarked":score===0?"missed":score===criterion.marks?"earned":"partial";
+      const icon=state==="earned"?"✓":state==="partial"?"◐":state==="missed"?"×":"□";
+      const feedback=String(detail?.notes?.[i]||"").trim();
+      return `<li class="criterion-row ${state}">
+        <span class="criterion-check" aria-hidden="true">${icon}</span>
+        <div class="criterion-detail"><div class="criterion-text">${esc(criterion.text)}</div>
+          ${feedback?`<p class="criterion-feedback">${esc(feedback)}</p>`:""}
+          ${!hasAnswer?'<small>No written response was submitted for this criterion.</small>':""}
+        </div>
+        <div class="criterion-control"><span>${score===null?"—":score} / ${criterion.marks}</span>
+          <label>Mark
+            <select data-criterion-question="${q.id}" data-criterion-index="${i}"
+              aria-label="Question ${q.id} criterion ${i+1} marks" ${!hasAnswer?"disabled":""}>
+              <option value="" ${score===null?"selected":""}>Unchecked</option>
+              ${Array.from({length:criterion.marks+1},(_,n)=>`<option value="${n}" ${score===n?"selected":""}>${n} / ${criterion.marks} ${n===0?"· Missing":n===criterion.marks?"· Met":"· Partial"}</option>`).join("")}
+            </select></label></div>
+      </li>`;
+    }).join("")}</ol>
+    ${detail?.summary?`<div class="criterion-summary"><strong>Why this mark?</strong><p>${esc(detail.summary)}</p></div>`:""}
+    ${detail?.nextStep?`<div class="criterion-next"><strong>What to improve</strong><p>${esc(detail.nextStep)}</p></div>`:""}
+    <p class="criterion-hint">${detail?.source==="gemini"?"AI graded. You can change any mark.":"Manual review: grade each criterion for partial or full credit."} Your work is saved locally.</p>
+  </section>`;
+}
+  function renderMarkRow(q,g){
+  return `<div class="review-mark"><div><strong>${q.marks} marks available</strong><br>
+    <small>${g.marked?"All parts graded.":g.pending+" marks are still unreviewed."}</small></div>
+    ${Array.isArray(q.rubric)?`<strong>${g.score} / ${q.marks} marks${g.marked?"":" · Provisional"}</strong>`:
+    g.pending?`<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span>
+    <select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>
+    ${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>`:
+    `<strong>${g.score} / ${q.marks} marks</strong>`}
+  </div>`;
+}
   function renderReviews() {
+    const expanded=new Set(Array.from($("#reviewList")?.querySelectorAll("details[open]")||[]).map(el=>el.dataset.reviewQuestion));
     const visible=DATA.questions.filter(q=>{
       const g=grade(q);
       if(filter==="wrong")return g.marked && g.score<q.marks;
@@ -647,13 +692,11 @@
           ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet"><code class="language-${esc(snippetLanguage(q))}">${esc(q.snippet)}</code></pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
           <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div>
-            ${Array.isArray(q.rubric)?`<div class="marking-rubric"><strong>Marking rubric · ${q.marks} marks</strong><p>Full credit for a complete point, partial credit for a partly correct point.</p><ol>${q.rubric.map(r=>`<li><span>${esc(r.text)}</span><b>${r.marks} marks</b></li>`).join("")}</ol></div>`:""}</div>
-          <div class="review-mark">
-            <div><strong>${q.marks} marks available</strong><br><small>${g.pending ? "Compare your answer to the memorandum and award only earned marks." : "Checked automatically or no answer provided."}</small></div>
-            ${g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
-          </div>
+            ${renderCriterionChecklist(q,g)}</div>
+          ${renderMarkRow(q,g)}
         </div></details>`;
     }).join("") : '<div class="review-empty">Nothing in this filter. Keep going ✳</div>';
+    for(const id of expanded){const node=$("#reviewList").querySelector('details[data-review-question="'+id+'"]');if(node)node.open=true;}
     document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
     drawDiagrams($("#reviewList"));
     highlightCode($("#reviewList"));
