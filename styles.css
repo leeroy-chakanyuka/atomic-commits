@@ -692,3 +692,27 @@ body:has(#examScreen:not([hidden])) main,
 .adp-full-mocks>.adp-topic-guidance{max-width:850px;margin-bottom:18px;line-height:1.8}
 .adp-full-mock-list{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
 .adp-full-mock-list .session-file{margin:0}
+
+
+/* PRM finals: optional Gemini grading and evidence-based self-marking. */
+.gemini-marking-panel{background:#fbfbf5;border:1px solid #d9e1d5;border-radius:18px;padding:26px 30px;margin:32px 0 35px;color:#3a4c3c}
+.gemini-panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px}
+.gemini-panel-heading h3{font-family:var(--serif);font-size:29px;letter-spacing:-.035em;font-weight:600;margin:7px 0}
+.gemini-optional-label{font-size:11px;background:#e5eddf;color:#435c41;padding:7px 10px;border-radius:100px}
+.gemini-marking-panel>p{line-height:1.65;color:#637161;font-size:13px;max-width:780px}
+.gemini-fields{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin-top:19px}
+.gemini-fields label{display:flex;flex-direction:column;gap:8px;flex:1 1 205px;color:#50634f;font-size:12px;font-weight:700}
+.gemini-fields input,.gemini-fields select{width:100%;background:white;border:1px solid #cdd7c9;border-radius:9px;padding:12px 13px;min-height:44px;color:#304530;font:inherit}
+.gemini-actions{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.gemini-actions .button{min-height:42px;padding:9px 13px;font-size:12px}
+.gemini-clear-button{border:0;background:transparent;color:#657565;font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer;padding:10px}
+.gemini-marking-panel .gemini-private-note{font-size:11px;color:#7b897a;max-width:770px;margin-top:15px}
+.gemini-status{min-height:1.4em;font-size:12px;font-weight:600;color:#3a6241;margin-top:10px}
+.marking-rubric{margin-top:16px;padding:14px 15px;background:#f3f7ef;border:1px solid #dbe6d5;border-radius:11px}
+.marking-rubric>strong{display:block;font-size:13px;color:#3d543c}
+.marking-rubric>p{font-size:11px;color:#738470;line-height:1.5;margin:6px 0 12px}
+.marking-rubric ol{margin:0;padding:0 0 0 22px}
+.marking-rubric li{padding:9px 0;border-bottom:1px solid #e0e9dc;display:list-item;font-size:12px;line-height:1.5}
+.marking-rubric li:last-child{border-bottom:0}
+.marking-rubric li b{font-size:11px;white-space:nowrap;color:#526b4e;margin-left:8px}
+@media(max-width:700px){.gemini-marking-panel{padding:20px 16px}.gemini-fields{display:block}.gemini-fields label+label{margin-top:12px}.marking-rubric li{font-size:11px}}
