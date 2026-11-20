@@ -743,3 +743,7 @@ body:has(#examScreen:not([hidden])) main,
 .interactive-rubric .rubric-evidence{margin:9px 0 0 32px;padding:10px 12px;background:#f9faf6;border-left:3px solid #b1c5ac;color:#526253;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
 .interactive-rubric .rubric-legacy{font-size:12px;color:#876c30}
 @media(max-width:700px){.interactive-rubric{padding:13px}.interactive-rubric .rubric-score-buttons{margin-left:0}.interactive-rubric .rubric-evidence{margin-left:0}}
+
+/* Answer-first keyboard navigation hints. */
+.exam-keyboard-hint{margin:18px 0 0;color:#819081;font-size:11px;line-height:1.7}
+.exam-keyboard-hint kbd{display:inline-block;border:1px solid #dce4d7;border-radius:5px;background:#f6f8f3;padding:1px 5px;font:inherit;color:#526551;font-weight:700}
