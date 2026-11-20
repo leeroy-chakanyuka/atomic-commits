@@ -642,15 +642,15 @@
     <div class="criterion-checklist-header"><div><strong>Criterion checklist</strong><span>${completed} / ${q.rubric.length} reviewed</span></div><b>${g.score} / ${q.marks} marks</b></div>
     ${oldTotal?'<p class="criterion-legacy">Previous total-only score: regrade with Gemini or use the checklist for a per-item breakdown.</p>':""}
     <ol class="criterion-rows">${q.rubric.map((criterion,i)=>{
-      const score=Number.isInteger(scores[i])?scores[i]:null;
-      const state=!hasAnswer?"not-answered":score===null?"unmarked":score===0?"missed":score===criterion.marks?"earned":"partial";
+      const score=Number.isInteger(scores[i])?scores[i]:(hasAnswer?null:0);
+      const state=!hasAnswer?"missed":score===null?"unmarked":score===0?"missed":score===criterion.marks?"earned":"partial";
       const icon=state==="earned"?"✓":state==="partial"?"◐":state==="missed"?"×":"□";
       const feedback=String(detail?.notes?.[i]||"").trim();
       return `<li class="criterion-row ${state}">
         <span class="criterion-check" aria-hidden="true">${icon}</span>
         <div class="criterion-detail"><div class="criterion-text">${esc(criterion.text)}</div>
           ${feedback?`<p class="criterion-feedback">${esc(feedback)}</p>`:""}
-          ${!hasAnswer?'<small>No written response was submitted for this criterion.</small>':""}
+          ${!hasAnswer?'<small>No written evidence was provided for this criterion.</small>':""}
         </div>
         <div class="criterion-control"><span>${score===null?"—":score} / ${criterion.marks}</span>
           <label>Mark
