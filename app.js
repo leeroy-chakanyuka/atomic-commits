@@ -548,7 +548,13 @@
   function autoGrade(q,source=attempt) {
     const a = answer(q.id,source);
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? (q.fullMarksOnCorrect ? q.marks : 1) : 0, pending:0, objective:true };
-    if (q.kind === "Identify the term") return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
+    if (q.kind === "Identify the term") {
+      // Synonyms and phrasing variations cannot safely be decided by exact strings.
+      if(Array.isArray(q.rubric))return a.text?.trim()
+        ? {score:0,pending:q.marks,objective:false}
+        : {score:0,pending:0,objective:true};
+      return { score: a.text && accepted(a.text,q.accepted?.[0] || []) ? 1:0, pending:0, objective:true };
+    }
     if (q.kind === "Matching") {
       const pairs=q.matchItems||[];
       const awarded=pairs.filter((item,i)=>a["match"+(i+1)]===item.correct).length;
@@ -572,10 +578,21 @@
   }
   function grade(q,source=attempt) {
     const base=autoGrade(q,source);
-    const assigned = source.reviews[q.id];
-    const marked = base.pending === 0 || (assigned !== undefined && assigned !== null);
-    const score = base.score + (marked ? Number(assigned || 0) : 0);
-    return { ...base,score,marked };
+    // New per-criterion marks take precedence over the previous single-total score.
+    // An incomplete manual checklist remains provisional rather than receiving
+    // an unjustified full mark or zero automatically.
+    const detail=source?.reviewDetails?.[q.id];
+    if(base.pending>0 && Array.isArray(q.rubric) && Array.isArray(detail?.scores)
+        && detail.scores.length===q.rubric.length){
+      const values=detail.scores.map((n,i)=>Number.isInteger(n) && n>=0 && n<=q.rubric[i].marks ? n : null);
+      const earned=values.reduce((t,n)=>t+(n===null?0:n),0);
+      const pending=values.reduce((t,n,i)=>t+(n===null?q.rubric[i].marks:0),0);
+      return {...base,score:base.score+earned,pending,marked:pending===0,source:detail.source||"self"};
+    }
+    const assigned=source?.reviews?.[q.id];
+    const marked=base.pending===0 || (assigned!==undefined && assigned!==null);
+    const score=base.score+(marked?Number(assigned||0):0);
+    return {...base,score,marked,source:marked&&base.pending>0?"legacy":"automatic"};
   }
   function scoreStats(source=attempt,paper=DATA) {
     const values=paper.questions.map(q=>grade(q,source));
