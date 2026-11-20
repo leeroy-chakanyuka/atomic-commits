@@ -631,6 +631,33 @@
     const wrong=DATA.questions.filter(q=>{const g=grade(q);return g.marked&&g.score<q.marks;}).length;
     const el=$("#wrongCount");if(el)el.textContent=String(wrong);
   }
+  function rubricBreakdown(q,g){
+    const criteria=Array.isArray(q.rubric)?q.rubric:[];
+    if(DATA.module!=="PRM"||!criteria.length||autoGrade(q).pending<=0)return "";
+    const saved=attempt?.criteriaReviews?.[q.id]||{};
+    const scores=Array.isArray(g.criterionScores)?g.criterionScores:[];
+    const feedback=Array.isArray(saved.feedback)?saved.feedback:[];
+    const earned=criteria.reduce((n,c,i)=>n+(scores[i]??0),0);
+    const legacy=g.legacyBreakdown;
+    const header=legacy?"Older score: "+g.score+"/"+q.marks+" (no breakdown saved)":earned+"/"+autoGrade(q).pending+" rubric marks";
+    const tip=legacy?"Your earlier mark was stored as one number. Choose criteria scores or re-grade with Gemini to see the breakdown.":
+      "0 = missing, 1 = partial, 2 = full when worth two marks. You may change any AI mark."; 
+    const rows=criteria.map((criterion,i)=>{
+      const max=criterion.marks,chosen=scores[i]??null;
+      const state=chosen===null?"Not marked":chosen===max?"Met":chosen===0?"Missing":"Partially met";
+      const symbol=chosen===null?"○":chosen===max?"✓":chosen===0?"×":"◐";
+      const buttons=Array.from({length:max+1},(_,n)=>
+        '<button type="button" class="'+(chosen===n?"selected":"")+'" aria-pressed="'+(chosen===n)+'" data-rubric-question="'+q.id+'" data-rubric-index="'+i+'" data-rubric-award="'+n+'">'+n+' '+(n===0?"missing":n===max?"complete":"partial")+'</button>').join("");
+      const reason=typeof feedback[i]==="string"?feedback[i]:"";
+      const why=reason?'<p class="rubric-evidence"><strong>Gemini assessment:</strong> '+esc(reason)+'</p>':"";
+      return '<li class="rubric-criterion '+(chosen===null?"is-ungraded":chosen===max?"is-met":chosen===0?"is-missing":"is-partial")+'">'
+        +'<div class="rubric-criterion-head"><span class="rubric-state">'+symbol+'</span><span class="rubric-text">'+esc(criterion.text)
+        +'</span><strong class="rubric-earned">'+(chosen===null?"—":chosen)+' / '+max+'</strong></div>'
+        +'<div class="rubric-score-buttons" role="group" aria-label="Question '+q.id+', criterion '+(i+1)+' marks">'+buttons+'<span class="rubric-state-name">'+state+'</span></div>'+why+'</li>';
+    }).join("");
+    return '<div class="marking-rubric interactive-rubric"><div class="rubric-heading"><strong>Marking checklist</strong><span class="rubric-total">'+esc(header)+'</span></div>'
+      +'<p>'+esc(tip)+'</p><ol>'+rows+'</ol></div>';
+  }
   function renderReviews() {
     const visible=DATA.questions.filter(q=>{
       const g=grade(q);
@@ -638,6 +665,7 @@
       if(filter==="pending")return !g.marked;
       return true;
     });
+    const previouslyOpen=new Set([...document.querySelectorAll("#reviewList details[open]")].map(x=>x.dataset.reviewQuestion));
     $("#reviewList").innerHTML=visible.length ? visible.map(q=>{
       const g=grade(q), state=reviewBadge(q,g);
       return `<details class="review-item" data-review-question="${q.id}">
@@ -646,13 +674,14 @@
           ${(q.contextMd||q.snippet||q.diagram)?`<div class="review-material md-body">${q.contextMd?rich(q.contextMd):""}${q.snippet?`<pre class="question-snippet"><code class="language-${esc(snippetLanguage(q))}">${esc(q.snippet)}</code></pre>`:""}${q.diagram?`<div class="mermaid">${esc(q.diagram)}</div>`:""}</div>`:""}
           <div class="review-answer"><h4>Your answer</h4><p>${esc(displayAnswer(q))}</p></div>
           <div class="review-answer right"><h4>Model answer / marking guidance</h4><div class="md-body">${rich(q.memo)}</div>
-            ${Array.isArray(q.rubric)?`<div class="marking-rubric"><strong>Marking rubric · ${q.marks} marks</strong><p>Full credit for a complete point, partial credit for a partly correct point.</p><ol>${q.rubric.map(r=>`<li><span>${esc(r.text)}</span><b>${r.marks} marks</b></li>`).join("")}</ol></div>`:""}</div>
+            ${rubricBreakdown(q,g)}</div>
           <div class="review-mark">
             <div><strong>${q.marks} marks available</strong><br><small>${g.pending ? "Compare your answer to the memorandum and award only earned marks." : "Checked automatically or no answer provided."}</small></div>
-            ${g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
+            ${DATA.module==="PRM" && Array.isArray(q.rubric) && autoGrade(q).pending>0 ? `<strong>${g.score} / ${q.marks}${g.ungraded?" · "+g.ungraded+" pending":""}</strong>` : g.pending ? `<label><span style="font-size:11px;color:#7d8978;margin-right:7px">Self-mark</span><select data-grade="${q.id}" aria-label="Award marks to question ${q.id}"><option value="" ${!g.marked?"selected":""} disabled>Choose marks</option>${Array.from({length:g.pending+1},(_,i)=>`<option value="${i}" ${g.marked&&attempt.reviews[q.id]===i?"selected":""}>${i} / ${g.pending}</option>`).join("")}</select></label>` : `<strong>${g.score} / ${q.marks} marks</strong>`}
           </div>
         </div></details>`;
     }).join("") : '<div class="review-empty">Nothing in this filter. Keep going ✳</div>';
+    document.querySelectorAll("#reviewList details").forEach(el=>{if(previouslyOpen.has(el.dataset.reviewQuestion))el.open=true;});
     document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
     drawDiagrams($("#reviewList"));
     highlightCode($("#reviewList"));
