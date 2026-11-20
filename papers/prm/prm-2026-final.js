@@ -423,12 +423,25 @@
       for(let i=criteria.length; i<n;i++)
         criteria.push(point(fallback[i%fallback.length]));
     }
-    // Allow at most 2 marks per distinct criterion. Never invent extra total marks.
-    // A small adjustment for marks above rubric row count keeps all mark values exact.
+    // Match the paper's marks, not its number of rows: a two-mark
+    // classification criterion may coexist with four one-mark criteria.
     if(criteria.length>n)criteria=criteria.slice(0,n);
-    if(criteria.length<n){
-      let remaining=n-criteria.length;
-      for(let i=0;remaining>0;i=(i+1)%criteria.length){criteria[i].marks++;remaining--;}
+    let allocated=criteria.reduce((total,c)=>total+c.marks,0);
+    while(allocated>n){
+      const idx=criteria.findLastIndex(c=>c.marks>1);
+      if(idx>=0)criteria[idx].marks--;
+      else criteria.pop();
+      allocated--;
+    }
+    let cursor=0;
+    while(allocated<n){
+      const idx=criteria.findIndex((c,j)=>j>=cursor&&c.marks<2);
+      if(idx<0){
+        cursor=0;
+        const nextIndex=criteria.findIndex(c=>c.marks<2);
+        if(nextIndex<0)throw Error("Not enough independent rubric criteria");
+        criteria[nextIndex].marks++;allocated++;
+      }else{criteria[idx].marks++;allocated++;cursor=(idx+1)%criteria.length;}
     }
     if(criteria.reduce((total,c)=>total+c.marks,0)!==n)
       throw Error("Invalid itemised rubric for "+kind+": "+q.prompt);
