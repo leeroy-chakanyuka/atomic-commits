@@ -331,8 +331,7 @@
     const rubric=points.map(text=>({text,marks:2}));
     return {kind:"Essay / case study",prompt:"Case study: "+scenario+"\n\n"+stem,
       marks:12,rubric,sourceChapter:ch,
-      memo:"Award up to **2 marks for each criterion** (1 for partially correct, 0 for missing or incorrect). Accept equivalent terminology and well-justified alternatives.\n\n"+
-        rubric.map((r,i)=>(i+1)+". **2 marks** — "+r.text).join("\n")};
+      memo:"Use the itemised six-criterion rubric below. Award two marks for a complete, accurate point; one for a partly correct point; zero for an absent or incorrect point. Credit well-justified equivalent terminology."};
   }
   function normalise(p,questions) {
     const qs=questions.map((q,i)=>({...q,id:i+1}));
@@ -348,14 +347,15 @@
       intro:"60 questions: detailed definitions, core concepts, Agile, calculations, cases and eight rubric-scored essays. Emphasis on the November final's stated scope without discarding wider chapter learning."},qs);
     if(revised[key].questions.length!==60)throw Error("PRM chapter paper count mismatch "+key);
   }
-  // Mixed paper composition is deliberately mark-weighted to mirror the final:
-  // 12 long answers × 12 marks = 144, 10 financial calculations × 8 = 80,
-  // 18 definitions × 2 = 36, and 20 objective checks × 1 = 20.
-  // Of 280 marks, this is 51.4% extended writing, 28.6% calculations, 20% shorter answers.
+  // Mixed paper composition is mark-weighted to approximate the final scope:
+  // 12 long answers x 12 marks = 144, 10 Chapter-14 calculations x 8 = 80,
+  // 14 definitions x 2 = 28, 4 lists/contrasts x ~4 = ~16,
+  // and 20 objective checks x 1 = 20. About half the marks are long-form essays,
+  // ~28% are numerical and the remainder checks definitions and other knowledge.
   for(let session=1;session<=3;session++){
-    const essaysMixed=chapters.flatMap(ch=>[0,1,2].map(i=>makeEssay(ch,(i+(session-1)*2)%8,session)));
+    const essaysMixed=chapters.flatMap(ch=>[0,1,2].map(i=>makeEssay(ch,(i+(session-1)*3)%8,session)));
     const definitions=chapters.flatMap((ch,i)=>
-      revised[ch+"-"+session].questions.filter(q=>q.kind==="Definitions").slice(0,[5,5,4,4][i])
+      revised[ch+"-"+session].questions.filter(q=>q.kind==="Definitions").slice(0,[4,4,3,3][i])
         .map(q=>({...q,sourceChapter:ch})));
     const objective=chapters.flatMap(ch=>{
       const list=revised[ch+"-"+session].questions;
@@ -366,6 +366,10 @@
           prompt:"Choose TRUE or FALSE only: "+q.prompt.replace(/^\s*True or false\?\s*/i,"").replace(/\s*Correct.*$/i,"").replace(/\s*True \/ False:.*$/i,"")}));
       return [...term,...mcq,...tf].map(q=>({...q,sourceChapter:ch}));
     });
+    const contrastChapters=session===1?[11,12]:session===2?[14,15]:[11,15];
+    const listChapters=session===1?[14,15]:session===2?[11,12]:[12,14];
+    const comparison=contrastChapters.map(ch=>({...revised[ch+"-"+session].questions.filter(q=>q.kind==="Compare and contrast")[session-1],sourceChapter:ch}));
+    const listing=listChapters.map(ch=>({...revised[ch+"-"+session].questions.filter(q=>q.kind==="Lists and sequences")[session-1],sourceChapter:ch}));
     const allFinance=raw["14-"+session].questions.filter(q=>q.kind==="Numerical reasoning");
     const additional=raw["14-"+(session%3+1)].questions.filter(q=>q.kind==="Numerical reasoning").slice(0,2);
     const financial=[...allFinance,...additional].slice(0,10).map(q=>({...q,
@@ -377,7 +381,7 @@
         {text:"Show sound calculations and produce the correct numerical answer.",marks:2},
         {text:"State the unit or reasonable rounding and interpret the result correctly.",marks:2}
       ]}));
-    const questions=[...objective,...definitions,...financial,...essaysMixed];
+    const questions=[...objective,...definitions,...comparison,...listing,...financial,...essaysMixed];
     if(questions.length!==60)throw Error("PRM combined paper length mismatch "+session);
     revised["99-"+session]=normalise({
       module:"PRM",moduleName:"Project Management",chapter:99,
