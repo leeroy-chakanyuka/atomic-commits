@@ -892,7 +892,7 @@
     if(btn)showQuestion(Number(btn.dataset.navigate),true);
   });
   $("#examExit").addEventListener("click",()=>{
-    notify("Your progress is saved. The one-hour timer keeps running.");
+    notify("Your progress is saved. The session timer keeps running.");
     location.hash="#/module/"+DATA.module.toLowerCase();
   });
   $("#restartExam").addEventListener("click",()=>{
@@ -905,6 +905,26 @@
   document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{
     filter=b.dataset.filter;renderReviews();
   }));
+  $("#reviewList").addEventListener("click",event=>{
+    const control=event.target.closest("button[data-rubric-question]");
+    if(!control||!attempt?.submittedAt||DATA.module!=="PRM")return;
+    const id=Number(control.dataset.rubricQuestion),
+      index=Number(control.dataset.rubricIndex),
+      award=Number(control.dataset.rubricAward);
+    const q=DATA.questions.find(item=>item.id===id);
+    if(!q||!Array.isArray(q.rubric)||!Number.isInteger(index)||
+      index<0||index>=q.rubric.length||!validRubricAward(award,q.rubric[index].marks)||
+      autoGrade(q).pending<=0)return;
+    attempt.criteriaReviews=attempt.criteriaReviews||{};
+    const previous=attempt.criteriaReviews[id]||{};
+    const scores=Array.isArray(previous.scores)?[...previous.scores]:q.rubric.map(()=>null);
+    const feedback=Array.isArray(previous.feedback)?[...previous.feedback]:q.rubric.map(()=>"");
+    scores[index]=award;
+    feedback[index]=previous.grader==="ai"?"Score manually adjusted. "+(feedback[index]||""):(feedback[index]||"");
+    attempt.criteriaReviews[id]={scores,feedback,grader:"self",markedAt:Date.now()};
+    delete attempt.reviews[id];
+    save();updateResultsMeta();renderReviews();
+  });
   $("#reviewList").addEventListener("change",e=>{
     const id=Number(e.target?.dataset?.grade);
     if(!id||!attempt)return;
