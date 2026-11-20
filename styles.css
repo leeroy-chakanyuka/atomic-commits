@@ -716,3 +716,30 @@ body:has(#examScreen:not([hidden])) main,
 .marking-rubric li:last-child{border-bottom:0}
 .marking-rubric li b{font-size:11px;white-space:nowrap;color:#526b4e;margin-left:8px}
 @media(max-width:700px){.gemini-marking-panel{padding:20px 16px}.gemini-fields{display:block}.gemini-fields label+label{margin-top:12px}.marking-rubric li{font-size:11px}}
+
+
+/* Criterion-level PRM marking, preserving the existing Paperroom aesthetic. */
+.interactive-rubric{margin-top:18px;padding:18px 19px}
+.interactive-rubric .rubric-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+.interactive-rubric .rubric-heading>strong{font-weight:750;color:#344c38;font-size:14px}
+.interactive-rubric .rubric-total{font-size:12px;font-weight:750;color:#4b684d}
+.interactive-rubric>p{color:#6c7a6b;font-size:12px;line-height:1.55;margin:0 0 12px}
+.interactive-rubric ol{list-style:none;padding:0;margin:0;counter-reset:prm-criterion}
+.interactive-rubric .rubric-criterion{counter-increment:prm-criterion;display:block;padding:14px 0;border-bottom:1px solid #dce7d9}
+.interactive-rubric .rubric-criterion:last-child{border-bottom:0}
+.interactive-rubric .rubric-criterion-head{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.55}
+.interactive-rubric .rubric-state{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#f1f1e9;color:#697b68;flex:none;font-size:14px;font-weight:800}
+.interactive-rubric .rubric-criterion.is-met .rubric-state{color:#286344;background:#d7e8da}
+.interactive-rubric .rubric-criterion.is-partial .rubric-state{color:#81621c;background:#f6edce}
+.interactive-rubric .rubric-criterion.is-missing .rubric-state{color:#995951;background:#f3dfdc}
+.interactive-rubric .rubric-text{flex:1;overflow-wrap:anywhere}
+.interactive-rubric .rubric-earned{white-space:nowrap;color:#446247;font-size:12px;margin-left:auto}
+.interactive-rubric .rubric-score-buttons{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:10px 0 0 32px}
+.interactive-rubric .rubric-score-buttons button{border:1px solid #c9d5c5;border-radius:9px;padding:8px 11px;color:#566751;background:#fffdfa;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
+.interactive-rubric .rubric-score-buttons button:hover{background:#edf3e9;border-color:#899f85}
+.interactive-rubric .rubric-score-buttons button.selected{background:#3c5843;color:white;border-color:#3c5843}
+.interactive-rubric .rubric-score-buttons button:focus-visible{outline:3px solid #95b18c;outline-offset:2px}
+.interactive-rubric .rubric-state-name{font-size:11px;color:#6e806a;margin-left:5px;font-weight:700}
+.interactive-rubric .rubric-evidence{margin:9px 0 0 32px;padding:10px 12px;background:#f9faf6;border-left:3px solid #b1c5ac;color:#526253;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.interactive-rubric .rubric-legacy{font-size:12px;color:#876c30}
+@media(max-width:700px){.interactive-rubric{padding:13px}.interactive-rubric .rubric-score-buttons{margin-left:0}.interactive-rubric .rubric-evidence{margin-left:0}}
