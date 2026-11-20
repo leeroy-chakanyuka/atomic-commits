@@ -437,7 +437,7 @@
       const term=list.filter(q=>q.kind==="Identify the term").slice(0,2);
       const mcq=list.filter(q=>q.kind==="Multiple choice").slice(0,2);
       const tf=list.filter(q=>q.kind==="True or false").slice(0,1)
-        .map(q=>({...q,kind:"True or false",marks:1,truthOnly:true,
+        .map(q=>({...q,kind:"True or false",marks:1,truthOnly:true,rubric:undefined,
           prompt:"Choose TRUE or FALSE only: "+q.prompt.replace(/^\s*True or false\?\s*/i,"").replace(/\s*Correct.*$/i,"").replace(/\s*True \/ False:.*$/i,"")}));
       return [...term,...mcq,...tf].map(q=>({...q,sourceChapter:ch}));
     });
