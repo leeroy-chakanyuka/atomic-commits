@@ -550,7 +550,7 @@
     if (q.kind === "Multiple choice") return { score: a.choice && a.choice === q.correct ? (q.fullMarksOnCorrect ? q.marks : 1) : 0, pending:0, objective:true };
     if (q.kind === "Identify the term") {
       const correct=Boolean(a.text && accepted(a.text,q.accepted?.[0] || []));
-      if(DATA.module==="PRM" && a.text?.trim() && !correct)
+      if(Array.isArray(q.rubric) && a.text?.trim() && !correct)
         return {score:0,pending:q.marks,objective:false};
       return {score:correct?q.marks:0,pending:0,objective:true};
     }
@@ -580,7 +580,7 @@
     const base=autoGrade(q,source);
     const reviews=source?.criteriaReviews?.[q.id];
     const criteria=Array.isArray(q.rubric)?q.rubric:[];
-    if(base.pending>0&&DATA.module==="PRM"&&criteria.length&&reviews&&Array.isArray(reviews.scores)){
+    if(base.pending>0&&criteria.length&&reviews&&Array.isArray(reviews.scores)){
       const scores=criteria.map((c,i)=>validRubricAward(reviews.scores[i],c.marks)?reviews.scores[i]:null);
       const score=base.score+scores.reduce((n,v)=>n+(v??0),0);
       const ungraded=criteria.reduce((n,c,i)=>n+(scores[i]===null?c.marks:0),0);
