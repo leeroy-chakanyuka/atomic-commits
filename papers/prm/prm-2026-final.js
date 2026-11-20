@@ -345,6 +345,23 @@
     .split(/\s*;\s*|\.\s+(?=[A-Z])|,\s+(?=[A-Za-z]{3})/)
     .map(x=>x.trim().replace(/[.;]+$/,"")).filter(Boolean);
   const point=(text,marks=1)=>({text,marks});
+  function definitionParts(memo){
+    // Do not split a definition mid-list merely because it contains commas.
+    const clean=tidyMemo(memo);
+    let pieces=clean.split(/;\s*|\.\s+(?=[A-Z])/).map(t=>t.trim().replace(/[.;]+$/,"")).filter(Boolean);
+    if(pieces.length>=2)return [pieces[0],pieces.slice(1).join("; ")];
+    const joins=[/\s+used to\s+/i,/\s+so\s+/i,/\s+against\s+/i,/\s+in order to\s+/i,
+      /\s+which\s+/i,/\s+whereby\s+/i,/\s+including\s+/i,/\s+by\s+/i,
+      /\s+for\s+/i,/\s+that\s+/i,/\s+to\s+/i,/\s+and\s+/i];
+    for(const separator of joins){
+      const match=separator.exec(clean);
+      if(match && match.index>=22 && clean.length-match.index-match[0].length>=14)
+        return [clean.slice(0,match.index).trim(),clean.slice(match.index).trim()];
+    }
+    const words=clean.split(/\s+/);
+    if(words.length>=10){const mid=Math.ceil(words.length*.55);return [words.slice(0,mid).join(" "),words.slice(mid).join(" ")];}
+    return [clean,"Clarifies the defining feature, purpose or project relevance contained in the model answer."];
+  }
   function buildRubric(q){
     if(Array.isArray(q.rubric)&&q.rubric.length)return q.rubric;
     if(q.kind==="True or false"&&q.marks===2&&q.correct==="false"&&!q.truthOnly)
@@ -353,9 +370,8 @@
     const n=q.marks, memo=tidyMemo(q.memo), parts=segments(memo), kind=q.kind;
     let criteria=[];
     if(kind==="Definitions"){
-      const head=parts[0]||memo;
-      const second=parts.slice(1).join("; ")||memo;
-      criteria=[point("Core meaning / defining feature: "+head),point("Correct purpose, effect, qualification or project context: "+second)];
+      const [head,second]=definitionParts(memo);
+      criteria=[point("Core meaning / defining feature: "+head),point("Distinguishing purpose, condition, effect or application: "+second)];
     }else if(kind==="Identify the term"){
       criteria=[point("Identifies the correct technical term or an unambiguous equivalent: "+memo)];
     }else if(kind==="Lists and sequences"){
@@ -368,17 +384,31 @@
         point(/example|illustrat/i.test(q.prompt)?"Relevant, correct example(s) as requested.":"Additional distinct, accurate point of comparison or practical implication.")
       ];
     }else if(kind==="Numerical reasoning"){
-      criteria=[
-        point("Appropriate formula, calculation method or quantitative relationship."),
-        point("Correct identification and substitution of given numerical values."),
-        point("Correct arithmetic and numerical result."),
-        point(/interpret|explain|rank|recommend|state what|indicate/i.test(q.prompt)
-          ?"Correct interpretation of the result in the context of the question."
-          :"Correct units, sign, rounding or clearly shown calculation reasoning.")
-      ];
+      if(/classif/i.test(q.prompt)){
+        criteria=[
+          point("Identify the relevant calculation relationship or cost-of-quality formula."),
+          point("Use the given numbers consistently in the workings."),
+          point("Classify every stated cost or category correctly.",2),
+          point("Calculate the correct total or requested subtotals."),
+          point("Use the correct currency, units and an intelligible result.")
+        ];
+      }else{
+        criteria=[
+          point("Appropriate formula, calculation method or quantitative relationship."),
+          point("Correct identification and substitution of given numerical values."),
+          point("Correct arithmetic and numerical result."),
+          point(/interpret|explain|rank|recommend|state what|indicate/i.test(q.prompt)
+            ?"Correct interpretation of the result in the context of the question."
+            :"Correct units, sign, rounding or clearly shown calculation reasoning.")
+        ];
+      }
     }else{
       // Make the expected evidence visible, not an opaque '4 / 5' field.
-      const candidates=parts.slice(0,n);
+      // Do not silently drop the final step when a memo has more clauses
+      // than its mark allocation. Combine any trailing clauses instead.
+      const candidates=parts.length>n
+        ?[...parts.slice(0,n-1),parts.slice(n-1).join("; ")]
+        :parts;
       criteria=candidates.map(x=>point("Accurately addresses this expected element: "+x));
       const fallback=kind==="Short explanations"
         ?["States the relevant concept or issue correctly.",
